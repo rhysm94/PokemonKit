@@ -6,7 +6,8 @@
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import <GameplayKit/GameplayKit.h>
 
 //! Project version number for PokemonKit.
 FOUNDATION_EXPORT double PokemonKitVersionNumber;
