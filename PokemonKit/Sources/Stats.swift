@@ -8,7 +8,23 @@
 
 struct Stats: Codable {
 	let hp, atk, def, spAtk, spDef, spd: Int
-	static let statModifiers = [-6: 0.25, -5: 0.285, -4: 0.33, -3: 0.4, -2: 0.5, -1: 0.66, 0: 1, 1: 1.5, 2: 2, 3: 2.5, 4: 3, 5: 3.5, 6: 4]
+	static let statModifiers = [
+		-6: 0.25,
+		-5: 0.285,
+		-4: 0.33,
+		-3: 0.4,
+		-2: 0.5,
+		-1: 0.66,
+		0: 1,
+		1: 1.5,
+		2: 2,
+		3: 2.5,
+		4: 3,
+		5: 3.5,
+		6: 4]
+	
+	static let fullIVs = Stats(hp: 31, atk: 31, def: 31, spAtk: 31, spDef: 31, spd: 31)
+	static let empty = Stats(hp: 0, atk: 0, def: 0, spAtk: 0, spDef: 0, spd: 0)
 }
 
 extension Stats: Equatable {

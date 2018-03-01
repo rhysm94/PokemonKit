@@ -327,34 +327,36 @@ struct BattleEngine: Viewable {
 		let attackerStat: Int
 		let defenderStat: Int
 		
+		print("---")
+		
 		if attack.category == .physical {
 			if attack.name == "Foul Play" {
-				attackerStat = defender.baseStats.atk
+				attackerStat = defender.modifiedStats.atk
 			} else {
-				attackerStat = attacker.baseStats.atk
+				attackerStat = attacker.modifiedStats.atk
 			}
-			defenderStat = defender.baseStats.def
+			defenderStat = defender.modifiedStats.def
 		} else {
-			attackerStat = attacker.baseStats.spAtk
+			attackerStat = attacker.modifiedStats.spAtk
 
 			if attack.name == "Psyshock" {
-				defenderStat = defender.baseStats.def
+				defenderStat = defender.modifiedStats.def
 			} else {
-				defenderStat = defender.baseStats.spDef
+				defenderStat = defender.modifiedStats.spDef
 			}
 		}
 		
-		let innerBrackets = (2 * attacker.level / 5) + 2
-//		print("Inner brackets = \(innerBrackets)")
+		let topInnerBrackets = (floor(2 * Double(attacker.level)) / 5 + 2)
+		let topOfEquation = floor(floor(Double(topInnerBrackets) * Double(attack.power) * Double(attackerStat)) / Double(defenderStat))
 		
-		let statCalc = attackerStat / defenderStat
+		print("Attacker stat = \(attackerStat)")
+		print("Defender stat = \(defenderStat)")
+		print("Attack Power: \(attack.power)")
 		
-		let unmodified = ((innerBrackets * attack.power * statCalc) / 50) + 2
+		let innerBrackets = floor(topOfEquation / 50 + 2)
 		
-//		print("Unmodified damage = \(unmodified)")
-		
-//		let rng = Double(GKRandomDistribution(lowestValue: 85, highestValue: 100).nextInt()) / 100
-//		print("RNG = \(rng)")
+		let rng = Double(GKRandomDistribution(lowestValue: 85, highestValue: 100).nextInt()) / 100
+		print("RNG = \(rng)")
 		
 		if attacker.ability.name == "Protean" {
 			attacker.species.typeOne = attack.type
@@ -372,7 +374,8 @@ struct BattleEngine: Viewable {
 		} else {
 			stab = 1
 		}
-		stab >= 1.5 ? print("STAB activated") : print("No STAB")
+//		stab >= 1.5 ? print("STAB activated") : print("No STAB")
+		print("STAB = \(stab)")
 		
 		let typeOneEff = attack.type.typeEffectiveness(recipient: defender.species.typeOne).rawValue
 		let typeTwoEff: Double
@@ -383,8 +386,9 @@ struct BattleEngine: Viewable {
 		}
 		
 		let effectiveness: Type.Effectiveness
+		let effectivenessMultiplier = typeOneEff * typeTwoEff
 		
-		switch typeOneEff * typeTwoEff {
+		switch effectivenessMultiplier {
 		case 0.25, 0.5:
 			effectiveness = .notVeryEffective
 		case 2, 4:
@@ -394,11 +398,16 @@ struct BattleEngine: Viewable {
 		default:
 			effectiveness = .normallyEffective
 		}
+
+		print("Effectiveness = \(typeOneEff * typeTwoEff)")
 		
-		let modifier = 0.85 * stab * typeOneEff * typeTwoEff
-//		print("Modifier = \(modifier)")
+		let gameFreakRound = { return $0 > 0.5 ? ceil($0) : floor($0) }
+
+		let damage = Int(floor(gameFreakRound(floor(Double(innerBrackets) * rng) * stab) * effectivenessMultiplier))
 		
-		let damage = Int(floor(Double(unmodified) * modifier))
+		print("Final damage = \(damage)")
+		
+		print("---")
 		
 		return (damage, effectiveness)
 	}

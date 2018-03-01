@@ -4,40 +4,40 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>PokemonKit-iOS.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>0</integer>
-		</dict>
-		<key>PokemonKit-macOS.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>1</integer>
-		</dict>
-		<key>PokemonKit-tvOS.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>2</integer>
-		</dict>
-		<key>PokemonKit.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>6</integer>
-		</dict>
-		<key>PokemonKit_iOSTests.xcscheme</key>
+		<key>PokemonKit-iOS.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>3</integer>
 		</dict>
-		<key>PokemonKit_macOSTests.xcscheme</key>
+		<key>PokemonKit-macOS.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>4</integer>
 		</dict>
-		<key>PokemonKit_tvOSTests.xcscheme</key>
+		<key>PokemonKit-tvOS.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>0</integer>
+		</dict>
+		<key>PokemonKit.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+		<key>PokemonKit_iOSTests.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+		<key>PokemonKit_macOSTests.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>5</integer>
+		</dict>
+		<key>PokemonKit_tvOSTests.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>6</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
@@ -47,7 +47,27 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>91A0DB4F20470FFD00D7B67A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>91A0DB5C2047101A00D7B67A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>91A0DB692047102400D7B67A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>91A0DB75204710C600D7B67A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>91A0DB84204710D000D7B67A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
