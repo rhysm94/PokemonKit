@@ -6,8 +6,10 @@
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
 //
 
-class Turn: Codable {
-	var player: Player
+public class Turn: Codable {
+	public let player: Player
+	let action: Action
+
 	var playerSpeed: Int {
 		switch action {
 		case let .attack(attacker,_,_):
@@ -16,6 +18,7 @@ class Turn: Codable {
 			return 0
 		}
 	}
+	
 	var priority: Int {
 		switch action {
 		case let .attack(_, _, attack):
@@ -30,19 +33,15 @@ class Turn: Codable {
 			return 0
 		}
 	}
-
-	var action: Action
 	
-	init(player: Player, action: Action) {
+	public init(player: Player, action: Action) {
 		self.player = player
 		self.action = action
 	}
-	
-	
 }
 
 extension Turn: Equatable {
-	static func ==(lhs: Turn, rhs: Turn) -> Bool {
+	public static func ==(lhs: Turn, rhs: Turn) -> Bool {
 		return lhs.playerSpeed == rhs.playerSpeed &&
 			lhs.priority == rhs.priority &&
 			lhs.action == rhs.action
@@ -50,7 +49,7 @@ extension Turn: Equatable {
 }
 
 extension Turn: CustomStringConvertible {
-	var description: String {
+	public var description: String {
 		
 		switch action {
 		case let .attack(attacker, _, attack):			

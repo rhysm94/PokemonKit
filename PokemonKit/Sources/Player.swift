@@ -8,21 +8,21 @@
 
 import Foundation
 
-class Player: Codable {
-	var name: String
-	var team = [Pokemon]() {
+public class Player: Codable {
+	public let name: String
+	internal(set) public var team = [Pokemon]() {
 		didSet {
-//			print("Setting active Pokémon for \(name) to \(team.first?.species.name ?? "nothing")")
 			activePokemon = team.first
 		}
 	}
 	
-	var activePokemon: Pokemon!
-	var teamMembers: Int {
+	internal(set) public var activePokemon: Pokemon!
+	
+	public var teamMembers: Int {
 		return team.count
 	}
 	
-	func add(pokemon: Pokemon) {
+	public func add(pokemon: Pokemon) {
 		if team.count < 6 {
 			team.append(pokemon)
 		} else {
@@ -30,22 +30,18 @@ class Player: Codable {
 		}
 	}
 	
-	init(name: String) {
+	public init(name: String) {
 		self.name = name
 		activePokemon = team.first
 	}
 	
-	var allFainted: Bool {
+	public var allFainted: Bool {
 		return team.reduce(false, { $1.status == .fainted })
 	}
 }
 
 extension Player: Equatable {
-	static func ==(lhs: Player, rhs: Player) -> Bool {
+	public static func ==(lhs: Player, rhs: Player) -> Bool {
 		return lhs.name == rhs.name && lhs.team == rhs.team && lhs.activePokemon == rhs.activePokemon
 	}
-}
-
-enum PlayerErrors: Error {
-	case TeamFull
 }

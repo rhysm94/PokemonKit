@@ -6,7 +6,7 @@
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
 //
 
-struct Stats: Codable {
+public struct Stats: Codable {
 	let hp, atk, def, spAtk, spDef, spd: Int
 	static let statModifiers = [
 		-6: 0.25,
@@ -21,14 +21,24 @@ struct Stats: Codable {
 		3: 2.5,
 		4: 3,
 		5: 3.5,
-		6: 4]
+		6: 4
+	]
 	
-	static let fullIVs = Stats(hp: 31, atk: 31, def: 31, spAtk: 31, spDef: 31, spd: 31)
-	static let empty = Stats(hp: 0, atk: 0, def: 0, spAtk: 0, spDef: 0, spd: 0)
+	public init(hp: Int, atk: Int, def: Int, spAtk: Int, spDef: Int, spd: Int) {
+		self.hp = hp
+		self.atk = atk
+		self.def = def
+		self.spAtk = spAtk
+		self.spDef = spDef
+		self.spd = spd
+	}
+	
+	public static let fullIVs = Stats(hp: 31, atk: 31, def: 31, spAtk: 31, spDef: 31, spd: 31)
+	public static let empty = Stats(hp: 0, atk: 0, def: 0, spAtk: 0, spDef: 0, spd: 0)
 }
 
 extension Stats: Equatable {
-	static func ==(lhs: Stats, rhs: Stats) -> Bool {
+	public static func ==(lhs: Stats, rhs: Stats) -> Bool {
 		return lhs.hp == rhs.hp && lhs.atk == rhs.atk && lhs.spAtk == rhs.spAtk && lhs.spDef == rhs.spDef && lhs.spd == rhs.spd
 	}
 }

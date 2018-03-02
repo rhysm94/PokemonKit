@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Pokemon: Codable {
+public class Pokemon: Codable {
 	private var _nickname: String?
 	var nickname: String {
 		get {
@@ -124,7 +124,7 @@ class Pokemon: Codable {
 	
 	var nature: Nature
 	
-	init(species: PokemonSpecies, level: Int = 50, ability: Ability = Ability(name: "Some ability"), nature: Nature, effortValues: Stats, individualValues: Stats, attacks: [Attack]) {
+	public init(species: PokemonSpecies, level: Int = 50, ability: Ability = Ability(name: "Some ability"), nature: Nature, effortValues: Stats, individualValues: Stats, attacks: [Attack]) {
 		self.species = species
 		self.level = level
 		self.effortValues = effortValues
@@ -172,7 +172,7 @@ class Pokemon: Codable {
 		case atk, def, spAtk, spDef, spd
 	}
 	
-	func encode(to encoder: Encoder) throws {
+	public func encode(to encoder: Encoder) throws {
 		var container = encoder.container(keyedBy: CodingKeys.self)
 		try container.encode(_nickname, forKey: .nickname)
 		try container.encode(species, forKey: .species)
@@ -201,7 +201,7 @@ class Pokemon: Codable {
 		var spd: Int
 	}
 	
-	required init(from decoder: Decoder) throws {
+	public required init(from decoder: Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
 		self._nickname = try container.decode(String?.self, forKey: .nickname)
 		self.species = try container.decode(PokemonSpecies.self, forKey: .species)
@@ -224,13 +224,13 @@ class Pokemon: Codable {
 }
 
 extension Pokemon: CustomStringConvertible {
-	var description: String {
+	public var description: String {
 		return "\(nickname) - Lv. \(level)"
 	}
 }
 
 extension Pokemon: Equatable {
-	static func ==(lhs: Pokemon, rhs: Pokemon) -> Bool {
+	public static func ==(lhs: Pokemon, rhs: Pokemon) -> Bool {
 		return lhs.species == rhs.species &&
 			lhs._currentHP == rhs._currentHP &&
 			lhs._nickname == rhs._nickname &&

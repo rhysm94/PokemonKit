@@ -6,9 +6,9 @@
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
 //
 
-import GameplayKit
+import GameKit
 
-struct BattleEngine: Viewable {
+public struct BattleEngine: Viewable {
 	private let maxTurnCount: Int
 	var state: BattleState = .running {
 		didSet {
@@ -56,7 +56,8 @@ struct BattleEngine: Viewable {
 		}
 	}
 	
-	var terrain: Terrain = .none
+	private(set) public var terrain: Terrain = .none
+	
 	var terrainCounter = 0 {
 		didSet {
 			if terrainCounter == 0 {
@@ -78,7 +79,7 @@ struct BattleEngine: Viewable {
 		}
 	}
 	
-	var turns: [Turn] = [] {
+	private var turns: [Turn] = [] {
 		didSet {
 			guard !multiHitMoveRunning else { return }
 			
@@ -136,12 +137,8 @@ struct BattleEngine: Viewable {
 				let turn = turns.removeFirst()
 				
 				switch turn.action {
-				case .attack(let attacker, var defender, let attack):
-//					if defender ==  {
-//						defender = playerOne.activePokemon
-//					} else {
-//						defender = playerTwo.activePokemon
-//					}
+				case let .attack(attacker, defender, attack):
+					guard attacker.status != .fainted else { break }
 					var damageRecipient: Pokemon
 					switch defender {
 					case .defender:
@@ -156,10 +153,6 @@ struct BattleEngine: Viewable {
 						} else {
 							damageRecipient = playerTwo.activePokemon
 						}
-					}
-					if attacker.status == .fainted {
-						print("Not attacking, as Pokémon has fainted")
-						break
 					}
 					
 					if attacker.volatileStatus.contains(.flinch) {
@@ -308,11 +301,11 @@ struct BattleEngine: Viewable {
 		}
 	}
 	
-	enum BattleType {
+	public enum BattleType {
 		case single, double
 	}
 	
-	init(playerOne: Player, playerTwo: Player, battleType: BattleType) {
+	public init(playerOne: Player, playerTwo: Player, battleType: BattleType) {
 		self.playerOne = playerOne
 		self.playerTwo = playerTwo
 		switch battleType {
@@ -434,22 +427,9 @@ struct BattleEngine: Viewable {
 		
 		view.queue(action: .switchTo(pokemon))
 		view.update(with: self)
-		
-//		for (index, turn) in zip(turns.indices, turns) {
-//			switch turn.action {
-//			case let .attack(attacker, defender, attack):
-////				if defender == .defender {
-//					let newTurn = Turn(player: turn.player, action: .attack(attacker: attacker, defender: defender, attack: attack))
-//					turns.remove(at: index)
-//					turns.insert(newTurn, at: index)
-////				}
-//			default:
-//				break
-//			}
-//		}
 	}
 	
-	mutating func removeTurns(for pokemon: Pokemon, belongingTo player: Player) {
+	private mutating func removeTurns(for pokemon: Pokemon, belongingTo player: Player) {
 		turns = turns.filter { turn in
 			switch turn.action {
 			case .attack(let attacker,_,_), .switchTo(_, let attacker):
@@ -461,11 +441,11 @@ struct BattleEngine: Viewable {
 	}
 	
 	
-	mutating func setViewer(_ viewer: BattleEngineViewer) {
+	mutating public func setViewer(_ viewer: BattleEngineViewer) {
 		view = viewer
 	}
 	
-	func notifyViewer() {
+	public func notifyViewer() {
 		view.update(with: self)
 	}
 	

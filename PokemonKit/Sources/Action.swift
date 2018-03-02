@@ -6,17 +6,13 @@
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
 //
 
-enum Action: Codable, Equatable {
+public enum Action: Codable, Equatable {
 	case attack(attacker: Pokemon, defender: Attack.EffectTarget, attack: Attack)
 	case switchTo(Pokemon, from: Pokemon)
 	case forceSwitch(Pokemon)
 	case recharge
 	case run
 	
-//	enum ValidTarget: String, Codable {
-//		case opponent, `self`
-//	}
-//	
 	private struct AttackParams: Codable {
 		let attacker: Pokemon
 		let defender: Attack.EffectTarget
@@ -45,7 +41,7 @@ enum Action: Codable, Equatable {
 	
 	// MARK:- Codable
 	// MARK: Encoder
-	func encode(to encoder: Encoder) throws {
+	public func encode(to encoder: Encoder) throws {
 		var container = encoder.container(keyedBy: CodingKeys.self)
 		
 		switch self {
@@ -67,7 +63,7 @@ enum Action: Codable, Equatable {
 	}
 	
 	// MARK: Decodable
-	init(from decoder: Decoder) throws {
+	public init(from decoder: Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
 		let base = try container.decode(Base.self, forKey: .base)
 		
@@ -88,7 +84,7 @@ enum Action: Codable, Equatable {
 		}
 	}
 	
-	static func ==(lhs: Action, rhs: Action) -> Bool {
+	public static func ==(lhs: Action, rhs: Action) -> Bool {
 		switch (lhs, rhs) {
 		case let (.attack(leftAttacker, leftDefender, leftAttack), .attack(rightAttacker, rightDefender, rightAttack)):
 			return leftAttacker == rightAttacker && leftDefender == rightDefender && leftAttack == rightAttack

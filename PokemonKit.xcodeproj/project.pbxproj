@@ -128,6 +128,8 @@
 		91A0DC1B2047151100D7B67A /* Turn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB282047072900D7B67A /* Turn.swift */; };
 		91A0DC1C2047151100D7B67A /* Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB2B2047072900D7B67A /* Type.swift */; };
 		91A0DC1D2047151100D7B67A /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB312047072A00D7B67A /* Weather.swift */; };
+		91DF932120499BD100F6C67B /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DF932020499BD100F6C67B /* GameKit.framework */; };
+		91DF932320499BD700F6C67B /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DF932220499BD700F6C67B /* GameKit.framework */; };
 		91FF59C220472F9C00CBEBD5 /* PokemonKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB78204710C600D7B67A /* PokemonKitTests.swift */; };
 		91FF59C320472F9D00CBEBD5 /* PokemonKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB78204710C600D7B67A /* PokemonKitTests.swift */; };
 /* End PBXBuildFile section */
@@ -190,6 +192,8 @@
 		91A0DB89204710D000D7B67A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		91A0DB94204710D900D7B67A /* PokemonKit_tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PokemonKit_tvOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		91A0DB98204710D900D7B67A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		91DF932020499BD100F6C67B /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		91DF932220499BD700F6C67B /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/GameKit.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,6 +201,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91DF932120499BD100F6C67B /* GameKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -204,6 +209,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91DF932320499BD700F6C67B /* GameKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -246,6 +252,7 @@
 			children = (
 				91A0DB18204706FA00D7B67A /* PokemonKit */,
 				91A0DB17204706FA00D7B67A /* Products */,
+				91DF931F20499BD100F6C67B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -374,6 +381,15 @@
 				91A0DB78204710C600D7B67A /* PokemonKitTests.swift */,
 			);
 			path = Sources;
+			sourceTree = "<group>";
+		};
+		91DF931F20499BD100F6C67B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				91DF932220499BD700F6C67B /* GameKit.framework */,
+				91DF932020499BD100F6C67B /* GameKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1061,6 +1077,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APPLICATION_EXTENSION_API_ONLY = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RP3TV2HAFG;
 				INFOPLIST_FILE = PokemonKit/Tests/iOS/Info.plist;
@@ -1076,6 +1093,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APPLICATION_EXTENSION_API_ONLY = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RP3TV2HAFG;
 				INFOPLIST_FILE = PokemonKit/Tests/iOS/Info.plist;
@@ -1091,6 +1109,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APPLICATION_EXTENSION_API_ONLY = NO;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -1109,6 +1128,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APPLICATION_EXTENSION_API_ONLY = NO;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -1127,6 +1147,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APPLICATION_EXTENSION_API_ONLY = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RP3TV2HAFG;
 				INFOPLIST_FILE = PokemonKit/Tests/tvOS/Info.plist;
@@ -1144,6 +1165,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APPLICATION_EXTENSION_API_ONLY = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RP3TV2HAFG;
 				INFOPLIST_FILE = PokemonKit/Tests/tvOS/Info.plist;

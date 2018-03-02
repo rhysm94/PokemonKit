@@ -6,14 +6,14 @@
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
 //
 
-struct MovesetItem {
-	enum MoveLearnMethod {
+public struct MovesetItem {
+	public enum MoveLearnMethod {
 		case levelUp(Int)
 		case machine
 		case egg
 		case moveTutor
 	}
 	
-	let move: Attack
-	let moveLearnMethod: MoveLearnMethod
+	public let move: Attack
+	public let moveLearnMethod: MoveLearnMethod
 }

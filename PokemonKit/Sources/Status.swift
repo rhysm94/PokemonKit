@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum Status: Codable, Equatable {
+public enum Status: Codable, Equatable {
 	enum CodingKeys: CodingKey {
 		case base, counter
 	}
@@ -24,7 +24,7 @@ enum Status: Codable, Equatable {
 		case healthy
 	}
 	
-	init(from decoder: Decoder) throws {
+	public init(from decoder: Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
 		let returnValue = try container.decode(Base.self, forKey: .base)
 		
@@ -49,7 +49,7 @@ enum Status: Codable, Equatable {
 		}
 	}
 	
-	func encode(to encoder: Encoder) throws {
+	public func encode(to encoder: Encoder) throws {
 		var container = encoder.container(keyedBy: CodingKeys.self)
 		
 		switch self {
@@ -82,7 +82,7 @@ enum Status: Codable, Equatable {
     case fainted
     case healthy
     
-    static func ==(lhs: Status, rhs: Status) -> Bool {
+    public static func ==(lhs: Status, rhs: Status) -> Bool {
         switch (lhs, rhs) {
         case (.paralysed, .paralysed):
             return true
@@ -106,13 +106,13 @@ enum Status: Codable, Equatable {
     }
 }
 
-enum VolatileStatus: Codable, CustomStringConvertible, Hashable {
+public enum VolatileStatus: Codable, CustomStringConvertible, Hashable {
 	case confused(Int)
 	case protected
 	case flinch
 	case mustRecharge
 	
-	static func ==(lhs: VolatileStatus, rhs: VolatileStatus) -> Bool {
+	public static func ==(lhs: VolatileStatus, rhs: VolatileStatus) -> Bool {
 		switch (lhs, rhs) {
 		case let (.confused(leftConfused), .confused(rightConfused)):
 			switch (leftConfused, rightConfused) {
@@ -136,9 +136,7 @@ enum VolatileStatus: Codable, CustomStringConvertible, Hashable {
 		}
 	}
 	
-
-	
-	var description: String {
+	public var description: String {
 		switch self {
 		case .confused(let turns):
 			return "confused for \(turns) more turns"
@@ -151,11 +149,11 @@ enum VolatileStatus: Codable, CustomStringConvertible, Hashable {
 		}
 	}
 	
-	var hashValue: Int {
+	public var hashValue: Int {
 		return self.description.hashValue
 	}
 	
-	func turn() -> VolatileStatus {
+	public func turn() -> VolatileStatus {
 		switch self {
 		case .confused(let c):
 			return .confused(c - 1)
@@ -173,7 +171,7 @@ enum VolatileStatus: Codable, CustomStringConvertible, Hashable {
 		case confused, protected, flinch, mustRecharge
 	}
 	
-	init(from decoder: Decoder) throws {
+	public init(from decoder: Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
 		let returnValue = try container.decode(Base.self, forKey: .base)
 		
@@ -190,7 +188,7 @@ enum VolatileStatus: Codable, CustomStringConvertible, Hashable {
 		}
 	}
 	
-	func encode(to encoder: Encoder) throws {
+	public func encode(to encoder: Encoder) throws {
 		var container = encoder.container(keyedBy: CodingKeys.self)
 		
 		switch self {

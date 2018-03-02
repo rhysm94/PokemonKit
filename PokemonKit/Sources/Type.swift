@@ -6,7 +6,7 @@
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
 //
 
-enum Type: String, Codable {
+public enum Type: String, Codable {
 	case normal = "Normal"
 	case fire = "Fire"
 	case water = "Water"
@@ -27,8 +27,8 @@ enum Type: String, Codable {
 	case fairy = "Fairy"
 	case typeless = "Typeless"
 	
-	enum Effectiveness: Double, CustomStringConvertible {
-		var description: String {
+	public enum Effectiveness: Double, CustomStringConvertible {
+		public var description: String {
 			switch self {
 			case .normallyEffective:
 				return "Normally Effective"
@@ -47,14 +47,14 @@ enum Type: String, Codable {
 		case notEffective = 0
 	}
 	
-	init(from number: Int) {
+	public init(from number: Int) {
 		switch number {
 		case 1: self = .normal
 		default: self = .typeless
 		}
 	}
 	
-	func typeEffectiveness(recipient: Type) -> Effectiveness {
+	public func typeEffectiveness(recipient: Type) -> Effectiveness {
 		switch self {
 		case .normal:
 			if [.ghost].contains(recipient) {

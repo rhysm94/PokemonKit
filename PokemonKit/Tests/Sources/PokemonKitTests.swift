@@ -24,8 +24,7 @@ class PokemonKitTests: XCTestCase {
     override func setUp() {
         super.setUp()
 		
-		let bulbasaurSpecies = PokemonSpecies(dexNum: 1, name: "Bulbasaur", typeOne: .grass, typeTwo: .poison, stats:
-			Stats(hp: 45, atk: 49, def: 49, spAtk: 65, spDef: 65, spd: 45))
+		let bulbasaurSpecies = PokemonSpecies(dexNum: 1, name: "Bulbasaur", typeOne: .grass, typeTwo: .poison, stats: Stats(hp: 45, atk: 49, def: 49, spAtk: 65, spDef: 65, spd: 45))
 		bulbasaur = Pokemon(species: bulbasaurSpecies, level: 50, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [])
 		
 		let pikachuSpecies = PokemonSpecies(dexNum: 25, name: "Pikachu", type: .electric, stats: Stats(hp: 35, atk: 55, def: 40, spAtk: 50, spDef: 50, spd: 90))
@@ -92,7 +91,7 @@ class PokemonKitTests: XCTestCase {
 	func testThunderboltDamage() {
 		let (damage, _) = engine.calculateDamage(attacker: pikachu, defender: bulbasaur, attack: thunderbolt)
 		XCTAssertGreaterThanOrEqual(damage, 30)
-		XCTAssertLessThan(damage, 36)
+		XCTAssertLessThanOrEqual(damage, 36)
 	}
 	
 	func testBulletSeedDamage() {

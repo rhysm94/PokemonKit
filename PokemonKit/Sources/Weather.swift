@@ -6,7 +6,7 @@
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
 //
 
-enum Weather: CustomStringConvertible {
+public enum Weather: CustomStringConvertible {
 	case none
 	case harshSunlight
 	case extremelyHarshSunlight
@@ -15,7 +15,7 @@ enum Weather: CustomStringConvertible {
 	case sandstorm
 	case hail
 	
-	var description: String {
+	public var description: String {
 		switch self {
 		case .harshSunlight:
 			return "harsh sunlight"

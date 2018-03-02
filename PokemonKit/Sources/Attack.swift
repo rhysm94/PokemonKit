@@ -8,16 +8,16 @@
 
 import Foundation
 
-struct Attack: Codable {
-	enum DamageCategory: String, Codable {
+public struct Attack: Codable {
+	public enum DamageCategory: String, Codable {
         case physical, special, status
     }
 	
-	enum EffectTarget: String, Codable {
+	public enum EffectTarget: String, Codable {
         case attacker, defender
     }
 	
-	indirect enum BonusEffect {
+	public indirect enum BonusEffect {
         case singleTarget((Pokemon) -> Void)
         case setWeather(Weather)
         case setTerrain(Terrain)
@@ -25,16 +25,16 @@ struct Attack: Codable {
 		case instanceOfMultiHit
     }
     
-    let name: String
-    let power: Int
-    let basePP: Int
-    let maxPP: Int
-    let priority: Int
-    let type: Type
-    let breaksProtect: Bool
-    let category: DamageCategory
-    let effectTarget: EffectTarget?
-    let bonusEffect: BonusEffect?
+	public let name: String
+	public let power: Int
+	public let basePP: Int
+    public let maxPP: Int
+    public let priority: Int
+	public let type: Type
+	public let breaksProtect: Bool
+	public let category: DamageCategory
+	public let effectTarget: EffectTarget?
+	public let bonusEffect: BonusEffect?
     
     init(name: String, power: Int, basePP: Int, maxPP: Int, priority: Int, type: Type, breaksProtect: Bool = false, category: DamageCategory, effectTarget: EffectTarget? = nil, bonusEffect: BonusEffect? = nil) {
         self.name = name
@@ -61,7 +61,7 @@ struct Attack: Codable {
 		case effectTarget
 	}
 	
-	func encode(to encoder: Encoder) throws {
+	public func encode(to encoder: Encoder) throws {
 		var container = encoder.container(keyedBy: CodingKeys.self)
 		try container.encode(name, forKey: .name)
 		try container.encode(power, forKey: .power)
@@ -74,7 +74,7 @@ struct Attack: Codable {
 		try container.encode(effectTarget, forKey: .effectTarget)
 	}
 	
-	init(from decoder: Decoder) throws {
+	public init(from decoder: Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
 		self.name = try container.decode(String.self, forKey: .name)
 		self.power = try container.decode(Int.self, forKey: .power)
@@ -90,7 +90,7 @@ struct Attack: Codable {
 }
 
 extension Attack: Equatable {
-    static func ==(lhs: Attack, rhs: Attack) -> Bool {
+	public static func ==(lhs: Attack, rhs: Attack) -> Bool {
         return lhs.name == rhs.name &&
             lhs.power == rhs.power &&
             lhs.basePP == rhs.basePP &&

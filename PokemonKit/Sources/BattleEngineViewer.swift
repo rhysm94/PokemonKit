@@ -6,7 +6,7 @@
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
 //
 
-protocol BattleEngineViewer: class {
+public protocol BattleEngineViewer: class {
 	func update(with state: BattleEngine)
 	func receive(message: String)
 	func clear()
@@ -17,7 +17,7 @@ protocol BattleEngineViewer: class {
 	func disableButtons()
 }
 
-protocol Viewable {
+public protocol Viewable {
 	mutating func setViewer(_ viewer: BattleEngineViewer)
 	func notifyViewer()
 }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum Nature: String, Codable {
+public enum Nature: String, Codable {
 	case adamant
 	case bashful
 	case bold

@@ -6,7 +6,7 @@
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
 //
 
-enum BattleAction {
+public enum BattleAction {
 	case switchTo(Pokemon)
 	case displayText(String)
 	case useAttack(attacker: Pokemon, defender: Pokemon, attack: Attack)

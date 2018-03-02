@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct PokemonSpecies: Codable {
+public struct PokemonSpecies: Codable {
 	let dexNum: Int
 	let name: String
 	let baseStats: Stats
@@ -18,7 +18,7 @@ struct PokemonSpecies: Codable {
 //	let abilityTwo: Ability?
 //	let hiddenAbility: Ability?
 	
-	init(dexNum: Int, name: String, typeOne: Type, typeTwo: Type?, stats: Stats) {
+	public init(dexNum: Int, name: String, typeOne: Type, typeTwo: Type?, stats: Stats) {
 		self.dexNum = dexNum
 		self.name = name
 		self.typeOne = typeOne
@@ -26,14 +26,14 @@ struct PokemonSpecies: Codable {
 		self.baseStats = stats
 	}
 	
-	init(dexNum: Int, name: String, type: Type, stats: Stats) {
+	public init(dexNum: Int, name: String, type: Type, stats: Stats) {
 		self.init(dexNum: dexNum, name: name, typeOne: type, typeTwo: nil, stats: stats)
 	}
 	
 }
 
 extension PokemonSpecies: Equatable {
-	static func ==(lhs: PokemonSpecies, rhs: PokemonSpecies) -> Bool {
+	public static func ==(lhs: PokemonSpecies, rhs: PokemonSpecies) -> Bool {
 		return lhs.dexNum == rhs.dexNum && lhs.name == rhs.name && lhs.typeOne == rhs.typeOne && lhs.typeTwo == rhs.typeTwo && lhs.baseStats == rhs.baseStats
 	}
 }

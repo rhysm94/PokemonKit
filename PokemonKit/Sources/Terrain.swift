@@ -6,7 +6,7 @@
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
 //
 
-enum Terrain {
+public enum Terrain {
 	case none
 	case electric
 	case grassy
