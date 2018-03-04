@@ -9,15 +9,15 @@
 import Foundation
 
 public struct PokemonSpecies: Codable {
-	let dexNum: Int
-	let identifier: String
-	let name: String
-	let baseStats: Stats
-	var typeOne: Type
-	var typeTwo: Type?
-	let abilityOne: Ability
-	let abilityTwo: Ability?
-	let hiddenAbility: Ability?
+	public let dexNum: Int
+	public let identifier: String
+	public let name: String
+	public let baseStats: Stats
+	internal(set) public var typeOne: Type
+	internal(set) public var typeTwo: Type?
+	public let abilityOne: Ability
+	public let abilityTwo: Ability?
+	public let hiddenAbility: Ability?
 	
 	public init(dexNum: Int, identifier: String, name: String, typeOne: Type, typeTwo: Type? = nil, stats: Stats, abilityOne: Ability, abilityTwo: Ability? = nil, hiddenAbility: Ability? = nil) {
 		self.dexNum = dexNum
