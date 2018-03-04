@@ -10,7 +10,7 @@ import GameplayKit
 import SQLite
 
 public class Pokedex {
-	static let `default`: Pokedex = {
+	public static let `default`: Pokedex = {
 		return Pokedex()
 	}()
 
