@@ -10,7 +10,7 @@ import Foundation
 
 public class Pokemon: Codable {
 	private var _nickname: String?
-	var nickname: String {
+	public var nickname: String {
 		get {
 			return _nickname ?? species.name
 		}
@@ -18,21 +18,21 @@ public class Pokemon: Codable {
 			_nickname = newValue
 		}
 	}
-	var species: PokemonSpecies
-	let level: Int
-	let effortValues: Stats
-	let individualValues: Stats
-	var attacks: [Attack]
-	var status: Status
-	var volatileStatus: Set<VolatileStatus> = Set()
-	let ability: Ability
+	internal(set) public var species: PokemonSpecies
+	public let level: Int
+	public let effortValues: Stats
+	public let individualValues: Stats
+	internal(set) public var attacks: [Attack]
+	internal(set) public var status: Status
+	internal(set) public var volatileStatus: Set<VolatileStatus> = Set()
+	public let ability: Ability
 //	private(set) var moveset: [MovesetItem] = []
 	
 	private lazy var _currentHP: Int = {
 		return baseStats.hp
 	}()
 	
-	var currentHP: Int {
+	internal(set) public var currentHP: Int {
 		get {
 			return _currentHP
 		}
@@ -49,7 +49,7 @@ public class Pokemon: Codable {
 		}
 	}
 	
-	var baseStats: Stats {
+	public var baseStats: Stats {
 		let baseStats = species.baseStats
 		let hp = calculateHPStat(base: baseStats.hp, EV: effortValues.hp, IV: individualValues.hp, level: level)
 		let atk = Int(floor(calculateOtherStats(base: baseStats.atk, EV: effortValues.atk, IV: individualValues.atk, level: level, natureModifier: nature.atkModifier)))
@@ -60,7 +60,7 @@ public class Pokemon: Codable {
 		return Stats(hp: hp, atk: atk, def: def, spAtk: spAtk, spDef: spDef, spd: spd)
 	}
 	
-	var modifiedStats: Stats {
+	public var modifiedStats: Stats {
 		let atkMod = Stats.statModifiers[statStages.atk] ?? 1
 		let defMod = Stats.statModifiers[statStages.def] ?? 1
 		let spAtkMod = Stats.statModifiers[statStages.spAtk] ?? 1
@@ -78,7 +78,7 @@ public class Pokemon: Codable {
 	}
 	
 	private var _statStages = (atk: 0, def: 0, spAtk: 0, spDef: 0, spd: 0)
-	var statStages: (atk: Int, def: Int, spAtk: Int, spDef: Int, spd: Int) {
+	internal(set) public var statStages: (atk: Int, def: Int, spAtk: Int, spDef: Int, spd: Int) {
 		get {
 			return _statStages
 		}
@@ -122,7 +122,7 @@ public class Pokemon: Codable {
 		}
 	}
 	
-	var nature: Nature
+	internal(set) public var nature: Nature
 	
 	public init(species: PokemonSpecies, level: Int = 50, ability: Ability = Ability(name: "Some ability", description: "Some Description"), nature: Nature, effortValues: Stats, individualValues: Stats, attacks: [Attack]) {
 		self.species = species
@@ -150,10 +150,6 @@ public class Pokemon: Codable {
 	func damage(_ damage: Int) {
 		currentHP -= damage
 	}
-	
-//	func add(attack: MovesetItem) {
-//		moveset.append(attack)
-//	}
 	
 	enum CodingKeys: CodingKey {
 		case nickname
