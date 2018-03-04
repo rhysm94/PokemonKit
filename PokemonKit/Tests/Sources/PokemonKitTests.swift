@@ -23,13 +23,15 @@ class PokemonKitTests: XCTestCase {
 	let bulletSeed = Attack(name: "Bullet Seed", power: 25, basePP: 1, maxPP: 1, priority: 0, type: .grass, category: .physical)
 	let thunderbolt = Attack(name: "Thunderbolt", power: 90, basePP: 1, maxPP: 1, priority: 0, type: .electric, category: .special)
 	
+	let testAbility = Ability(name: "Test", description: "Test")
+	
     override func setUp() {
         super.setUp()
 		
-		let bulbasaurSpecies = PokemonSpecies(dexNum: 1, identifier: "bulbasaur", name: "Bulbasaur", typeOne: .grass, typeTwo: .poison, stats: Stats(hp: 45, atk: 49, def: 49, spAtk: 65, spDef: 65, spd: 45))
+		let bulbasaurSpecies = PokemonSpecies(dexNum: 1, identifier: "bulbasaur", name: "Bulbasaur", typeOne: .grass, typeTwo: .poison, stats: Stats(hp: 45, atk: 49, def: 49, spAtk: 65, spDef: 65, spd: 45), abilityOne: testAbility)
 		bulbasaur = Pokemon(species: bulbasaurSpecies, level: 50, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [gigaDrain])
 		
-		let pikachuSpecies = PokemonSpecies(dexNum: 25, identifier: "pikachu", name: "Pikachu", type: .electric, stats: Stats(hp: 35, atk: 55, def: 40, spAtk: 50, spDef: 50, spd: 90))
+		let pikachuSpecies = PokemonSpecies(dexNum: 25, identifier: "pikachu", name: "Pikachu", type: .electric, stats: Stats(hp: 35, atk: 55, def: 40, spAtk: 50, spDef: 50, spd: 90), abilityOne: testAbility)
 		pikachu = Pokemon(species: pikachuSpecies, level: 50, nature: .timid, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [thunderbolt])
 		
 		rhys.add(pokemon: bulbasaur)
@@ -124,5 +126,26 @@ class PokemonKitTests: XCTestCase {
 		
 		XCTAssertGreaterThanOrEqual(joe[keyPath: activePokemon].currentHP, 17)
 		XCTAssertLessThanOrEqual(joe[keyPath: activePokemon].currentHP, 32)
+	}
+	
+	func testProteanMessage() {
+		let greninjaSpecies = PokemonSpecies(dexNum: 658, identifier: "greninja", name: "Greninja", typeOne: .water, typeTwo: .dark, stats: Stats(hp: 72, atk: 95, def: 67, spAtk: 103, spDef: 71, spd: 122), abilityOne: Ability(name: "Some", description: "Ability"), hiddenAbility: Ability(name: "Protean", description: "Changes Pokémon type to move type", activationMessage: Pokedex.activationMessage["Protean"]))
+		let greninja = Pokemon(species: greninjaSpecies, level: 100, ability: greninjaSpecies.hiddenAbility!, nature: .timid, effortValues: .empty, individualValues: .fullIVs, attacks: [])
+		
+		greninja.species.typeOne = .grass
+		greninja.species.typeTwo = nil
+		
+		guard let activationMessage = greninja.ability.activationMessage?(greninja) else {
+			XCTFail()
+			return
+		}
+		
+		XCTAssertEqual(activationMessage, "Greninja became Grass type")
+	}
+	
+	func testImportingFromDatabase() {
+		XCTAssertEqual(Pokedex.default.pokemon.count, 802)
+		let charizardSpecies = Pokedex.default.pokemon["charizard"]
+		XCTAssertNotNil(charizardSpecies)
 	}
 }

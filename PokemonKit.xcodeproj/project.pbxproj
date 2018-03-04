@@ -128,6 +128,19 @@
 		91A0DC1B2047151100D7B67A /* Turn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB282047072900D7B67A /* Turn.swift */; };
 		91A0DC1C2047151100D7B67A /* Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB2B2047072900D7B67A /* Type.swift */; };
 		91A0DC1D2047151100D7B67A /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB312047072A00D7B67A /* Weather.swift */; };
+		91BEEFD3204C73E800AF5792 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BEEFD2204C73E800AF5792 /* SQLite.framework */; };
+		91BEEFD6204C743F00AF5792 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BEEFD5204C743F00AF5792 /* SQLite.framework */; };
+		91BEEFD9204C747C00AF5792 /* SQLite.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91BEEFD8204C747C00AF5792 /* SQLite.framework.dSYM */; };
+		91BEEFDB204C748B00AF5792 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BEEFDA204C748B00AF5792 /* SQLite.framework */; };
+		91BEEFDF204C757C00AF5792 /* pokedex.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 91BEEFDE204C757C00AF5792 /* pokedex.sqlite */; };
+		91BEEFE0204C757C00AF5792 /* pokedex.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 91BEEFDE204C757C00AF5792 /* pokedex.sqlite */; };
+		91BEEFE1204C757D00AF5792 /* pokedex.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 91BEEFDE204C757C00AF5792 /* pokedex.sqlite */; };
+		91BEEFE2204C757D00AF5792 /* pokedex.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 91BEEFDE204C757C00AF5792 /* pokedex.sqlite */; };
+		91BEEFE3204C757D00AF5792 /* pokedex.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 91BEEFDE204C757C00AF5792 /* pokedex.sqlite */; };
+		91BEEFE4204C757D00AF5792 /* pokedex.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 91BEEFDE204C757C00AF5792 /* pokedex.sqlite */; };
+		91BEEFE5204C7F8800AF5792 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BEEFD5204C743F00AF5792 /* SQLite.framework */; };
+		91BEEFE6204C7F8B00AF5792 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BEEFD2204C73E800AF5792 /* SQLite.framework */; };
+		91BEEFE7204C7F9300AF5792 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BEEFDA204C748B00AF5792 /* SQLite.framework */; };
 		91DF932120499BD100F6C67B /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DF932020499BD100F6C67B /* GameKit.framework */; };
 		91DF932320499BD700F6C67B /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DF932220499BD700F6C67B /* GameKit.framework */; };
 		91FF59C220472F9C00CBEBD5 /* PokemonKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB78204710C600D7B67A /* PokemonKitTests.swift */; };
@@ -157,6 +170,19 @@
 			remoteInfo = "PokemonKit-tvOS";
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		91BEEFD7204C746100AF5792 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				91BEEFD9204C747C00AF5792 /* SQLite.framework.dSYM in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		91A0DB19204706FA00D7B67A /* PokemonKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PokemonKit.h; sourceTree = "<group>"; };
@@ -192,6 +218,11 @@
 		91A0DB89204710D000D7B67A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		91A0DB94204710D900D7B67A /* PokemonKit_tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PokemonKit_tvOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		91A0DB98204710D900D7B67A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		91BEEFD2204C73E800AF5792 /* SQLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SQLite.framework; path = Carthage/Build/iOS/SQLite.framework; sourceTree = "<group>"; };
+		91BEEFD5204C743F00AF5792 /* SQLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SQLite.framework; path = Carthage/Build/Mac/SQLite.framework; sourceTree = "<group>"; };
+		91BEEFD8204C747C00AF5792 /* SQLite.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; path = SQLite.framework.dSYM; sourceTree = "<group>"; };
+		91BEEFDA204C748B00AF5792 /* SQLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SQLite.framework; path = Carthage/Build/tvOS/SQLite.framework; sourceTree = "<group>"; };
+		91BEEFDE204C757C00AF5792 /* pokedex.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = pokedex.sqlite; sourceTree = "<group>"; };
 		91DF932020499BD100F6C67B /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		91DF932220499BD700F6C67B /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/GameKit.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
@@ -202,6 +233,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				91DF932120499BD100F6C67B /* GameKit.framework in Frameworks */,
+				91BEEFD3204C73E800AF5792 /* SQLite.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -210,6 +242,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				91DF932320499BD700F6C67B /* GameKit.framework in Frameworks */,
+				91BEEFD6204C743F00AF5792 /* SQLite.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,6 +250,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91BEEFDB204C748B00AF5792 /* SQLite.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -225,6 +259,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				91A0DB7B204710C600D7B67A /* PokemonKit.framework in Frameworks */,
+				91BEEFE6204C7F8B00AF5792 /* SQLite.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,6 +268,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				91A0DB8A204710D000D7B67A /* PokemonKit.framework in Frameworks */,
+				91BEEFE5204C7F8800AF5792 /* SQLite.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,6 +277,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				91A0DB99204710D900D7B67A /* PokemonKit.framework in Frameworks */,
+				91BEEFE7204C7F9300AF5792 /* SQLite.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,6 +346,7 @@
 		91A0DB9F204710FF00D7B67A /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				91BEEFDE204C757C00AF5792 /* pokedex.sqlite */,
 				91A0DBA22047111800D7B67A /* tvOS */,
 				91A0DBA12047111300D7B67A /* macOS */,
 				91A0DBA02047111000D7B67A /* iOS */,
@@ -327,6 +365,7 @@
 		91A0DBA12047111300D7B67A /* macOS */ = {
 			isa = PBXGroup;
 			children = (
+				91BEEFD8204C747C00AF5792 /* SQLite.framework.dSYM */,
 				91A0DB602047101A00D7B67A /* Info.plist */,
 			);
 			path = macOS;
@@ -386,6 +425,9 @@
 		91DF931F20499BD100F6C67B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				91BEEFD2204C73E800AF5792 /* SQLite.framework */,
+				91BEEFD5204C743F00AF5792 /* SQLite.framework */,
+				91BEEFDA204C748B00AF5792 /* SQLite.framework */,
 				91DF932220499BD700F6C67B /* GameKit.framework */,
 				91DF932020499BD100F6C67B /* GameKit.framework */,
 			);
@@ -430,6 +472,7 @@
 				91A0DB4C20470FFD00D7B67A /* Frameworks */,
 				91A0DB4D20470FFD00D7B67A /* Headers */,
 				91A0DB4E20470FFD00D7B67A /* Resources */,
+				91BEEFD4204C73FF00AF5792 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -448,6 +491,8 @@
 				91A0DB592047101A00D7B67A /* Frameworks */,
 				91A0DB5A2047101A00D7B67A /* Headers */,
 				91A0DB5B2047101A00D7B67A /* Resources */,
+				91BEEFD7204C746100AF5792 /* CopyFiles */,
+				91BEEFDD204C74E500AF5792 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -466,6 +511,7 @@
 				91A0DB662047102400D7B67A /* Frameworks */,
 				91A0DB672047102400D7B67A /* Headers */,
 				91A0DB682047102400D7B67A /* Resources */,
+				91BEEFDC204C749100AF5792 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -483,6 +529,7 @@
 				91A0DB72204710C600D7B67A /* Sources */,
 				91A0DB73204710C600D7B67A /* Frameworks */,
 				91A0DB74204710C600D7B67A /* Resources */,
+				91BEEFE8204C804A00AF5792 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -501,6 +548,7 @@
 				91A0DB81204710D000D7B67A /* Sources */,
 				91A0DB82204710D000D7B67A /* Frameworks */,
 				91A0DB83204710D000D7B67A /* Resources */,
+				91BEEFE9204C805D00AF5792 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -519,6 +567,7 @@
 				91A0DB90204710D900D7B67A /* Sources */,
 				91A0DB91204710D900D7B67A /* Frameworks */,
 				91A0DB92204710D900D7B67A /* Resources */,
+				91BEEFEA204C806100AF5792 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -593,6 +642,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91BEEFDF204C757C00AF5792 /* pokedex.sqlite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -600,6 +650,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91BEEFE1204C757D00AF5792 /* pokedex.sqlite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -607,6 +658,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91BEEFE3204C757D00AF5792 /* pokedex.sqlite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -614,6 +666,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91BEEFE0204C757C00AF5792 /* pokedex.sqlite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -621,6 +674,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91BEEFE2204C757D00AF5792 /* pokedex.sqlite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -628,10 +682,98 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91BEEFE4204C757D00AF5792 /* pokedex.sqlite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		91BEEFD4204C73FF00AF5792 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/SQLite.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+		91BEEFDC204C749100AF5792 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/tvOS/SQLite.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+		91BEEFDD204C74E500AF5792 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/Mac/SQLite.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+		91BEEFE8204C804A00AF5792 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/SQLite.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+		91BEEFE9204C805D00AF5792 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/Mac/SQLite.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+		91BEEFEA204C806100AF5792 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/tvOS/SQLite.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		91A0DB4B20470FFD00D7B67A /* Sources */ = {
@@ -946,6 +1088,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = PokemonKit/Assets/iOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -968,6 +1114,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = PokemonKit/Assets/iOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -990,6 +1140,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = PokemonKit/Assets/macOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1014,6 +1168,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = PokemonKit/Assets/macOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1037,6 +1195,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/tvOS",
+				);
 				INFOPLIST_FILE = PokemonKit/Assets/tvOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1060,6 +1222,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/tvOS",
+				);
 				INFOPLIST_FILE = PokemonKit/Assets/tvOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1080,6 +1246,10 @@
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RP3TV2HAFG;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = PokemonKit/Tests/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "co.rhysmorgan.PokemonKit-iOSTests";
@@ -1096,6 +1266,10 @@
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RP3TV2HAFG;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = PokemonKit/Tests/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "co.rhysmorgan.PokemonKit-iOSTests";
@@ -1114,6 +1288,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = RP3TV2HAFG;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = PokemonKit/Tests/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
@@ -1133,6 +1311,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = RP3TV2HAFG;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = PokemonKit/Tests/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
@@ -1150,6 +1332,10 @@
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RP3TV2HAFG;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/tvOS",
+				);
 				INFOPLIST_FILE = PokemonKit/Tests/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "co.rhysmorgan.PokemonKit-tvOSTests";
@@ -1168,6 +1354,10 @@
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = RP3TV2HAFG;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/tvOS",
+				);
 				INFOPLIST_FILE = PokemonKit/Tests/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "co.rhysmorgan.PokemonKit-tvOSTests";

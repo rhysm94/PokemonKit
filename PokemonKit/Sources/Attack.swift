@@ -85,7 +85,7 @@ public struct Attack: Codable {
 		self.breaksProtect = try container.decode(Bool.self, forKey: .breaksProtect)
 		self.category = try container.decode(DamageCategory.self, forKey: .category)
 		self.effectTarget = try container.decode(EffectTarget?.self, forKey: .effectTarget)
-		self.bonusEffect = Pokedex.default.attackBonuses[self.name]
+		self.bonusEffect = Pokedex.attackBonuses[self.name]
 	}
 }
 
