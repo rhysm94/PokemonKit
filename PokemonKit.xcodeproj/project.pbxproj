@@ -492,7 +492,6 @@
 				91A0DB5A2047101A00D7B67A /* Headers */,
 				91A0DB5B2047101A00D7B67A /* Resources */,
 				91BEEFD7204C746100AF5792 /* CopyFiles */,
-				91BEEFDD204C74E500AF5792 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -548,7 +547,6 @@
 				91A0DB81204710D000D7B67A /* Sources */,
 				91A0DB82204710D000D7B67A /* Frameworks */,
 				91A0DB83204710D000D7B67A /* Resources */,
-				91BEEFE9204C805D00AF5792 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -717,20 +715,6 @@
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks";
 		};
-		91BEEFDD204C74E500AF5792 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/Mac/SQLite.framework",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
-		};
 		91BEEFE8204C804A00AF5792 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -738,20 +722,6 @@
 			);
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/SQLite.framework",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
-		};
-		91BEEFE9204C805D00AF5792 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/Mac/SQLite.framework",
 			);
 			outputPaths = (
 			);
@@ -1188,7 +1158,7 @@
 		91A0DB702047102500D7B67A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = RP3TV2HAFG;
@@ -1215,7 +1185,7 @@
 		91A0DB712047102500D7B67A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = RP3TV2HAFG;
