@@ -28,8 +28,8 @@ public struct BattleEngine: Viewable {
 	
 	private weak var view: BattleEngineViewer?
 	
-	private(set) var playerOne: Player
-	private(set) var playerTwo: Player
+	private(set) public var playerOne: Player
+	private(set) public var playerTwo: Player
 	
 	private(set) var turnHistory = [Turn]()
 	private var turnCounter = 1
@@ -66,10 +66,10 @@ public struct BattleEngine: Viewable {
 		}
 	}
 	
-	var poisonCounter = 1
+	private var poisonCounter = 1
 	
-	var multiHitMoveRunning = false
-	var resolveTurns = false {
+	private var multiHitMoveRunning = false
+	private var resolveTurns = false {
 		didSet {
 			print("resolveTurns was set as \(resolveTurns)")
 			if resolveTurns {
@@ -99,7 +99,7 @@ public struct BattleEngine: Viewable {
 		}
 	}
 	
-	mutating func run() {
+	private mutating func run() {
 		print("---")
 		print("Turn \(turnCounter)")
 		print("---")
@@ -405,7 +405,7 @@ public struct BattleEngine: Viewable {
 		return (damage, effectiveness)
 	}
 	
-	mutating func addTurn(_ turn: Turn) {
+	public mutating func addTurn(_ turn: Turn) {
 		if !turns.isEmpty {
 			switch turn.action {
 			case .attack(let attacker, _, _), .switchTo(_, from: let attacker):
@@ -419,7 +419,7 @@ public struct BattleEngine: Viewable {
 		}
 	}
 	
-	mutating func switchPokemon(player: Player, pokemon: Pokemon) {
+	private mutating func switchPokemon(player: Player, pokemon: Pokemon) {
 		let switchingPokemon = player.activePokemon!
 		player.activePokemon = pokemon
 		

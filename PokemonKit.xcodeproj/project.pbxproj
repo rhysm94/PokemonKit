@@ -130,7 +130,7 @@
 		91A0DC1D2047151100D7B67A /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB312047072A00D7B67A /* Weather.swift */; };
 		91BEEFD3204C73E800AF5792 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BEEFD2204C73E800AF5792 /* SQLite.framework */; };
 		91BEEFD6204C743F00AF5792 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BEEFD5204C743F00AF5792 /* SQLite.framework */; };
-		91BEEFD9204C747C00AF5792 /* SQLite.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91BEEFD8204C747C00AF5792 /* SQLite.framework.dSYM */; };
+		91BEEFD9204C747C00AF5792 /* SQLite.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91BEEFD8204C747C00AF5792 /* SQLite.framework.dSYM */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		91BEEFDB204C748B00AF5792 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BEEFDA204C748B00AF5792 /* SQLite.framework */; };
 		91BEEFDF204C757C00AF5792 /* pokedex.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 91BEEFDE204C757C00AF5792 /* pokedex.sqlite */; };
 		91BEEFE0204C757C00AF5792 /* pokedex.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 91BEEFDE204C757C00AF5792 /* pokedex.sqlite */; };
@@ -143,6 +143,7 @@
 		91BEEFE7204C7F9300AF5792 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BEEFDA204C748B00AF5792 /* SQLite.framework */; };
 		91DF932120499BD100F6C67B /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DF932020499BD100F6C67B /* GameKit.framework */; };
 		91DF932320499BD700F6C67B /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DF932220499BD700F6C67B /* GameKit.framework */; };
+		91E909DE204CB1830007B1A9 /* SQLite.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91BEEFD5204C743F00AF5792 /* SQLite.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		91FF59C220472F9C00CBEBD5 /* PokemonKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB78204710C600D7B67A /* PokemonKitTests.swift */; };
 		91FF59C320472F9D00CBEBD5 /* PokemonKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB78204710C600D7B67A /* PokemonKitTests.swift */; };
 /* End PBXBuildFile section */
@@ -179,6 +180,16 @@
 			dstSubfolderSpec = 16;
 			files = (
 				91BEEFD9204C747C00AF5792 /* SQLite.framework.dSYM in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		91E909DD204CB16B0007B1A9 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				91E909DE204CB1830007B1A9 /* SQLite.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -488,6 +499,7 @@
 			buildConfigurationList = 91A0DB622047101A00D7B67A /* Build configuration list for PBXNativeTarget "PokemonKit-macOS" */;
 			buildPhases = (
 				91A0DB582047101A00D7B67A /* Sources */,
+				91E909DD204CB16B0007B1A9 /* CopyFiles */,
 				91A0DB592047101A00D7B67A /* Frameworks */,
 				91A0DB5A2047101A00D7B67A /* Headers */,
 				91A0DB5B2047101A00D7B67A /* Resources */,
