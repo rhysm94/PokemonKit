@@ -13,8 +13,10 @@ class PokemonKitTests: XCTestCase {
 	
 	var bulbasaur: Pokemon!
 	var pikachu: Pokemon!
+	let rhys = Player(name: "Rhys")
+	let joe = Player(name: "Joe")
 	
-	let engine = BattleEngine(playerOne: Player(name: "Rhys"), playerTwo: Player(name: "Joe"), battleType: .single)
+	var engine: BattleEngine!
 	
 	let sludgeBomb = Attack(name: "Sludge Bomb", power: 90, basePP: 1, maxPP: 1, priority: 0, type: .poison, category: .special)
 	let gigaDrain = Attack(name: "Giga Drain", power: 75, basePP: 1, maxPP: 1, priority: 0, type: .grass, category: .special, effectTarget: .attacker)
@@ -24,11 +26,16 @@ class PokemonKitTests: XCTestCase {
     override func setUp() {
         super.setUp()
 		
-		let bulbasaurSpecies = PokemonSpecies(dexNum: 1, name: "Bulbasaur", typeOne: .grass, typeTwo: .poison, stats: Stats(hp: 45, atk: 49, def: 49, spAtk: 65, spDef: 65, spd: 45))
-		bulbasaur = Pokemon(species: bulbasaurSpecies, level: 50, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [])
+		let bulbasaurSpecies = PokemonSpecies(dexNum: 1, identifier: "bulbasaur", name: "Bulbasaur", typeOne: .grass, typeTwo: .poison, stats: Stats(hp: 45, atk: 49, def: 49, spAtk: 65, spDef: 65, spd: 45))
+		bulbasaur = Pokemon(species: bulbasaurSpecies, level: 50, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [gigaDrain])
 		
-		let pikachuSpecies = PokemonSpecies(dexNum: 25, name: "Pikachu", type: .electric, stats: Stats(hp: 35, atk: 55, def: 40, spAtk: 50, spDef: 50, spd: 90))
-		pikachu = Pokemon(species: pikachuSpecies, level: 50, nature: .timid, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [])
+		let pikachuSpecies = PokemonSpecies(dexNum: 25, identifier: "pikachu", name: "Pikachu", type: .electric, stats: Stats(hp: 35, atk: 55, def: 40, spAtk: 50, spDef: 50, spd: 90))
+		pikachu = Pokemon(species: pikachuSpecies, level: 50, nature: .timid, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [thunderbolt])
+		
+		rhys.add(pokemon: bulbasaur)
+		joe.add(pokemon: pikachu)
+		
+		engine = BattleEngine(playerOne: rhys, playerTwo: joe, battleType: .single)
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
     
@@ -98,5 +105,24 @@ class PokemonKitTests: XCTestCase {
 		let (damage, _) = engine.calculateDamage(attacker: bulbasaur, defender: pikachu, attack: bulletSeed)
 		XCTAssertGreaterThanOrEqual(damage, 16)
 		XCTAssertLessThanOrEqual(damage, 19)
+	}
+	
+	func testPikachuHP() {
+		XCTAssertEqual(pikachu.currentHP, 110)
+	}
+	
+	func testBattleEngineAppliesDamage() {
+		let activePokemon = \Player.activePokemon
+		
+		Random.shared = Random(seed: "Testing")
+		
+		engine.addTurn(Turn(player: rhys, action: .attack(attacker: rhys[keyPath: activePokemon], defender: .defender, attack: rhys[keyPath: activePokemon].attacks[0])))
+		engine.addTurn(Turn(player: joe, action: .attack(attacker: joe[keyPath: activePokemon], defender: .defender, attack: joe[keyPath: activePokemon].attacks[0])))
+		
+		XCTAssertGreaterThanOrEqual(rhys[keyPath: activePokemon].currentHP, 84)
+		XCTAssertLessThanOrEqual(rhys[keyPath: activePokemon].currentHP, 90)
+		
+		XCTAssertGreaterThanOrEqual(joe[keyPath: activePokemon].currentHP, 17)
+		XCTAssertLessThanOrEqual(joe[keyPath: activePokemon].currentHP, 32)
 	}
 }

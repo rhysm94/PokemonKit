@@ -12,7 +12,7 @@ public struct BattleEngine: Viewable {
 	private let maxTurnCount: Int
 	var state: BattleState = .running {
 		didSet {
-			if state == .completed { view.disableButtons() }
+			if state == .completed { view?.disableButtons() }
 		}
 	}
 	
@@ -21,12 +21,12 @@ public struct BattleEngine: Viewable {
 			guard let winner = winner else { return }
 //			print("Notifying delegate of winner")
 
-			view.notifyOfWinner(winner)
+			view?.notifyOfWinner(winner)
 			state = .completed
 		}
 	}
 	
-	private weak var view: BattleEngineViewer!
+	private weak var view: BattleEngineViewer?
 	
 	private(set) var playerOne: Player
 	private(set) var playerTwo: Player
@@ -34,16 +34,16 @@ public struct BattleEngine: Viewable {
 	private(set) var turnHistory = [Turn]()
 	private var turnCounter = 1
 	
-	private(set) var weather: Weather = .none {
+	private(set) public var weather: Weather = .none {
 		didSet {
 			switch weather {
 			case .none:
-				view.queue(action: .displayText("The weather calmed down"))
+				view?.queue(action: .displayText("The weather calmed down"))
 			default:
-				view.queue(action: .displayText("The weather became \(weather)"))
+				view?.queue(action: .displayText("The weather became \(weather)"))
 			}
 			
-			view.display(weather: weather)
+			view?.display(weather: weather)
 		}
 	}
 	
@@ -104,7 +104,7 @@ public struct BattleEngine: Viewable {
 		print("Turn \(turnCounter)")
 		print("---")
 		
-		view.clear()
+		view?.clear()
 		
 		while resolveTurns {
 			print("Turns currently sorted as \(turns)")
@@ -156,7 +156,7 @@ public struct BattleEngine: Viewable {
 					}
 					
 					if attacker.volatileStatus.contains(.flinch) {
-						view.queue(action: .displayText("\(attacker) flinched!"))
+						view?.queue(action: .displayText("\(attacker) flinched!"))
 						attacker.volatileStatus = attacker.volatileStatus.filter { $0 != .flinch }
 						break
 					}
@@ -166,7 +166,7 @@ public struct BattleEngine: Viewable {
 					
 					func doDamage() {
 						if attack.category == .status {
-							view.queue(action: .useAttack(attacker: attacker, defender: damageRecipient, attack: attack))
+							view?.queue(action: .useAttack(attacker: attacker, defender: damageRecipient, attack: attack))
 						}
 						guard attack.power > 0 else { return }
 						if case .multiHitMove(_,_)? = attack.bonusEffect { return }
@@ -175,9 +175,9 @@ public struct BattleEngine: Viewable {
 							let (baseDamage, effectiveness) = calculateDamage(attacker: attacker, defender: damageRecipient, attack: attack)
 							print("\(attack.name) is going to do \(baseDamage) HP of damage against \(defender)")
 							damageRecipient.damage(baseDamage)
-							view.queue(action: .useAttack(attacker: attacker, defender: damageRecipient, attack: attack))
+							view?.queue(action: .useAttack(attacker: attacker, defender: damageRecipient, attack: attack))
 							if effectiveness != .normallyEffective {
-								view.queue(action: .displayText(effectiveness.description))
+								view?.queue(action: .displayText(effectiveness.description))
 							}
 						}
 						
@@ -187,21 +187,21 @@ public struct BattleEngine: Viewable {
 					// but due to .confused's == behaviour, this will return true if it contains *any* .confused(value) where value != 0
 					if attacker.volatileStatus.contains(.confused(1)) {
 						print("\(attacker.nickname) is confused!")
-						let diceRoll = GKRandomDistribution(forDieWithSideCount: 3).nextInt()
+						let diceRoll = Random.shared.d3Roll()
 						if diceRoll == 1 {
-							view.queue(action: .displayText("\(attacker.nickname) hurt itself in its confusion!"))
+							view?.queue(action: .displayText("\(attacker.nickname) hurt itself in its confusion!"))
 							let (baseDamage, _) = calculateDamage(attacker: attacker, defender: attacker, attack: Attack(name: "Confused", power: 40, basePP: 1, maxPP: 1, priority: 0, type: .typeless, category: .physical))
 //							print("Confusion damage is going to do \(baseDamage) HP of damage")
 							attacker.damage(baseDamage)
 						} else {
 							if attacker.volatileStatus.remove(.confused(0)) != nil {
-								view.queue(action: .displayText("\(attacker.nickname) snapped out of it's confusion!"))
+								view?.queue(action: .displayText("\(attacker.nickname) snapped out of it's confusion!"))
 							}
 							doDamage()
 						}
 					} else {
 						if damageRecipient.volatileStatus.contains(.protected) && !attack.breaksProtect {
-							view.queue(action: .displayText("\(damageRecipient.nickname) is protected!"))
+							view?.queue(action: .displayText("\(damageRecipient.nickname) is protected!"))
 							break
 						} else {
 							doDamage()
@@ -218,8 +218,8 @@ public struct BattleEngine: Viewable {
 						case .setTerrain(let terrain)?:
 							setTerrain(terrain)
 						case let .multiHitMove(minHits, maxHits)?:
-							let numberOfHits = Random.shared.between(minimum: minHits, maximum: maxHits)//GKRandomDistribution(lowestValue: minHits, highestValue: maxHits).nextInt()
-							view.queue(action: .displayText("\(attack.name) will hit \(numberOfHits) times!"))
+							let numberOfHits = Random.shared.between(minimum: minHits, maximum: maxHits)
+							view?.queue(action: .displayText("\(attack.name) will hit \(numberOfHits) times!"))
 							let replacementAttack = Attack(name: attack.name, power: attack.power, basePP: 1, maxPP: 1, priority: 0, type: attack.type, breaksProtect: attack.breaksProtect, category: attack.category)
 							for _ in 1...numberOfHits {
 								turns.insert(Turn(player: turn.player, action: .attack(attacker: attacker, defender: defender, attack: replacementAttack)), at: turns.startIndex)
@@ -251,7 +251,7 @@ public struct BattleEngine: Viewable {
 				case .recharge:
 					let pokemon = turn.player.activePokemon!
 					if pokemon.volatileStatus.contains(.mustRecharge) {
-						view.queue(action: .displayText("\(pokemon) must recharge!"))
+						view?.queue(action: .displayText("\(pokemon) must recharge!"))
 						pokemon.volatileStatus = pokemon.volatileStatus.filter { $0 != .mustRecharge }
 						break
 					}
@@ -265,13 +265,13 @@ public struct BattleEngine: Viewable {
 				if player.activePokemon.status == .poisoned {
 					let poisonDamage = Int(ceil(Double(player.activePokemon.baseStats.hp) / 16.0))
 					player.activePokemon.damage(poisonDamage)
-					view.queue(action: .statusDamage(.poisoned, player.activePokemon, poisonDamage))
+					view?.queue(action: .statusDamage(.poisoned, player.activePokemon, poisonDamage))
 				}
 				
 				if player.activePokemon.status == .badlyPoisoned {
 					let poisonDamage = Int(ceil((Double(poisonCounter) / 16.0) * Double(player.activePokemon.baseStats.hp)))
 					player.activePokemon.damage(poisonDamage)
-					view.queue(action: .statusDamage(.badlyPoisoned, player.activePokemon, poisonDamage))
+					view?.queue(action: .statusDamage(.badlyPoisoned, player.activePokemon, poisonDamage))
 				}
 				
 				player.activePokemon.volatileStatus.remove(.protected)
@@ -280,9 +280,9 @@ public struct BattleEngine: Viewable {
 				player.activePokemon.volatileStatus = Set(player.activePokemon.volatileStatus.map { $0.turn() })
 				
 				if player.activePokemon.status == .fainted {
-					view.queue(action: .displayText("\(player.activePokemon!) fainted!"))
+					view?.queue(action: .displayText("\(player.activePokemon!) fainted!"))
 					if player == playerOne {
-						view.notifyFainted(player: player, pokemon: player.activePokemon)
+						view?.notifyFainted(player: player, pokemon: player.activePokemon)
 					}
 				}
 			}
@@ -348,13 +348,13 @@ public struct BattleEngine: Viewable {
 		
 		let innerBrackets = floor(topOfEquation / 50 + 2)
 		
-		let rng = Double(GKRandomDistribution(lowestValue: 85, highestValue: 100).nextInt()) / 100
+		let rng = Random.shared.battleRNG() / 100
 		print("RNG = \(rng)")
 		
 		if attacker.ability.name == "Protean" {
 			attacker.species.typeOne = attack.type
 			attacker.species.typeTwo = nil
-			view.queue(action: .abilityActivation(attacker.ability, attacker))
+			view?.queue(action: .abilityActivation(attacker.ability, attacker))
 		}
 		
 		let stab: Double
@@ -425,8 +425,8 @@ public struct BattleEngine: Viewable {
 		
 		switchingPokemon.volatileStatus.removeAll()
 		
-		view.queue(action: .switchTo(pokemon))
-		view.update(with: self)
+		view?.queue(action: .switchTo(pokemon))
+		view?.update(with: self)
 	}
 	
 	private mutating func removeTurns(for pokemon: Pokemon, belongingTo player: Player) {
@@ -446,7 +446,7 @@ public struct BattleEngine: Viewable {
 	}
 	
 	public func notifyViewer() {
-		view.update(with: self)
+		view?.update(with: self)
 	}
 	
 	private mutating func setWeather(_ weather: Weather) {

@@ -21,16 +21,12 @@ class Random {
 		self.random = GKRandomDistribution(randomSource: randomSource, lowestValue: 1, highestValue: 16)
 	}
 	
-	func battleRNG() -> Int {
-		return 101 - random.nextInt()
+	func battleRNG() -> Double {
+		return Double(101 - random.nextInt())
 	}
 	
 	func confusion() -> Int {
 		return random.nextInt(upperBound: 4)
-	}
-	
-	func sleep() -> Int {
-		return random.nextInt(upperBound: 5)
 	}
 	
 	func d10Roll() -> Int {
@@ -43,6 +39,10 @@ class Random {
 	
 	func d5Roll() -> Int {
 		return random.nextInt(upperBound: 5)
+	}
+	
+	func d3Roll() -> Int {
+		return random.nextInt(upperBound: 3)
 	}
 	
 	func between(minimum: Int, maximum: Int) -> Int {
