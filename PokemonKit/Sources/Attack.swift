@@ -36,7 +36,7 @@ public struct Attack: Codable {
 	public let effectTarget: EffectTarget?
 	public let bonusEffect: BonusEffect?
     
-    init(name: String, power: Int, basePP: Int, maxPP: Int, priority: Int, type: Type, breaksProtect: Bool = false, category: DamageCategory, effectTarget: EffectTarget? = nil, bonusEffect: BonusEffect? = nil) {
+    public init(name: String, power: Int, basePP: Int, maxPP: Int, priority: Int, type: Type, breaksProtect: Bool = false, category: DamageCategory, effectTarget: EffectTarget? = nil, bonusEffect: BonusEffect? = nil) {
         self.name = name
         self.power = power
         self.basePP = basePP
