@@ -402,7 +402,7 @@ public struct BattleEngine: Viewable {
 		
 		print("---")
 		
-		return (damage, effectiveness)
+		return (min(1, damage), effectiveness)
 	}
 	
 	public mutating func addTurn(_ turn: Turn) {
