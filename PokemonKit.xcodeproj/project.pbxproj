@@ -491,6 +491,7 @@
 				91A0DB592047101A00D7B67A /* Frameworks */,
 				91A0DB5A2047101A00D7B67A /* Headers */,
 				91A0DB5B2047101A00D7B67A /* Resources */,
+				91F8D41A2050169C00F8B53C /* ShellScript */,
 				91BEEFD7204C746100AF5792 /* CopyFiles */,
 			);
 			buildRules = (
@@ -547,6 +548,7 @@
 				91A0DB81204710D000D7B67A /* Sources */,
 				91A0DB82204710D000D7B67A /* Frameworks */,
 				91A0DB83204710D000D7B67A /* Resources */,
+				91F8D41B205016DA00F8B53C /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -736,6 +738,34 @@
 			);
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/tvOS/SQLite.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+		91F8D41A2050169C00F8B53C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/Mac/SQLite.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+		91F8D41B205016DA00F8B53C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/Mac/SQLite.framework",
 			);
 			outputPaths = (
 			);

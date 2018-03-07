@@ -1,5 +1,5 @@
 //
-//  SharedRandom.swift
+//  Random.swift
 //  PokemonBattleEngineTest
 //
 //  Created by Rhys Morgan on 22/02/2018.
@@ -9,12 +9,12 @@
 import Foundation
 import GameplayKit
 
-class Random {
-	static var shared: Random!
+public class Random {
+	public static var shared: Random!
 	var randomSource: GKARC4RandomSource!
 	let random: GKRandomDistribution
 	
-	init(seed: String) {
+	public init(seed: String) {
 		print("init(seed:) for Random run with seed: \(seed)")
 		let dataSeed = seed.data(using: .utf8)!
 		randomSource = GKARC4RandomSource(seed: dataSeed)
