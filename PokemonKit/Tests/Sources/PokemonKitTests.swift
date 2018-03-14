@@ -128,6 +128,14 @@ class PokemonKitTests: XCTestCase {
 		XCTAssertLessThanOrEqual(joe[keyPath: activePokemon].currentHP, 32)
 	}
 	
+	func testParalysisApplied() {
+		let activePokemon = \Player.activePokemon
+		engine.addTurn(Turn(player: joe, action: .attack(attacker: joe[keyPath: activePokemon], defender: .defender, attack: Pokedex.default.attacks["Thunder Wave"]!)))
+		engine.addTurn(Turn(player: rhys, action: .attack(attacker: rhys[keyPath: activePokemon], defender: .defender, attack: rhys[keyPath: activePokemon].attacks[0])))
+		
+		XCTAssert(rhys[keyPath: activePokemon].status == .paralysed)
+	}
+	
 	func testProteanMessage() {
 		let greninjaSpecies = PokemonSpecies(dexNum: 658, identifier: "greninja", name: "Greninja", typeOne: .water, typeTwo: .dark, stats: Stats(hp: 72, atk: 95, def: 67, spAtk: 103, spDef: 71, spd: 122), abilityOne: Ability(name: "Some", description: "Ability"), hiddenAbility: Ability(name: "Protean", description: "Changes Pokémon type to move type", activationMessage: Pokedex.activationMessage["Protean"]))
 		let greninja = Pokemon(species: greninjaSpecies, level: 100, ability: greninjaSpecies.hiddenAbility!, nature: .timid, effortValues: .empty, individualValues: .fullIVs, attacks: [])

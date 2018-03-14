@@ -289,8 +289,6 @@ public class Pokedex {
 			.join(moveNames, on: moveTable[id] == moveNames[moveID])
 			.filter(moveNames[localLanguageID] == 9 && moveTable[type] != 10002)
 		
-		print("HERE: ", query.asSQL())
-		
 		do {
 			for row in try db.prepare(query) {
 				let moveName = row[moveName]
@@ -298,7 +296,7 @@ public class Pokedex {
 				let type = Type(from: row[type])
 				let category = Attack.DamageCategory(from: row[category])
 				
-				let attack = Attack(name: moveName, power: row[power] ?? 0, basePP: row[pp], maxPP: row[pp], priority: row[priority], type: type, breaksProtect: false, category: category, bonusEffect: Pokedex.attackBonuses[moveName])
+				let attack = Attack(name: moveName, power: row[power] ?? 0, basePP: row[pp], maxPP: row[pp], priority: row[priority], type: type, breaksProtect: false, category: category, effectTarget: .defender, bonusEffect: Pokedex.attackBonuses[moveName])
 				attacks[moveName] = attack
 			}
 		} catch let error {
