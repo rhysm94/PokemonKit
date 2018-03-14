@@ -50,6 +50,23 @@ public enum Type: String, Codable {
 	public init(from number: Int) {
 		switch number {
 		case 1: self = .normal
+		case 2: self = .fighting
+		case 3: self = .flying
+		case 4: self = .poison
+		case 5: self = .ground
+		case 6: self = .rock
+		case 7: self = .bug
+		case 8: self = .ghost
+		case 9: self = .steel
+		case 10: self = .fire
+		case 11: self = .water
+		case 12: self = .grass
+		case 13: self = .electric
+		case 14: self = .psychic
+		case 15: self = .ice
+		case 16: self = .dragon
+		case 17: self = .dark
+		case 18: self = .fairy
 		default: self = .typeless
 		}
 	}

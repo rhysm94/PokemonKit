@@ -173,9 +173,13 @@ public struct BattleEngine: Viewable {
 						
 						if [.physical, .special].contains(attack.category) {
 							let (baseDamage, effectiveness) = calculateDamage(attacker: attacker, defender: damageRecipient, attack: attack)
-							print("\(attack.name) is going to do \(baseDamage) HP of damage against \(defender)")
-							damageRecipient.damage(baseDamage)
-							view?.queue(action: .useAttack(attacker: attacker, defender: damageRecipient, attack: attack))
+							if effectiveness != .notEffective {
+								print("\(attack.name) is going to do \(baseDamage) HP of damage against \(defender)")
+								damageRecipient.damage(baseDamage)
+								view?.queue(action: .useAttack(attacker: attacker, defender: damageRecipient, attack: attack))
+							}
+							
+							
 							if effectiveness != .normallyEffective {
 								view?.queue(action: .displayText(effectiveness.description))
 							}

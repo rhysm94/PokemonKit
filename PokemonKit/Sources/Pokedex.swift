@@ -18,10 +18,12 @@ public class Pokedex {
 	
 	public let pokemon: [PokemonSpecies]
 	public let abilities: [String: Ability]
+	public let attacks: [String: Attack]
 	
 	init() {
 		self.abilities = Pokedex.getAbilities()
 		self.pokemon = Pokedex.getPokemon(abilities: abilities)
+		self.attacks = Pokedex.getAttacks()
 	}
     
 	static let attackBonuses: [String: Attack.BonusEffect] = [
@@ -49,7 +51,6 @@ public class Pokedex {
 				print("\($0.nickname) flinched!")
 			}
 		}),
-		
 		"Growl": .singleTarget({ $0.statStages.atk -= 1 }),
 		"Hyper Beam": .singleTarget({ $0.volatileStatus.insert(.mustRecharge) }),
 		"Ice Beam": .singleTarget({
@@ -72,6 +73,15 @@ public class Pokedex {
 		"Thunderbolt": .singleTarget({
 			let diceRoll = Random.shared.d6Roll()
 			if diceRoll == 1 && $0.status == .healthy {
+				$0.status = .paralysed
+			}
+		}),
+		"Thunder Wave": .singleTarget({
+			if
+				$0.species.typeOne != .electric &&
+				$0.species.typeTwo != .electric &&
+				$0.status == .healthy
+			{
 				$0.status = .paralysed
 			}
 		})
@@ -243,6 +253,59 @@ public class Pokedex {
 			print("getPokemon() error: \(error)")
 		}
 		return pokemon
+	}
+	
+	static func getAttacks() -> [String: Attack] {
+		var attacks = [String: Attack]()
+		var database: Connection?
+		
+		guard let dbPath = dbPath else {
+			print("Failed at dbPath = dbPath in getAbilities")
+			return [:]
+		}
+		
+		database = try? Connection(dbPath, readonly: true)
+		
+		guard let db = database else {
+			print("Failed at db = database in getAbilities")
+			return [:]
+		}
+		
+		let moveTable = Table("moves")
+		let moveNames = Table("move_names")
+		
+		let id = Expression<Int>("id")
+		let moveID = Expression<Int>("move_id")
+		let moveName = Expression<String>("name")
+		let power = Expression<Int?>("power")
+		let pp = Expression<Int>("pp")
+		let type = Expression<Int>("type_id")
+		let category = Expression<Int>("damage_class_id")
+		let accuracy = Expression<Int>("accuracy")
+		let priority = Expression<Int>("priority")
+		let localLanguageID = Expression<Int>("local_language_id")
+		
+		let query = moveTable.select(moveNames[moveName], moveTable[power], moveTable[type], moveTable[category], moveTable[pp], moveTable[accuracy], moveTable[priority])
+			.join(moveNames, on: moveTable[id] == moveNames[moveID])
+			.filter(moveNames[localLanguageID] == 9 && moveTable[type] != 10002)
+		
+		print("HERE: ", query.asSQL())
+		
+		do {
+			for row in try db.prepare(query) {
+				let moveName = row[moveName]
+				
+				let type = Type(from: row[type])
+				let category = Attack.DamageCategory(from: row[category])
+				
+				let attack = Attack(name: moveName, power: row[power] ?? 0, basePP: row[pp], maxPP: row[pp], priority: row[priority], type: type, breaksProtect: false, category: category, bonusEffect: Pokedex.attackBonuses[moveName])
+				attacks[moveName] = attack
+			}
+		} catch let error {
+			print("getAbilities() error: \(error)")
+		}
+		
+		return attacks
 	}
 }
 
