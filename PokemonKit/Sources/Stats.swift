@@ -7,7 +7,7 @@
 //
 
 public struct Stats: Codable {
-	let hp, atk, def, spAtk, spDef, spd: Int
+	public let hp, atk, def, spAtk, spDef, spd: Int
 	static let statModifiers = [
 		-6: 0.25,
 		-5: 0.285,
