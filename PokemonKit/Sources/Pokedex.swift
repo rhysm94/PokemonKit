@@ -25,6 +25,8 @@ public class Pokedex {
 		self.pokemon = Pokedex.getPokemon(abilities: abilities)
 		self.attacks = Pokedex.getAttacks()
 	}
+	
+	private static let protectBreakingMoves = ["Feint", "Hyperspace Fury", "Hyperspace Hole", "Phantom Force", "Shadow Force"]
     
 	static let attackBonuses: [String: Attack.BonusEffect] = [
 		"Bullet Seed": .multiHitMove(minHits: 2, maxHits: 5),
@@ -296,7 +298,9 @@ public class Pokedex {
 				let type = Type(from: row[type])
 				let category = Attack.DamageCategory(from: row[category])
 				
-				let attack = Attack(name: moveName, power: row[power] ?? 0, basePP: row[pp], maxPP: row[pp], priority: row[priority], type: type, breaksProtect: false, category: category, effectTarget: .defender, bonusEffect: Pokedex.attackBonuses[moveName])
+				let breaksProtect = Pokedex.protectBreakingMoves.contains(moveName)
+				
+				let attack = Attack(name: moveName, power: row[power] ?? 0, basePP: row[pp], maxPP: row[pp], priority: row[priority], type: type, breaksProtect: breaksProtect, category: category, effectTarget: .defender, bonusEffect: Pokedex.attackBonuses[moveName])
 				attacks[moveName] = attack
 			}
 		} catch let error {

@@ -13,7 +13,11 @@ public class Turn: Codable {
 	var playerSpeed: Int {
 		switch action {
 		case let .attack(attacker,_,_):
-			return attacker.baseStats.spd
+			if attacker.status == .paralysed {
+				return attacker.baseStats.spd / 2
+			} else {
+				return attacker.baseStats.spd
+			}
 		default:
 			return 0
 		}
