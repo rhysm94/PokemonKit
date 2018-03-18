@@ -298,9 +298,9 @@ public struct BattleEngine: Viewable {
 				
 				if player.activePokemon.status == .fainted {
 					view?.queue(action: .displayText("\(player.activePokemon!) fainted!"))
-					if player == playerOne {
+//					if player == playerOne {
 						view?.notifyFainted(player: player, pokemon: player.activePokemon)
-					}
+//					}
 				}
 			}
 			
