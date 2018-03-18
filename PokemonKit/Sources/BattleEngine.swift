@@ -435,8 +435,16 @@ public struct BattleEngine: Viewable {
 	}
 	
 	private mutating func switchPokemon(player: Player, pokemon: Pokemon) {
-		let switchingPokemon = player.activePokemon!
-		player.activePokemon = pokemon
+		var switchingPlayer: Player
+		
+		if player == playerOne {
+			switchingPlayer = playerOne
+		} else {
+			switchingPlayer = playerTwo
+		}
+		
+		let switchingPokemon = switchingPlayer.activePokemon!
+		switchingPlayer.activePokemon = pokemon
 		
 		switchingPokemon.volatileStatus.removeAll()
 		
