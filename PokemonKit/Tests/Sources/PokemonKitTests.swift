@@ -118,8 +118,8 @@ class PokemonKitTests: XCTestCase {
 		
 		Random.shared = Random(seed: "Testing")
 		
-		engine.addTurn(Turn(player: rhys, action: .attack(attacker: rhys[keyPath: activePokemon], defender: .defender, attack: rhys[keyPath: activePokemon].attacks[0])))
-		engine.addTurn(Turn(player: joe, action: .attack(attacker: joe[keyPath: activePokemon], defender: .defender, attack: joe[keyPath: activePokemon].attacks[0])))
+		engine.addTurn(Turn(player: rhys, action: .attack(defender: .defender, attack: rhys[keyPath: activePokemon].attacks[0])))
+		engine.addTurn(Turn(player: joe, action: .attack(defender: .defender, attack: joe[keyPath: activePokemon].attacks[0])))
 		
 		XCTAssertGreaterThanOrEqual(rhys[keyPath: activePokemon].currentHP, 84)
 		XCTAssertLessThanOrEqual(rhys[keyPath: activePokemon].currentHP, 90)
@@ -130,8 +130,8 @@ class PokemonKitTests: XCTestCase {
 	
 	func testParalysisApplied() {
 		let activePokemon = \Player.activePokemon
-		engine.addTurn(Turn(player: joe, action: .attack(attacker: joe[keyPath: activePokemon], defender: .defender, attack: Pokedex.default.attacks["Thunder Wave"]!)))
-		engine.addTurn(Turn(player: rhys, action: .attack(attacker: rhys[keyPath: activePokemon], defender: .defender, attack: rhys[keyPath: activePokemon].attacks[0])))
+		engine.addTurn(Turn(player: joe, action: .attack(defender: .defender, attack: Pokedex.default.attacks["Thunder Wave"]!)))
+		engine.addTurn(Turn(player: rhys, action: .attack(defender: .defender, attack: rhys[keyPath: activePokemon].attacks[0])))
 		
 		XCTAssert(rhys[keyPath: activePokemon].status == .paralysed)
 	}
@@ -155,5 +155,20 @@ class PokemonKitTests: XCTestCase {
 		XCTAssertEqual(Pokedex.default.pokemon.count, 802)
 		let charizardSpecies = Pokedex.default.pokemon["charizard"]
 		XCTAssertNotNil(charizardSpecies)
+	}
+	
+	func testAddingMultipleAttacks() {
+		engine.addTurn(Turn(player: joe, action: .attack(defender: .defender, attack: Pokedex.default.attacks["Thunder Wave"]!)))
+		engine.addTurn(Turn(player: joe, action: .attack(defender: .defender, attack: Pokedex.default.attacks["Thunderbolt"]!)))
+		XCTAssert(engine.turns.count == 1)
+	}
+	
+	func testAddingSwitchTurn() {
+		let activePokemon = \Player.activePokemon
+		
+		engine.addTurn(Turn(player: joe, action: .attack(defender: .defender, attack: Pokedex.default.attacks["Thunder Wave"]!)))
+		engine.addTurn(Turn(player: joe, action: .switchTo(bulbasaur, from: joe[keyPath: activePokemon])))
+		
+		XCTAssert(engine.turns.count == 1)
 	}
 }

@@ -79,7 +79,7 @@ public struct BattleEngine: Viewable {
 		}
 	}
 	
-	private var turns: [Turn] = [] {
+	private(set) var turns: [Turn] = [] {
 		didSet {
 			guard !multiHitMoveRunning else { return }
 			
@@ -128,7 +128,7 @@ public struct BattleEngine: Viewable {
 				*/
 				if
 					let lookahead = turns.first,
-					case let .attack(_,_,attack) = lookahead.action,
+					case let .attack(_,attack) = lookahead.action,
 					case .multiHitMove(_,_)? = attack.bonusEffect
 				{
 					multiHitMoveRunning = true
@@ -136,9 +136,22 @@ public struct BattleEngine: Viewable {
 				
 				let turn = turns.removeFirst()
 				
+				// Completely refactor the .attack(_, _, _) action
+				// Need to make it more generic, otherwise attacker on one device won't == attacker on another device, when doing comparisons if the attacker has fainted
+				// e.g. P1's Pokémon knocks out P2's Pokémon
+				// P1's game still has the turn containing old, unfainted P2 Pokémon
+				// Therefore, un-fainted P2 Pokémon can and will still deliver attack to P1
 				switch turn.action {
-				case let .attack(attacker, defender, attack):
+				case let .attack(defender, attack):
+					var attacker: Pokemon
+					if turn.player == playerOne {
+						attacker = playerOne.activePokemon
+					} else {
+						attacker = playerTwo.activePokemon
+					}
+					
 					guard attacker.status != .fainted else { break }
+					
 					var damageRecipient: Pokemon
 					switch defender {
 					case .defender:
@@ -226,7 +239,7 @@ public struct BattleEngine: Viewable {
 							view?.queue(action: .displayText("\(attack.name) will hit \(numberOfHits) times!"))
 							let replacementAttack = Attack(name: attack.name, power: attack.power, basePP: 1, maxPP: 1, priority: 0, type: attack.type, breaksProtect: attack.breaksProtect, category: attack.category)
 							for _ in 1...numberOfHits {
-								turns.insert(Turn(player: turn.player, action: .attack(attacker: attacker, defender: defender, attack: replacementAttack)), at: turns.startIndex)
+								turns.insert(Turn(player: turn.player, action: .attack(defender: defender, attack: replacementAttack)), at: turns.startIndex)
 							}
 						default:
 							break
@@ -285,9 +298,7 @@ public struct BattleEngine: Viewable {
 				
 				if player.activePokemon.status == .fainted {
 					view?.queue(action: .displayText("\(player.activePokemon!) fainted!"))
-					if player == playerOne {
-						view?.notifyFainted(player: player, pokemon: player.activePokemon)
-					}
+					view?.notifyFainted(player: player, pokemon: player.activePokemon)
 				}
 			}
 			
@@ -412,8 +423,8 @@ public struct BattleEngine: Viewable {
 	public mutating func addTurn(_ turn: Turn) {
 		if !turns.isEmpty {
 			switch turn.action {
-			case .attack(let attacker, _, _), .switchTo(_, from: let attacker):
-				removeTurns(for: attacker, belongingTo: turn.player)
+			case .attack(_, _), .switchTo(_, _):
+				removeTurns(belongingTo: turn.player)
 				turns.append(turn)
 			default:
 				turns.append(turn)
@@ -433,11 +444,11 @@ public struct BattleEngine: Viewable {
 		view?.update(with: self)
 	}
 	
-	private mutating func removeTurns(for pokemon: Pokemon, belongingTo player: Player) {
+	private mutating func removeTurns(belongingTo player: Player) {
 		turns = turns.filter { turn in
 			switch turn.action {
-			case .attack(let attacker,_,_), .switchTo(_, let attacker):
-				return attacker == pokemon && turn.player == player ? false : true
+			case .attack(_,_), .switchTo(_,_):
+				return turn.player != player
 			default:
 				return true
 			}
@@ -465,7 +476,7 @@ public struct BattleEngine: Viewable {
 		terrainCounter = 5
 	}
 	
-	enum BattleState {
+	enum BattleState: String, Codable {
 		case running, completed
 	}
 }
