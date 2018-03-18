@@ -14,7 +14,6 @@ public enum Action: Codable, Equatable {
 	case run
 	
 	private struct AttackParams: Codable {
-//		let attacker: Pokemon
 		let defender: Attack.EffectTarget
 		let attack: Attack
 	}
@@ -70,7 +69,7 @@ public enum Action: Codable, Equatable {
 		switch base {
 		case .attack:
 			let attackerParams = try container.decode(AttackParams.self, forKey: .attackParams)
-			self = .attack(/*attacker: attackerParams.attacker,*/ defender: attackerParams.defender, attack: attackerParams.attack)
+			self = .attack(defender: attackerParams.defender, attack: attackerParams.attack)
 		case .switchTo:
 			let switchToParams = try container.decode(SwitchToParams.self, forKey: .switchToParams)
 			self = .switchTo(switchToParams.pokemon, from: switchToParams.from)
