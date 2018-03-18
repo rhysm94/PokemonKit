@@ -234,8 +234,6 @@ extension Pokemon: Equatable {
 			lhs.ability == rhs.ability &&
 			lhs.baseStats == rhs.baseStats
 	}
-	
-	
 }
 
 

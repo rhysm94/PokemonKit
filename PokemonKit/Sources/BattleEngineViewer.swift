@@ -6,7 +6,7 @@
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
 //
 
-public protocol BattleEngineViewer: class {
+public protocol BattleEngineViewer: class, Codable {
 	func update(with state: BattleEngine)
 	func receive(message: String)
 	func clear()
@@ -15,6 +15,8 @@ public protocol BattleEngineViewer: class {
 	func queue(action: BattleAction)
 	func notifyOfWinner(_ winner: Player)
 	func disableButtons()
+	
+//	init(from: Decodable)
 }
 
 public protocol Viewable {
