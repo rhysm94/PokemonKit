@@ -86,7 +86,24 @@ public class Pokedex {
 			{
 				$0.status = .paralysed
 			}
+		}),
+		"Topsy-Turvy": .singleTarget({
+			var pokemonStatStages = $0.statStages
+			let newAtk = -pokemonStatStages.atk
+			let newDef = -pokemonStatStages.def
+			let newSpAtk = -pokemonStatStages.spAtk
+			let newSpDef = -pokemonStatStages.spDef
+			let newSpd = -pokemonStatStages.spd
+			$0.statStages = (atk: newAtk, def: newDef, spAtk: newSpAtk, spDef: newSpDef, spd: newSpd)
 		})
+	]
+	
+	private static let targets: [String: Attack.EffectTarget] = [
+		"Hyper Beam": .attacker,
+		"Recover": .attacker,
+		"Swords Dance": .attacker,
+		"Topsy-Turvy": .defender,
+		"Thunder Wave": .defender
 	]
 	
 	static let activationMessage: [String: (Pokemon) -> String] = [
@@ -299,7 +316,7 @@ public class Pokedex {
 				let category = Attack.DamageCategory(from: row[category])
 				
 				let breaksProtect = Pokedex.protectBreakingMoves.contains(moveName)
-				let effectTarget: Attack.EffectTarget = moveName == "Hyper Beam" || moveName == "Recover" ? .attacker : .defender
+				let effectTarget = Pokedex.targets[moveName]
 				let attack = Attack(name: moveName, power: row[power] ?? 0, basePP: row[pp], maxPP: row[pp], priority: row[priority], type: type, breaksProtect: breaksProtect, category: category, effectTarget: effectTarget, bonusEffect: Pokedex.attackBonuses[moveName])
 				attacks[moveName] = attack
 			}

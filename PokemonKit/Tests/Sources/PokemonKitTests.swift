@@ -117,25 +117,21 @@ class PokemonKitTests: XCTestCase {
 	}
 	
 	func testBattleEngineAppliesDamage() {
-		let activePokemon = \Player.activePokemon
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: rhys.activePokemon.attacks[0])))
+		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
 		
+		XCTAssertGreaterThanOrEqual(rhys.activePokemon.currentHP, 84)
+		XCTAssertLessThanOrEqual(rhys.activePokemon.currentHP, 90)
 		
-		engine.addTurn(Turn(player: rhys, action: .attack(attack: rhys[keyPath: activePokemon].attacks[0])))
-		engine.addTurn(Turn(player: joe, action: .attack(attack: joe[keyPath: activePokemon].attacks[0])))
-		
-		XCTAssertGreaterThanOrEqual(rhys[keyPath: activePokemon].currentHP, 84)
-		XCTAssertLessThanOrEqual(rhys[keyPath: activePokemon].currentHP, 90)
-		
-		XCTAssertGreaterThanOrEqual(joe[keyPath: activePokemon].currentHP, 17)
-		XCTAssertLessThanOrEqual(joe[keyPath: activePokemon].currentHP, 32)
+		XCTAssertGreaterThanOrEqual(joe.activePokemon.currentHP, 17)
+		XCTAssertLessThanOrEqual(joe.activePokemon.currentHP, 32)
 	}
 	
 	func testParalysisApplied() {
-		let activePokemon = \Player.activePokemon
 		engine.addTurn(Turn(player: joe, action: .attack(attack: Pokedex.default.attacks["Thunder Wave"]!)))
-		engine.addTurn(Turn(player: rhys, action: .attack(attack: rhys[keyPath: activePokemon].attacks[0])))
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: rhys.activePokemon.attacks[0])))
 		
-		XCTAssert(rhys[keyPath: activePokemon].status == .paralysed)
+		XCTAssert(rhys.activePokemon.status == .paralysed)
 	}
 	
 	func testProteanMessage() {
@@ -189,5 +185,29 @@ class PokemonKitTests: XCTestCase {
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: gigaDrain)))
 		
 		XCTAssert(joe.activePokemon.volatileStatus.contains(.mustRecharge))
+	}
+	
+	func testSwordsDance() {
+		let swordsDance = Pokedex.default.attacks["Swords Dance"]!
+
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: swordsDance)))
+		engine.addTurn(Turn(player: joe, action: .attack(attack: thunderbolt)))
+		
+		XCTAssertEqual(rhys.activePokemon.statStages.atk, 2)
+
+	}
+	
+	func testTopsyTurvy() {
+		let swordsDance = Pokedex.default.attacks["Swords Dance"]!
+		let topsyTurvy = Pokedex.default.attacks["Topsy-Turvy"]!
+		print(topsyTurvy)
+		
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: swordsDance)))
+		engine.addTurn(Turn(player: joe, action: .attack(attack: thunderbolt)))
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: gigaDrain)))
+		engine.addTurn(Turn(player: joe, action: .attack(attack: topsyTurvy)))
+		
+		XCTAssertEqual(rhys.activePokemon.statStages.atk, -2)
+
 	}
 }
