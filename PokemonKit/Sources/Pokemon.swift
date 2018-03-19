@@ -51,12 +51,12 @@ public class Pokemon: Codable {
 	
 	public var baseStats: Stats {
 		let baseStats = species.baseStats
-		let hp = calculateHPStat(base: baseStats.hp, EV: effortValues.hp, IV: individualValues.hp, level: level)
-		let atk = Int(floor(calculateOtherStats(base: baseStats.atk, EV: effortValues.atk, IV: individualValues.atk, level: level, natureModifier: nature.atkModifier)))
-		let def = Int(floor(calculateOtherStats(base: baseStats.def, EV: effortValues.def, IV: individualValues.def, level: level, natureModifier: nature.defModifier)))
-		let spAtk = Int(floor(calculateOtherStats(base: baseStats.spAtk, EV: effortValues.spAtk, IV: individualValues.spAtk, level: level, natureModifier: nature.spAtkModifier)))
-		let spDef = Int(floor(calculateOtherStats(base: baseStats.spDef, EV: effortValues.spDef, IV: individualValues.spDef, level: level, natureModifier: nature.spDefModifier)))
-		let spd = Int(floor(calculateOtherStats(base: baseStats.spd, EV: effortValues.spd, IV: individualValues.spd, level: level, natureModifier: nature.spdModifier)))
+		let hp = Pokemon.calculateHPStat(base: baseStats.hp, EV: effortValues.hp, IV: individualValues.hp, level: level)
+		let atk = Int(floor(Pokemon.calculateOtherStats(base: baseStats.atk, EV: effortValues.atk, IV: individualValues.atk, level: level, natureModifier: nature.atkModifier)))
+		let def = Int(floor(Pokemon.calculateOtherStats(base: baseStats.def, EV: effortValues.def, IV: individualValues.def, level: level, natureModifier: nature.defModifier)))
+		let spAtk = Int(floor(Pokemon.calculateOtherStats(base: baseStats.spAtk, EV: effortValues.spAtk, IV: individualValues.spAtk, level: level, natureModifier: nature.spAtkModifier)))
+		let spDef = Int(floor(Pokemon.calculateOtherStats(base: baseStats.spDef, EV: effortValues.spDef, IV: individualValues.spDef, level: level, natureModifier: nature.spDefModifier)))
+		let spd = Int(floor(Pokemon.calculateOtherStats(base: baseStats.spd, EV: effortValues.spd, IV: individualValues.spd, level: level, natureModifier: nature.spdModifier)))
 		return Stats(hp: hp, atk: atk, def: def, spAtk: spAtk, spDef: spDef, spd: spd)
 	}
 	
@@ -68,12 +68,12 @@ public class Pokemon: Codable {
 		let spdMod = Stats.statModifiers[statStages.spd] ?? 1
 		
 		let baseStats = species.baseStats
-		let hp = calculateHPStat(base: baseStats.hp, EV: effortValues.hp, IV: individualValues.hp, level: level)
-		let atk = Int(floor(calculateOtherStats(base: baseStats.atk, EV: effortValues.atk, IV: individualValues.atk, level: level, natureModifier: nature.atkModifier) * atkMod))
-		let def = Int(floor(calculateOtherStats(base: baseStats.def, EV: effortValues.def, IV: individualValues.def, level: level, natureModifier: nature.defModifier) * defMod))
-		let spAtk = Int(floor(calculateOtherStats(base: baseStats.spAtk, EV: effortValues.spAtk, IV: individualValues.spAtk, level: level, natureModifier: nature.spAtkModifier) * spAtkMod))
-		let spDef = Int(floor(calculateOtherStats(base: baseStats.spDef, EV: effortValues.spDef, IV: individualValues.spDef, level: level, natureModifier: nature.spDefModifier) * spDefMod))
-		let spd = Int(floor(calculateOtherStats(base: baseStats.spd, EV: effortValues.spd, IV: individualValues.spd, level: level, natureModifier: nature.spdModifier) * spdMod))
+		let hp = Pokemon.calculateHPStat(base: baseStats.hp, EV: effortValues.hp, IV: individualValues.hp, level: level)
+		let atk = Int(floor(Pokemon.calculateOtherStats(base: baseStats.atk, EV: effortValues.atk, IV: individualValues.atk, level: level, natureModifier: nature.atkModifier) * atkMod))
+		let def = Int(floor(Pokemon.calculateOtherStats(base: baseStats.def, EV: effortValues.def, IV: individualValues.def, level: level, natureModifier: nature.defModifier) * defMod))
+		let spAtk = Int(floor(Pokemon.calculateOtherStats(base: baseStats.spAtk, EV: effortValues.spAtk, IV: individualValues.spAtk, level: level, natureModifier: nature.spAtkModifier) * spAtkMod))
+		let spDef = Int(floor(Pokemon.calculateOtherStats(base: baseStats.spDef, EV: effortValues.spDef, IV: individualValues.spDef, level: level, natureModifier: nature.spDefModifier) * spDefMod))
+		let spd = Int(floor(Pokemon.calculateOtherStats(base: baseStats.spd, EV: effortValues.spd, IV: individualValues.spd, level: level, natureModifier: nature.spdModifier) * spdMod))
 		return Stats(hp: hp, atk: atk, def: def, spAtk: spAtk, spDef: spDef, spd: spd)
 	}
 	
@@ -135,13 +135,13 @@ public class Pokemon: Codable {
 		self.status = .healthy
 	}
 	
-	func calculateHPStat(base: Int, EV: Int, IV: Int, level: Int) -> Int {
+	static func calculateHPStat(base: Int, EV: Int, IV: Int, level: Int) -> Int {
 		let top = (2 * base + IV + Int(floor(Double(EV) / 4))) * level
 		let result = Int(floor(Double(top) / 100)) + level + 10
 		return result
 	}
 	
-	func calculateOtherStats(base: Int, EV: Int, IV: Int, level: Int, natureModifier: Double) -> Double {
+	static func calculateOtherStats(base: Int, EV: Int, IV: Int, level: Int, natureModifier: Double) -> Double {
 		let top = (2 * base + IV + Int(floor(Double(EV) / 4))) * level
 		let brackets = floor(Double(top) / 100) + 5
 		return floor(brackets * natureModifier)
