@@ -9,6 +9,6 @@ cache:
 before_install:
 - brew update
 - brew outdated carthage || brew upgrade carthage
-- carthage bootstrap verbose --no-use-binaries --platform ios --cache-builds
+- carthage bootstrap --verbose --no-use-binaries --platform ios --cache-builds
 script:
 - xcodebuild clean test -project PokemonKit.xcodeproj -scheme PokemonKit-macOS -destination "platform=macOS" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO -quiet
