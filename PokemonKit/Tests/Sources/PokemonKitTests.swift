@@ -167,7 +167,7 @@ class PokemonKitTests: XCTestCase {
 	
 	func testAddingSwitchTurn() {
 		engine.addTurn(Turn(player: joe, action: .attack(attack: Pokedex.default.attacks["Thunder Wave"]!)))
-		engine.addTurn(Turn(player: joe, action: .switchTo(bulbasaur, from: joe.activePokemon)))
+		engine.addTurn(Turn(player: joe, action: .switchTo(bulbasaur)))
 		
 		XCTAssert(engine.turns.count == 1)
 	}
