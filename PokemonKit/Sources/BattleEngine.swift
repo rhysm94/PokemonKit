@@ -257,7 +257,7 @@ public struct BattleEngine: Viewable {
 					default:
 						runBonusEffect(attack: attack, target: nil)
 					}
-				case .switchTo(let pokemon, _), .forceSwitch(let pokemon):
+				case .switchTo(let pokemon), .forceSwitch(let pokemon):
 					switchPokemon(player: turn.player, pokemon: pokemon)
 				case .run:
 					if turn.player == playerOne {
@@ -425,7 +425,7 @@ public struct BattleEngine: Viewable {
 	public mutating func addTurn(_ turn: Turn) {
 		if !turns.isEmpty {
 			switch turn.action {
-			case .attack(_), .switchTo(_, _):
+			case .attack(_), .switchTo(_):
 				removeTurns(belongingTo: turn.player)
 				turns.append(turn)
 			default:
@@ -457,7 +457,7 @@ public struct BattleEngine: Viewable {
 	private mutating func removeTurns(belongingTo player: Player) {
 		turns = turns.filter { turn in
 			switch turn.action {
-			case .attack(_), .switchTo(_,_):
+			case .attack(_), .switchTo(_):
 				return turn.player != player
 			default:
 				return true

@@ -58,7 +58,7 @@ extension Turn: CustomStringConvertible {
 		switch action {
 		case let .attack(attack):
 			return "\(player.name)'s \(player.activePokemon.nickname) is going to use attack \(attack.name)"
-		case let .switchTo(pokemon, _):
+		case let .switchTo(pokemon):
 			return "\(player.name) is going to switch to \(pokemon.nickname)"
 		case let .forceSwitch(pokemon):
 			return "\(player.name) had to switch in \(pokemon.nickname)"
