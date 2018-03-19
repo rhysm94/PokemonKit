@@ -1,2 +1,4 @@
 language: swift
+xcode_project: PokemonKit.xcodeproj
+xcode_scheme: PokemonKit_macOSTests
 os: osx
