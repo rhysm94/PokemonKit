@@ -13,7 +13,7 @@ public enum Action: Codable, Equatable {
 	case recharge
 	case run
 	
-	private enum CodingKeys: String, CodingKey {
+	private enum CodingKeys: CodingKey {
 		case base
 		case attack
 		case pokemon

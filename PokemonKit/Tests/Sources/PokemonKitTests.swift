@@ -181,6 +181,13 @@ class PokemonKitTests: XCTestCase {
 		engine.addTurn(Turn(player: joe, action: .attack(attack: thunderbolt)))
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: Pokedex.default.attacks["Recover"]!)))
 		
-		XCTAssertEqual(joe.activePokemon.currentHP, joe.activePokemon.baseStats.hp)
+		XCTAssertEqual(rhys.activePokemon.currentHP, rhys.activePokemon.baseStats.hp)
+	}
+	
+	func testNeedToRecharge() {
+		engine.addTurn(Turn(player: joe, action: .attack(attack: Pokedex.default.attacks["Hyper Beam"]!)))
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: gigaDrain)))
+		
+		XCTAssert(joe.activePokemon.volatileStatus.contains(.mustRecharge))
 	}
 }

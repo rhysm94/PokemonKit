@@ -299,8 +299,8 @@ public class Pokedex {
 				let category = Attack.DamageCategory(from: row[category])
 				
 				let breaksProtect = Pokedex.protectBreakingMoves.contains(moveName)
-				
-				let attack = Attack(name: moveName, power: row[power] ?? 0, basePP: row[pp], maxPP: row[pp], priority: row[priority], type: type, breaksProtect: breaksProtect, category: category, effectTarget: .defender, bonusEffect: Pokedex.attackBonuses[moveName])
+				let effectTarget: Attack.EffectTarget = moveName == "Hyper Beam" ? .attacker : .defender
+				let attack = Attack(name: moveName, power: row[power] ?? 0, basePP: row[pp], maxPP: row[pp], priority: row[priority], type: type, breaksProtect: breaksProtect, category: category, effectTarget: effectTarget, bonusEffect: Pokedex.attackBonuses[moveName])
 				attacks[moveName] = attack
 			}
 		} catch let error {
