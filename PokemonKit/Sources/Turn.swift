@@ -12,7 +12,7 @@ public class Turn: Codable {
 
 	var playerSpeed: Int {
 		switch action {
-		case .attack(_,_):
+		case .attack(_):
 			if player.activePokemon.status == .paralysed {
 				return player.activePokemon.baseStats.spd / 2
 			} else {
@@ -25,7 +25,7 @@ public class Turn: Codable {
 	
 	var priority: Int {
 		switch action {
-		case let .attack(_, attack):
+		case let .attack(attack):
 			return attack.priority
 		case .switchTo(_):
 			return 6
@@ -56,9 +56,9 @@ extension Turn: CustomStringConvertible {
 	public var description: String {
 		
 		switch action {
-		case let .attack(_, attack):
-			return "\(player.name)'s \(player.activePokemon.nickname) is going to use attack \(attack.name)"// against \(defender.nickname)"
-		case let .switchTo(pokemon, _):
+		case let .attack(attack):
+			return "\(player.name)'s \(player.activePokemon.nickname) is going to use attack \(attack.name)"
+		case let .switchTo(pokemon):
 			return "\(player.name) is going to switch to \(pokemon.nickname)"
 		case let .forceSwitch(pokemon):
 			return "\(player.name) had to switch in \(pokemon.nickname)"

@@ -7,31 +7,16 @@
 //
 
 public enum Action: Codable, Equatable {
-	case attack(defender: Attack.EffectTarget, attack: Attack)
-	case switchTo(Pokemon, from: Pokemon)
+	case attack(attack: Attack)
+	case switchTo(Pokemon)
 	case forceSwitch(Pokemon)
 	case recharge
 	case run
 	
-	private struct AttackParams: Codable {
-		let defender: Attack.EffectTarget
-		let attack: Attack
-	}
-	
-	private struct SwitchToParams: Codable {
-		let pokemon: Pokemon
-		let from: Pokemon
-	}
-	
-	private struct ForceSwitchParams: Codable {
-		let pokemon: Pokemon
-	}
-	
 	private enum CodingKeys: String, CodingKey {
 		case base
-		case attackParams
-		case switchToParams
-		case forceSwitchParams
+		case attack
+		case pokemon
 	}
 	
 	private enum Base: String, Codable {
@@ -44,20 +29,19 @@ public enum Action: Codable, Equatable {
 		var container = encoder.container(keyedBy: CodingKeys.self)
 		
 		switch self {
-		case let .attack(defender, attack):
+		case let .attack(attack):
 			try container.encode(Base.attack, forKey: .base)
-			try container.encode(AttackParams(defender: defender, attack: attack), forKey: .attackParams)
-		case let .switchTo(switchIn, switchOut):
+			try container.encode(attack, forKey: .attack)//(AttackParams(attack: attack), forKey: .attackParams)
+		case .switchTo(let switchIn):
 			try container.encode(Base.switchTo, forKey: .base)
-			try container.encode(SwitchToParams(pokemon: switchIn, from: switchOut), forKey: .switchToParams)
-		case let .forceSwitch(switchIn):
+			try container.encode(switchIn, forKey: .pokemon)
+		case .forceSwitch(let switchIn):
 			try container.encode(Base.forceSwitch, forKey: .base)
-			try container.encode(ForceSwitchParams(pokemon: switchIn), forKey: .forceSwitchParams)
+			try container.encode(switchIn, forKey: .pokemon)
 		case .recharge:
 			try container.encode(Base.recharge, forKey: .base)
 		case .run:
 			try container.encode(Base.run, forKey: .base)
-			
 		}
 	}
 	
@@ -68,14 +52,14 @@ public enum Action: Codable, Equatable {
 		
 		switch base {
 		case .attack:
-			let attackerParams = try container.decode(AttackParams.self, forKey: .attackParams)
-			self = .attack(defender: attackerParams.defender, attack: attackerParams.attack)
+			let attack = try container.decode(Attack.self, forKey: .attack)
+			self = .attack(attack: attack)
 		case .switchTo:
-			let switchToParams = try container.decode(SwitchToParams.self, forKey: .switchToParams)
-			self = .switchTo(switchToParams.pokemon, from: switchToParams.from)
+			let pokemon = try container.decode(Pokemon.self, forKey: .pokemon)
+			self = .switchTo(pokemon)
 		case .forceSwitch:
-			let forceSwitchParams = try container.decode(ForceSwitchParams.self, forKey: .forceSwitchParams)
-			self = .forceSwitch(forceSwitchParams.pokemon)
+			let pokemon = try container.decode(Pokemon.self, forKey: .pokemon)
+			self = .forceSwitch(pokemon)
 		case .recharge:
 			self = .recharge
 		case .run:
@@ -85,8 +69,8 @@ public enum Action: Codable, Equatable {
 	
 	public static func ==(lhs: Action, rhs: Action) -> Bool {
 		switch (lhs, rhs) {
-		case let (.attack(leftDefender, leftAttack), .attack(rightDefender, rightAttack)):
-			return leftDefender == rightDefender && leftAttack == rightAttack
+		case let (.attack(leftAttack), .attack(rightAttack)):
+			return leftAttack == rightAttack
 		case let (.switchTo(leftPokemon), .switchTo(rightPokemon)):
 			return leftPokemon == rightPokemon
 		case (.recharge, .recharge):
