@@ -1,4 +1,12 @@
 language: swift
+os: osx
+osx_image: xcode9.2
 xcode_project: PokemonKit.xcodeproj
 xcode_scheme: PokemonKit_macOSTests
-os: osx
+cache:
+  directories:
+   - Carthage
+before_install:
+- brew update
+- brew outdated carthage || brew upgrade carthage
+- carthage bootstrap verbose --no-use-binaries --platform ios --cache-builds
