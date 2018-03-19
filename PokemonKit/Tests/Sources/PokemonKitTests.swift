@@ -28,6 +28,8 @@ class PokemonKitTests: XCTestCase {
     override func setUp() {
         super.setUp()
 		
+		Random.shared = Random(seed: "Testing")
+		
 		let bulbasaurSpecies = PokemonSpecies(dexNum: 1, identifier: "bulbasaur", name: "Bulbasaur", typeOne: .grass, typeTwo: .poison, stats: Stats(hp: 45, atk: 49, def: 49, spAtk: 65, spDef: 65, spd: 45), abilityOne: testAbility)
 		bulbasaur = Pokemon(species: bulbasaurSpecies, level: 50, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [gigaDrain])
 		
@@ -51,32 +53,32 @@ class PokemonKitTests: XCTestCase {
 	}
 	
 	func testHPStatCalculation() {
-		let calculatedStat = bulbasaur.calculateHPStat(base: 45, EV: 0, IV: 31, level: 50)
+		let calculatedStat = Pokemon.calculateHPStat(base: 45, EV: 0, IV: 31, level: 50)
 		XCTAssertEqual(calculatedStat, 120)
 	}
 	
 	func testAttackStatCalculation() {
-		let calculatedAttack = floor(bulbasaur.calculateOtherStats(base: 49, EV: 0, IV: 31, level: 50, natureModifier: Nature.modest.atkModifier))
+		let calculatedAttack = floor(Pokemon.calculateOtherStats(base: 49, EV: 0, IV: 31, level: 50, natureModifier: Nature.modest.atkModifier))
 		XCTAssertEqual(calculatedAttack, 62)
 	}
 	
 	func testDefStatCalculation() {
-		let calculatedDef = floor(bulbasaur.calculateOtherStats(base: 49, EV: 4, IV: 31, level: 50, natureModifier: Nature.modest.defModifier))
+		let calculatedDef = floor(Pokemon.calculateOtherStats(base: 49, EV: 4, IV: 31, level: 50, natureModifier: Nature.modest.defModifier))
 		XCTAssertEqual(calculatedDef, 70)
 	}
 	
 	func testSpAtkStatCalculation() {
-		let calculatedSpAtk = floor(bulbasaur.calculateOtherStats(base: 65, EV: 252, IV: 31, level: 50, natureModifier: Nature.modest.spAtkModifier))
+		let calculatedSpAtk = floor(Pokemon.calculateOtherStats(base: 65, EV: 252, IV: 31, level: 50, natureModifier: Nature.modest.spAtkModifier))
 		XCTAssertEqual(calculatedSpAtk, 128)
 	}
 	
 	func testSpDefStatCalculation() {
-		let calculatedSpDef = floor(bulbasaur.calculateOtherStats(base: 65, EV: 0, IV: 31, level: 50, natureModifier: Nature.modest.spDefModifier))
+		let calculatedSpDef = floor(Pokemon.calculateOtherStats(base: 65, EV: 0, IV: 31, level: 50, natureModifier: Nature.modest.spDefModifier))
 		XCTAssertEqual(calculatedSpDef, 85)
 	}
 	
 	func testSpeedStatCalculation() {
-		let calculatedSpeed = floor(bulbasaur.calculateOtherStats(base: 45, EV: 252, IV: 31, level: 50, natureModifier: Nature.modest.spdModifier))
+		let calculatedSpeed = floor(Pokemon.calculateOtherStats(base: 45, EV: 252, IV: 31, level: 50, natureModifier: Nature.modest.spdModifier))
 		XCTAssertEqual(calculatedSpeed, 97)
 	}
 	
@@ -101,6 +103,7 @@ class PokemonKitTests: XCTestCase {
 		let (damage, _) = engine.calculateDamage(attacker: pikachu, defender: bulbasaur, attack: thunderbolt)
 		XCTAssertGreaterThanOrEqual(damage, 30)
 		XCTAssertLessThanOrEqual(damage, 36)
+		print("Thunderbolt damage: \(damage)")
 	}
 	
 	func testBulletSeedDamage() {
@@ -116,10 +119,9 @@ class PokemonKitTests: XCTestCase {
 	func testBattleEngineAppliesDamage() {
 		let activePokemon = \Player.activePokemon
 		
-		Random.shared = Random(seed: "Testing")
 		
-		engine.addTurn(Turn(player: rhys, action: .attack(defender: .defender, attack: rhys[keyPath: activePokemon].attacks[0])))
-		engine.addTurn(Turn(player: joe, action: .attack(defender: .defender, attack: joe[keyPath: activePokemon].attacks[0])))
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: rhys[keyPath: activePokemon].attacks[0])))
+		engine.addTurn(Turn(player: joe, action: .attack(attack: joe[keyPath: activePokemon].attacks[0])))
 		
 		XCTAssertGreaterThanOrEqual(rhys[keyPath: activePokemon].currentHP, 84)
 		XCTAssertLessThanOrEqual(rhys[keyPath: activePokemon].currentHP, 90)
@@ -130,8 +132,8 @@ class PokemonKitTests: XCTestCase {
 	
 	func testParalysisApplied() {
 		let activePokemon = \Player.activePokemon
-		engine.addTurn(Turn(player: joe, action: .attack(defender: .defender, attack: Pokedex.default.attacks["Thunder Wave"]!)))
-		engine.addTurn(Turn(player: rhys, action: .attack(defender: .defender, attack: rhys[keyPath: activePokemon].attacks[0])))
+		engine.addTurn(Turn(player: joe, action: .attack(attack: Pokedex.default.attacks["Thunder Wave"]!)))
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: rhys[keyPath: activePokemon].attacks[0])))
 		
 		XCTAssert(rhys[keyPath: activePokemon].status == .paralysed)
 	}
@@ -158,17 +160,27 @@ class PokemonKitTests: XCTestCase {
 	}
 	
 	func testAddingMultipleAttacks() {
-		engine.addTurn(Turn(player: joe, action: .attack(defender: .defender, attack: Pokedex.default.attacks["Thunder Wave"]!)))
-		engine.addTurn(Turn(player: joe, action: .attack(defender: .defender, attack: Pokedex.default.attacks["Thunderbolt"]!)))
+		engine.addTurn(Turn(player: joe, action: .attack(attack: Pokedex.default.attacks["Thunder Wave"]!)))
+		engine.addTurn(Turn(player: joe, action: .attack(attack: Pokedex.default.attacks["Thunderbolt"]!)))
 		XCTAssert(engine.turns.count == 1)
 	}
 	
 	func testAddingSwitchTurn() {
-		let activePokemon = \Player.activePokemon
-		
-		engine.addTurn(Turn(player: joe, action: .attack(defender: .defender, attack: Pokedex.default.attacks["Thunder Wave"]!)))
-		engine.addTurn(Turn(player: joe, action: .switchTo(bulbasaur, from: joe[keyPath: activePokemon])))
+		engine.addTurn(Turn(player: joe, action: .attack(attack: Pokedex.default.attacks["Thunder Wave"]!)))
+		engine.addTurn(Turn(player: joe, action: .switchTo(bulbasaur, from: joe.activePokemon)))
 		
 		XCTAssert(engine.turns.count == 1)
+	}
+	
+	func testHealingMove() {
+		// Rhys's Pokémon - Bulbasaur - is slower, so Joe's Pokémon - Pikachu - will attack first
+		// As established in a previous test, the damage is less than half of Bulbasaur's HP
+		// Then Bulbasaur will use Recover, an attack which recovers half a Pokémon's HP, up to their max. HP
+		// Bulbasaur's HP should be fully recovered by this point
+		
+		engine.addTurn(Turn(player: joe, action: .attack(attack: thunderbolt)))
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: Pokedex.default.attacks["Recover"]!)))
+		
+		XCTAssertEqual(joe.activePokemon.currentHP, joe.activePokemon.baseStats.hp)
 	}
 }

@@ -7,7 +7,7 @@
 //
 
 public enum BattleAction {
-	case switchTo(Pokemon)
+	case switchTo(Pokemon, for: Player)
 	case displayText(String)
 	case useAttack(attacker: Pokemon, defender: Pokemon, attack: Attack)
 	case confusedAttack(Pokemon)
