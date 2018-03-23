@@ -111,6 +111,7 @@ public enum VolatileStatus: Codable, CustomStringConvertible, Hashable {
 	case protected
 	case flinch
 	case mustRecharge
+	case preparingTo(Attack)
 	
 	public static func ==(lhs: VolatileStatus, rhs: VolatileStatus) -> Bool {
 		switch (lhs, rhs) {
@@ -129,6 +130,8 @@ public enum VolatileStatus: Codable, CustomStringConvertible, Hashable {
 			return true
 		case (.mustRecharge, .mustRecharge):
 			return true
+		case let (.preparingTo(leftAttack), .preparingTo(rightAttack)):
+			return leftAttack == rightAttack
 		default:
 			return false
 		}
@@ -144,6 +147,8 @@ public enum VolatileStatus: Codable, CustomStringConvertible, Hashable {
 			return "flinch"
 		case .mustRecharge:
 			return "must recharge"
+		case .preparingTo(let attack):
+			return "preparing to use \(attack.name)"
 		}
 	}
 	
@@ -162,11 +167,11 @@ public enum VolatileStatus: Codable, CustomStringConvertible, Hashable {
 	
 	// MARK:- Codable implementation
 	enum CodingKeys: CodingKey {
-		case base, counter
+		case base, counter, attack
 	}
 	
 	private enum Base: String, Codable {
-		case confused, protected, flinch, mustRecharge
+		case confused, protected, flinch, mustRecharge, preparingTo
 	}
 	
 	public init(from decoder: Decoder) throws {
@@ -183,6 +188,9 @@ public enum VolatileStatus: Codable, CustomStringConvertible, Hashable {
 			self = .flinch
 		case .mustRecharge:
 			self = .mustRecharge
+		case .preparingTo:
+			let attack = try container.decode(Attack.self, forKey: .attack)
+			self = .preparingTo(attack)
 		}
 	}
 	
@@ -199,6 +207,9 @@ public enum VolatileStatus: Codable, CustomStringConvertible, Hashable {
 			try container.encode(Base.flinch, forKey: .base)
 		case .mustRecharge:
 			try container.encode(Base.mustRecharge, forKey: .base)
+		case .preparingTo(let attack):
+			try container.encode(Base.preparingTo, forKey: .base)
+			try container.encode(attack, forKey: .attack)
 		}
 	}
 }

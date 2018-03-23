@@ -136,7 +136,7 @@ public struct BattleEngine {
 				let turn = turns.removeFirst()
 				
 				switch turn.action {
-				case let .attack(attack):
+				case var .attack(attack):
 					var attacker: Pokemon
 					var defender: Pokemon
 
@@ -152,20 +152,29 @@ public struct BattleEngine {
 					
 					if attacker.volatileStatus.contains(.flinch) {
 						view?.queue(action: .displayText("\(attacker) flinched!"))
-						attacker.volatileStatus = attacker.volatileStatus.filter { $0 != .flinch }
+						attacker.volatileStatus.remove(.flinch)
 						break
+					}
+					
+					// Removes .preparingTo(Attack) volatile status, as it's no longer useful here
+					if attacker.volatileStatus.contains(.preparingTo(attack.withoutBonusEffect())) {
+						attacker.volatileStatus.remove(.preparingTo(attack.withoutBonusEffect()))
 					}
 					
 					print("\(playerOne.name)'s \(playerOne.activePokemon!) - Lv. \(playerOne.activePokemon.level) has \(playerOne.activePokemon.currentHP)/\(playerOne.activePokemon.baseStats.hp) HP")
 					print("\(playerTwo.name)'s \(playerTwo.activePokemon!) - Lv. \(playerTwo.activePokemon.level) has \(playerTwo.activePokemon.currentHP)/\(playerTwo.activePokemon.baseStats.hp) HP")
 					
 					func doDamage() {
+						lastDamage = 0
+						
 						if attack.category == .status {
 							view?.queue(action: .useAttack(attacker: attacker, defender: defender, attack: attack))
-							lastDamage = 0
 						}
 						guard attack.power > 0 else { return }
-						
+						if case .multiTurnMove(_,_)? = attack.bonusEffect {
+							view?.queue(action: .useAttack(attacker: attacker, defender: defender, attack: attack))
+							return
+						}
 						if case .multiHitMove(_,_)? = attack.bonusEffect { return }
 						
 						if [.physical, .special].contains(attack.category) {
@@ -181,10 +190,7 @@ public struct BattleEngine {
 							}
 							
 							lastDamage = baseDamage
-						} else {
-							lastDamage = 0
 						}
-						
 					}
 					
 					// Have to use a value in .confused(), as you can't do .confused(_) on the right-hand side of an equation
@@ -208,6 +214,9 @@ public struct BattleEngine {
 							view?.queue(action: .displayText("\(defender.nickname) is protected!"))
 							break
 						} else {
+							if case .multiTurnMove(let condition, _)? = attack.bonusEffect, condition(self) {
+								attack = attack.withoutBonusEffect()
+							}
 							doDamage()
 						}
 					}
@@ -224,14 +233,19 @@ public struct BattleEngine {
 						case let .multiHitMove(minHits, maxHits)?:
 							let numberOfHits = Random.shared.between(minimum: minHits, maximum: maxHits)
 							view?.queue(action: .displayText("\(attack.name) will hit \(numberOfHits) times!"))
-							let replacementAttack = Attack(name: attack.name, power: attack.power, basePP: 1, maxPP: 1, priority: 0, type: attack.type, breaksProtect: attack.breaksProtect, category: attack.category)
+							let replacementAttack = attack.withoutBonusEffect()
 							for _ in 1...numberOfHits {
 								turns.insert(Turn(player: turn.player, action: .attack(attack: replacementAttack)), at: turns.startIndex)
 							}
 						case let .singleTargetUsingDamage(bonusEffect)?:
 							guard let moveTarget = target else { return }
 							bonusEffect(moveTarget, lastDamage)
-						default:
+						case .multiTurnMove(let condition, let addAttack)?:
+							guard let moveTarget = target else { return }
+							if !condition(self) {
+								addAttack(attack, moveTarget)
+							}
+						case .none, .instanceOfMultiHit?:
 							break
 						}
 					}
@@ -245,6 +259,7 @@ public struct BattleEngine {
 					default:
 						runBonusEffect(attack: attack, target: nil)
 					}
+
 				case .switchTo(let pokemon), .forceSwitch(let pokemon):
 					switchPokemon(player: turn.player, pokemon: pokemon)
 				case .run:
@@ -259,7 +274,7 @@ public struct BattleEngine {
 					let pokemon = turn.player.activePokemon!
 					if pokemon.volatileStatus.contains(.mustRecharge) {
 						view?.queue(action: .displayText("\(pokemon) must recharge!"))
-						pokemon.volatileStatus = pokemon.volatileStatus.filter { $0 != .mustRecharge }
+						pokemon.volatileStatus.remove(.mustRecharge)
 						break
 					}
 				}
@@ -306,21 +321,24 @@ public struct BattleEngine {
 		}
 	}
 	
-	public enum BattleType {
-		case single, double
-	}
-	
-	public init(playerOne: Player, playerTwo: Player, battleType: BattleType) {
+	/// Initialiser for the Battle Engine
+	///
+	/// - Parameters:
+	///   - playerOne: Player instance representing the first player
+	///   - playerTwo: Player instance representing the second player
+	public init(playerOne: Player, playerTwo: Player) {
 		self.playerOne = playerOne
 		self.playerTwo = playerTwo
-		switch battleType {
-		case .single:
-			self.maxTurnCount = 2
-		case .double:
-			self.maxTurnCount = 4
-		}
+		self.maxTurnCount = 2
 	}
 	
+	/// Calculates the damage for an attack, based on the relevant stats from the attacker and defender
+	///
+	/// - Parameters:
+	///   - attacker: The Pokémon using the attack
+	///   - defender: The Pokémon on the receiving end of the attack
+	///   - attack: The attack being used by `attacker`
+	/// - Returns: A tuple containing the damage, and the effectiveness of the attack
 	func calculateDamage(attacker: Pokemon, defender: Pokemon, attack: Attack) -> (Int, Type.Effectiveness) {
 		let attackerStat: Int
 		let defenderStat: Int
@@ -443,13 +461,13 @@ public struct BattleEngine {
 		}
 	}
 	
-	private mutating func setWeather(_ weather: Weather) {
+	mutating func setWeather(_ weather: Weather) {
 		self.weather = weather
 		
 		weatherCounter = 5
 	}
 	
-	private mutating func setTerrain(_ terrain: Terrain) {
+	mutating func setTerrain(_ terrain: Terrain) {
 		self.terrain = terrain
 		
 		terrainCounter = 5

@@ -74,6 +74,10 @@ public class Pokedex {
 			}
 		}),
 		"Sparkling Aria": .singleTarget({ if $0.status == .burned { $0.status = .healthy } }),
+		"Solar Beam": .multiTurnMove(
+			condition: { return $0.weather == .harshSunlight || $0.weather == .extremelyHarshSunlight },
+			addAttack: { (attack: Attack, pokemon: Pokemon) in pokemon.volatileStatus.insert(.preparingTo(attack.withoutBonusEffect())) }
+			),
 		"Sunny Day": .setWeather(.harshSunlight),
 		"Swords Dance": .singleTarget({ $0.statStages.atk += 2 }),
 		"Thunderbolt": .singleTarget({
@@ -105,6 +109,7 @@ public class Pokedex {
 	private static let targets: [String: Attack.EffectTarget] = [
 		"Hyper Beam": .attacker,
 		"Recover": .attacker,
+		"Solar Beam": .attacker,
 		"Swords Dance": .attacker,
 		"Topsy-Turvy": .defender,
 		"Giga Drain": .attacker,

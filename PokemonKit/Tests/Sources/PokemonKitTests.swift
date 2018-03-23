@@ -39,7 +39,7 @@ class PokemonKitTests: XCTestCase {
 		rhys.add(pokemon: bulbasaur)
 		joe.add(pokemon: pikachu)
 		
-		engine = BattleEngine(playerOne: rhys, playerTwo: joe, battleType: .single)
+		engine = BattleEngine(playerOne: rhys, playerTwo: joe)
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
     
@@ -249,5 +249,45 @@ class PokemonKitTests: XCTestCase {
 		let (_, effectiveness) = engine.calculateDamage(attacker: eevee, defender: gengar, attack: tackle)
 		
 		XCTAssertEqual(effectiveness, Type.Effectiveness.notEffective)
+	}
+	
+	
+	/// Checks that Solar Beam applies the correct volatile status to the Pokémon that uses it, and does no damage on the first turn
+	func testSolarBeamFirstTurn() {
+		let solarBeam = Pokedex.default.attacks["Solar Beam"]!
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: solarBeam)))
+		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
+		
+		print(rhys.activePokemon.volatileStatus)
+		print(joe.activePokemon.currentHP)
+		
+		XCTAssertTrue(rhys.activePokemon.volatileStatus.contains(.preparingTo(solarBeam.withoutBonusEffect())))
+		XCTAssertEqual(joe.activePokemon.currentHP, joe.activePokemon.baseStats.hp)
+	}
+	
+	// Checks that Solar Beam applies the correct volatile status, does
+	func testSolarBeamTwoTurns() {
+		let solarBeam = Pokedex.default.attacks["Solar Beam"]!
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: solarBeam)))
+		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
+		
+		XCTAssertEqual(joe.activePokemon.currentHP, joe.activePokemon.baseStats.hp)
+		XCTAssertTrue(rhys.activePokemon.volatileStatus.contains(.preparingTo(solarBeam.withoutBonusEffect())))
+
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: solarBeam.withoutBonusEffect())))
+		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
+		
+		XCTAssertNotEqual(joe.activePokemon.currentHP, joe.activePokemon.baseStats.hp)
+		XCTAssertFalse(rhys.activePokemon.volatileStatus.contains(.preparingTo(solarBeam.withoutBonusEffect())))
+	}
+	
+	func testSolarBeamUnderSunlight() {
+		let solarBeam = Pokedex.default.attacks["Solar Beam"]!
+		engine.setWeather(.harshSunlight)
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: solarBeam)))
+		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
+		
+		XCTAssertNotEqual(joe.activePokemon.currentHP, joe.activePokemon.baseStats.hp)
+		XCTAssertFalse(rhys.activePokemon.volatileStatus.contains(.preparingTo(solarBeam.withoutBonusEffect())))
 	}
 }

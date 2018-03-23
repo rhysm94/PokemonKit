@@ -33,6 +33,7 @@ public struct Attack: Codable {
         case setTerrain(Terrain)
 		case multiHitMove(minHits: Int, maxHits: Int)
 		case instanceOfMultiHit
+		case multiTurnMove(condition: (BattleEngine) -> Bool, addAttack: (Attack, Pokemon) -> Void)
     }
     
 	public let name: String
@@ -58,6 +59,12 @@ public struct Attack: Codable {
         self.effectTarget = effectTarget
         self.bonusEffect = bonusEffect
     }
+	
+	
+	/// Returns this Attack, but with its `bonusEffect` set to `nil`
+	func withoutBonusEffect() -> Attack {
+		return Attack(name: self.name, power: self.power, basePP: self.basePP, maxPP: self.maxPP, priority: self.priority, type: self.type, breaksProtect: self.breaksProtect, category: self.category, effectTarget: self.effectTarget)
+	}
 	
 	enum CodingKeys: CodingKey {
 		case name
