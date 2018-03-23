@@ -6,7 +6,7 @@
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
 //
 
-import GameKit
+import GameplayKit
 
 public struct BattleEngine {
 	private let maxTurnCount: Int
@@ -19,7 +19,6 @@ public struct BattleEngine {
 	private(set) var winner: Player? {
 		didSet {
 			guard let winner = winner else { return }
-//			print("Notifying delegate of winner")
 
 			view?.notifyOfWinner(winner)
 			state = .completed
@@ -136,11 +135,6 @@ public struct BattleEngine {
 				
 				let turn = turns.removeFirst()
 				
-				// Completely refactor the .attack(_, _, _) action
-				// Need to make it more generic, otherwise attacker on one device won't == attacker on another device, when doing comparisons if the attacker has fainted
-				// e.g. P1's Pokémon knocks out P2's Pokémon
-				// P1's game still has the turn containing old, unfainted P2 Pokémon
-				// Therefore, un-fainted P2 Pokémon can and will still deliver attack to P1
 				switch turn.action {
 				case let .attack(attack):
 					var attacker: Pokemon
@@ -429,14 +423,6 @@ public struct BattleEngine {
 	}
 	
 	private mutating func switchPokemon(player: Player, pokemon: Pokemon) {
-//		var switchingPlayer: Player
-//
-//		if player == playerOne {
-//			switchingPlayer = playerOne
-//		} else {
-//			switchingPlayer = playerTwo
-//		}
-		
 		let switchingPokemon = player.activePokemon!
 		player.activePokemon = pokemon
 		
