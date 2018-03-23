@@ -16,8 +16,3 @@ public protocol BattleEngineViewer: class {
 	func notifyOfWinner(_ winner: Player)
 	func disableButtons()
 }
-
-public protocol Viewable {
-	mutating func setViewer(_ viewer: BattleEngineViewer)
-	func notifyViewer()
-}

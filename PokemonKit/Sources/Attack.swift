@@ -26,8 +26,9 @@ public struct Attack: Codable {
         case attacker, defender
     }
 	
-	public indirect enum BonusEffect {
+	public enum BonusEffect {
         case singleTarget((Pokemon) -> Void)
+		case singleTargetUsingDamage((Pokemon, Int) -> Void)
         case setWeather(Weather)
         case setTerrain(Terrain)
 		case multiHitMove(minHits: Int, maxHits: Int)

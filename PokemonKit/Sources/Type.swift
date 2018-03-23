@@ -41,8 +41,8 @@ public enum Type: String, Codable {
 			}
 		}
 		
-		case normallyEffective = 1
-		case superEffective = 1.5
+		case normallyEffective = 1.0
+		case superEffective = 2.0
 		case notVeryEffective = 0.5
 		case notEffective = 0
 	}

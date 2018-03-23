@@ -53,6 +53,10 @@ public class Pokedex {
 				print("\($0.nickname) flinched!")
 			}
 		}),
+		"Giga Drain": .singleTargetUsingDamage({ pokemon, damage in
+			let restoreHP = Int(gameFreakRound(Double(damage) * 0.5))
+			pokemon.currentHP += restoreHP
+		}),
 		"Growl": .singleTarget({ $0.statStages.atk -= 1 }),
 		"Hyper Beam": .singleTarget({ $0.volatileStatus.insert(.mustRecharge) }),
 		"Ice Beam": .singleTarget({
@@ -103,6 +107,7 @@ public class Pokedex {
 		"Recover": .attacker,
 		"Swords Dance": .attacker,
 		"Topsy-Turvy": .defender,
+		"Giga Drain": .attacker,
 		"Thunder Wave": .defender
 	]
 	

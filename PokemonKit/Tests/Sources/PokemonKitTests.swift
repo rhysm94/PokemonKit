@@ -18,10 +18,10 @@ class PokemonKitTests: XCTestCase {
 	
 	var engine: BattleEngine!
 	
-	let sludgeBomb = Attack(name: "Sludge Bomb", power: 90, basePP: 1, maxPP: 1, priority: 0, type: .poison, category: .special)
-	let gigaDrain = Attack(name: "Giga Drain", power: 75, basePP: 1, maxPP: 1, priority: 0, type: .grass, category: .special, effectTarget: .attacker)
-	let bulletSeed = Attack(name: "Bullet Seed", power: 25, basePP: 1, maxPP: 1, priority: 0, type: .grass, category: .physical)
-	let thunderbolt = Attack(name: "Thunderbolt", power: 90, basePP: 1, maxPP: 1, priority: 0, type: .electric, category: .special)
+	let sludgeBomb = Pokedex.default.attacks["Sludge Bomb"]!
+	let gigaDrain = Pokedex.default.attacks["Giga Drain"]!
+	let bulletSeed = Pokedex.default.attacks["Bullet Seed"]!
+	let thunderbolt = Pokedex.default.attacks["Thunderbolt"]!
 	
 	let testAbility = Ability(name: "Test", description: "Test")
 	
@@ -31,7 +31,7 @@ class PokemonKitTests: XCTestCase {
 		Random.shared = Random(seed: "Testing")
 		
 		let bulbasaurSpecies = PokemonSpecies(dexNum: 1, identifier: "bulbasaur", name: "Bulbasaur", typeOne: .grass, typeTwo: .poison, stats: Stats(hp: 45, atk: 49, def: 49, spAtk: 65, spDef: 65, spd: 45), abilityOne: testAbility)
-		bulbasaur = Pokemon(species: bulbasaurSpecies, level: 50, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [gigaDrain])
+		bulbasaur = Pokemon(species: bulbasaurSpecies, level: 50, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [sludgeBomb])
 		
 		let pikachuSpecies = PokemonSpecies(dexNum: 25, identifier: "pikachu", name: "Pikachu", type: .electric, stats: Stats(hp: 35, atk: 55, def: 40, spAtk: 50, spDef: 50, spd: 90), abilityOne: testAbility)
 		pikachu = Pokemon(species: pikachuSpecies, level: 50, nature: .timid, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [thunderbolt])
@@ -123,8 +123,8 @@ class PokemonKitTests: XCTestCase {
 		XCTAssertGreaterThanOrEqual(rhys.activePokemon.currentHP, 84)
 		XCTAssertLessThanOrEqual(rhys.activePokemon.currentHP, 90)
 		
-		XCTAssertGreaterThanOrEqual(joe.activePokemon.currentHP, 17)
-		XCTAssertLessThanOrEqual(joe.activePokemon.currentHP, 32)
+		XCTAssertGreaterThanOrEqual(joe.activePokemon.currentHP, 0)
+		XCTAssertLessThanOrEqual(joe.activePokemon.currentHP, 17)
 	}
 	
 	func testParalysisApplied() {
@@ -208,6 +208,46 @@ class PokemonKitTests: XCTestCase {
 		engine.addTurn(Turn(player: joe, action: .attack(attack: topsyTurvy)))
 		
 		XCTAssertEqual(rhys.activePokemon.statStages.atk, -2)
+	}
+	
+	func testConfusedVolatileStatus() {
+		var confusion = VolatileStatus.confused(1)
+		confusion = confusion.turn()
+		
+		XCTAssertEqual(VolatileStatus.confused(0), confusion)
+		XCTAssertNotEqual(VolatileStatus.confused(1), confusion)
+	}
+	
+	func testGigaDrain() {
+		let swordsDance = Pokedex.default.attacks["Swords Dance"]!
 
+		let beforeTurnHP = rhys.activePokemon.currentHP
+		
+		engine.addTurn(Turn(player: joe, action: .attack(attack: thunderbolt)))
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: swordsDance)))
+		
+		print("Before Turn: \(rhys.activePokemon.nickname)'s HP: \(beforeTurnHP)")
+		print("After Turn: \(rhys.activePokemon.nickname)'s HP: \(rhys.activePokemon.currentHP)")
+		
+		XCTAssertNotEqual(rhys.activePokemon.currentHP, beforeTurnHP)
+	}
+	
+	func testSuperEffectiveDamage() {
+		let flamethrower = Pokedex.default.attacks["Flamethrower"]!
+		let (_, effectiveness) = engine.calculateDamage(attacker: rhys.activePokemon, defender: bulbasaur, attack: flamethrower)
+		XCTAssertEqual(effectiveness, Type.Effectiveness.superEffective)
+	}
+	
+	func testNotEffectiveDamage() {
+		let gengarSpecies = Pokedex.default.pokemon[93]
+		let gengar = Pokemon(species: gengarSpecies, level: 50, ability: gengarSpecies.abilityOne, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 0, spAtk: 252, spDef: 6, spd: 252), individualValues: .fullIVs, attacks: [])
+		
+		let eeveeSpecies = Pokedex.default.pokemon[132]
+		let eevee = Pokemon(species: eeveeSpecies, level: 50, ability: eeveeSpecies.abilityOne, nature: .hardy, effortValues: .empty, individualValues: .fullIVs, attacks: [])
+		let tackle = Pokedex.default.attacks["Tackle"]!
+		
+		let (_, effectiveness) = engine.calculateDamage(attacker: eevee, defender: gengar, attack: tackle)
+		
+		XCTAssertEqual(effectiveness, Type.Effectiveness.notEffective)
 	}
 }

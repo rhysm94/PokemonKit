@@ -8,7 +8,7 @@
 
 import GameKit
 
-public struct BattleEngine: Viewable {
+public struct BattleEngine {
 	private let maxTurnCount: Int
 	var state: BattleState = .running {
 		didSet {
@@ -33,6 +33,7 @@ public struct BattleEngine: Viewable {
 	
 	private(set) var turnHistory = [Turn]()
 	private var turnCounter = 1
+	private var lastDamage = 0
 	
 	private(set) public var weather: Weather = .none {
 		didSet {
@@ -74,7 +75,6 @@ public struct BattleEngine: Viewable {
 			print("resolveTurns was set as \(resolveTurns)")
 			if resolveTurns {
 				run()
-//				notifyViewer()
 			}
 		}
 	}
@@ -156,21 +156,6 @@ public struct BattleEngine: Viewable {
 					
 					guard attacker.status != .fainted else { break }
 					
-//					switch defender {
-//					case .defender:
-//						if turn.player == playerOne {
-//							damageRecipient = playerTwo.activePokemon
-//						} else {
-//							damageRecipient = playerOne.activePokemon
-//						}
-//					case .attacker:
-//						if turn.player == playerOne {
-//							damageRecipient = playerOne.activePokemon
-//						} else {
-//							damageRecipient = playerTwo.activePokemon
-//						}
-//					}
-					
 					if attacker.volatileStatus.contains(.flinch) {
 						view?.queue(action: .displayText("\(attacker) flinched!"))
 						attacker.volatileStatus = attacker.volatileStatus.filter { $0 != .flinch }
@@ -183,8 +168,10 @@ public struct BattleEngine: Viewable {
 					func doDamage() {
 						if attack.category == .status {
 							view?.queue(action: .useAttack(attacker: attacker, defender: defender, attack: attack))
+							lastDamage = 0
 						}
 						guard attack.power > 0 else { return }
+						
 						if case .multiHitMove(_,_)? = attack.bonusEffect { return }
 						
 						if [.physical, .special].contains(attack.category) {
@@ -195,10 +182,13 @@ public struct BattleEngine: Viewable {
 								view?.queue(action: .useAttack(attacker: attacker, defender: defender, attack: attack))
 							}
 							
-							
 							if effectiveness != .normallyEffective {
 								view?.queue(action: .displayText(effectiveness.description))
 							}
+							
+							lastDamage = baseDamage
+						} else {
+							lastDamage = 0
 						}
 						
 					}
@@ -211,6 +201,7 @@ public struct BattleEngine: Viewable {
 						if diceRoll == 1 {
 							view?.queue(action: .displayText("\(attacker.nickname) hurt itself in its confusion!"))
 							let (baseDamage, _) = calculateDamage(attacker: attacker, defender: attacker, attack: Attack(name: "Confused", power: 40, basePP: 1, maxPP: 1, priority: 0, type: .typeless, category: .physical))
+							view?.queue(action: .confusedAttack(attacker))
 							attacker.damage(baseDamage)
 						} else {
 							if attacker.volatileStatus.remove(.confused(0)) != nil {
@@ -243,6 +234,9 @@ public struct BattleEngine: Viewable {
 							for _ in 1...numberOfHits {
 								turns.insert(Turn(player: turn.player, action: .attack(attack: replacementAttack)), at: turns.startIndex)
 							}
+						case let .singleTargetUsingDamage(bonusEffect)?:
+							guard let moveTarget = target else { return }
+							bonusEffect(moveTarget, lastDamage)
 						default:
 							break
 						}
@@ -411,8 +405,6 @@ public struct BattleEngine: Viewable {
 
 		print("Effectiveness = \(typeOneEff * typeTwoEff)")
 		
-		let gameFreakRound = { return $0 > 0.5 ? ceil($0) : floor($0) }
-
 		let damage = Int(floor(gameFreakRound(floor(Double(innerBrackets) * rng) * stab) * effectivenessMultiplier))
 		
 		print("Final damage = \(damage)")
@@ -463,15 +455,6 @@ public struct BattleEngine: Viewable {
 				return true
 			}
 		}
-	}
-	
-	
-	mutating public func setViewer(_ viewer: BattleEngineViewer) {
-		view = viewer
-	}
-	
-	public func notifyViewer() {
-		view?.update(with: self)
 	}
 	
 	private mutating func setWeather(_ weather: Weather) {

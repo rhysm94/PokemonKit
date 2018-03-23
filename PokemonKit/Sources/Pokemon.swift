@@ -37,9 +37,12 @@ public class Pokemon: Codable {
 			return _currentHP
 		}
 		set {
-			_currentHP = newValue
-			if _currentHP < 0 {
+			if newValue < 0 {
 				_currentHP = 0
+			} else if newValue > baseStats.hp {
+				_currentHP = baseStats.hp
+			} else {
+				_currentHP = newValue
 			}
 			
 			if _currentHP == 0 {

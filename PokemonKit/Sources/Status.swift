@@ -118,9 +118,7 @@ public enum VolatileStatus: Codable, CustomStringConvertible, Hashable {
 			switch (leftConfused, rightConfused) {
 			case (0, 0):
 				return true
-			case (0, _):
-				return false
-			case (_, 0):
+			case (0, _), (_, 0):
 				return false
 			case (_, _):
 				return true
