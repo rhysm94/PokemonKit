@@ -25,7 +25,7 @@ public struct BattleEngine {
 		}
 	}
 	
-	private weak var view: BattleEngineViewer?
+	public weak var view: BattleEngineViewer?
 	
 	private(set) public var playerOne: Player
 	private(set) public var playerTwo: Player
