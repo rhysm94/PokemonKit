@@ -62,7 +62,7 @@ public struct Attack: Codable {
 	
 	
 	/// Returns this Attack, but with its `bonusEffect` set to `nil`
-	func withoutBonusEffect() -> Attack {
+	public func withoutBonusEffect() -> Attack {
 		return Attack(name: self.name, power: self.power, basePP: self.basePP, maxPP: self.maxPP, priority: self.priority, type: self.type, breaksProtect: self.breaksProtect, category: self.category, effectTarget: self.effectTarget)
 	}
 	
