@@ -164,8 +164,8 @@ public struct BattleEngine {
 						attacker.volatileStatus.remove(.preparingTo(attack.withoutBonusEffect()))
 					}
 					
-					print("\(playerOne.name)'s \(playerOne.activePokemon!) - Lv. \(playerOne.activePokemon.level) has \(playerOne.activePokemon.currentHP)/\(playerOne.activePokemon.baseStats.hp) HP")
-					print("\(playerTwo.name)'s \(playerTwo.activePokemon!) - Lv. \(playerTwo.activePokemon.level) has \(playerTwo.activePokemon.currentHP)/\(playerTwo.activePokemon.baseStats.hp) HP")
+					print("\(playerOne.name)'s \(playerOne.activePokemon) - Lv. \(playerOne.activePokemon.level) has \(playerOne.activePokemon.currentHP)/\(playerOne.activePokemon.baseStats.hp) HP")
+					print("\(playerTwo.name)'s \(playerTwo.activePokemon) - Lv. \(playerTwo.activePokemon.level) has \(playerTwo.activePokemon.currentHP)/\(playerTwo.activePokemon.baseStats.hp) HP")
 					
 					func doDamage() {
 						lastDamage = 0
@@ -279,7 +279,7 @@ public struct BattleEngine {
 					print("\(turn.player.name) has run")
 					return
 				case .recharge:
-					let pokemon = turn.player.activePokemon!
+					let pokemon = turn.player.activePokemon
 					if pokemon.volatileStatus.contains(.mustRecharge) {
 						view?.queue(action: .displayText("\(pokemon) must recharge!"))
 						pokemon.volatileStatus.remove(.mustRecharge)
@@ -312,7 +312,7 @@ public struct BattleEngine {
 				player.activePokemon.volatileStatus = Set(player.activePokemon.volatileStatus.map { $0.turn() })
 				
 				if player.activePokemon.status == .fainted {
-					view?.queue(action: .displayText("\(player.activePokemon!) fainted!"))
+					view?.queue(action: .displayText("\(player.activePokemon) fainted!"))
 					view?.queue(action: .fainted(player.activePokemon))
 				}
 				
@@ -320,8 +320,8 @@ public struct BattleEngine {
 				print("player.activePokemon === player.team[0] = \(player.activePokemon === player.team[0])")
 			}
 			
-			print("\(playerOne.name)'s \(playerOne.activePokemon!) has \(playerOne.activePokemon.currentHP)/\(playerOne.activePokemon.baseStats.hp) HP")
-			print("\(playerTwo.name)'s \(playerTwo.activePokemon!) has \(playerTwo.activePokemon.currentHP)/\(playerTwo.activePokemon.baseStats.hp) HP")
+			print("\(playerOne.name)'s \(playerOne.activePokemon) has \(playerOne.activePokemon.currentHP)/\(playerOne.activePokemon.baseStats.hp) HP")
+			print("\(playerTwo.name)'s \(playerTwo.activePokemon) has \(playerTwo.activePokemon.currentHP)/\(playerTwo.activePokemon.baseStats.hp) HP")
 			
 			weatherCounter -= 1
 			terrainCounter -= 1
@@ -465,7 +465,7 @@ public struct BattleEngine {
 	}
 	
 	private mutating func switchPokemon(player: Player, pokemon: Pokemon) {
-		let switchingPokemon = player.activePokemon!
+		let switchingPokemon = player.activePokemon
 		player.activePokemon = pokemon
 		
 		switchingPokemon.volatileStatus.removeAll()
