@@ -317,6 +317,7 @@ public struct BattleEngine {
 				}
 				
 				print("After turn: \(player.name)'s team: \(player.team)")
+				print("player.activePokemon === player.team[0] = \(player.activePokemon === player.team[0])")
 			}
 			
 			print("\(playerOne.name)'s \(playerOne.activePokemon!) has \(playerOne.activePokemon.currentHP)/\(playerOne.activePokemon.baseStats.hp) HP")

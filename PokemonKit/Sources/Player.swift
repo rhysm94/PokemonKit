@@ -10,13 +10,11 @@ import Foundation
 
 public class Player: Codable {
 	public let name: String
-	internal(set) public var team = [Pokemon]() {
-		didSet {
-			activePokemon = team.first
-		}
-	}
+	internal(set) public var team = [Pokemon]()
 	
-	internal(set) public var activePokemon: Pokemon!
+	internal(set) public lazy var activePokemon: Pokemon = {
+		return self.team[0]
+	}()
 	
 	public var teamMembers: Int {
 		return team.count
@@ -32,7 +30,7 @@ public class Player: Codable {
 	
 	public init(name: String) {
 		self.name = name
-		activePokemon = team.first
+//		activePokemon = team.first
 	}
 	
 	public var allFainted: Bool {
