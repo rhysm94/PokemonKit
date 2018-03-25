@@ -118,6 +118,7 @@ public struct BattleEngine {
 			// Resolving turns
 			
 			while !turns.isEmpty {
+				view?.disableButtons()
 				/* 	Lookahead to allow multi-hit moves to be added to the turns array without screwing up weather and terrain counters
 					Without this code, when multi-hit moves are used, run() breaks out, and is called again multiple times,
 					by resolveTurns's didSet which ends up decrementing the weather and terrain counters
@@ -318,6 +319,8 @@ public struct BattleEngine {
 			multiHitMoveRunning = false
 			turnCounter += 1
 		}
+		
+		view?.queue(action: .clear)
 	}
 	
 	/// Initialiser for the Battle Engine

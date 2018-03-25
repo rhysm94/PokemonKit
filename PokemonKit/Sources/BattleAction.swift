@@ -14,4 +14,5 @@ public enum BattleAction {
 	case statusDamage(Status, Pokemon, Int)
 	case abilityActivation(Ability, Pokemon)
 	case fainted(Pokemon)
+	case clear
 }
