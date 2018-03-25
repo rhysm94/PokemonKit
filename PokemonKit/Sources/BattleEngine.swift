@@ -142,9 +142,13 @@ public struct BattleEngine {
 					if turn.player == playerOne {
 						attacker = playerOne.activePokemon
 						defender = playerTwo.activePokemon
+						print("Attacker === playerOne.activePokemon: \(attacker === playerOne.activePokemon)")
+						print("defender === playerTwo.activePokemon: \(defender === playerTwo.activePokemon)")
 					} else {
 						attacker = playerTwo.activePokemon
 						defender = playerOne.activePokemon
+						print("Attacker === playerTwo.activePokemon: \(attacker === playerTwo.activePokemon)")
+						print("defender === playerOne.activePokemon: \(defender === playerOne.activePokemon)")
 					}
 					
 					guard attacker.status != .fainted else { break }
@@ -165,6 +169,8 @@ public struct BattleEngine {
 					
 					func doDamage() {
 						lastDamage = 0
+						
+						print("Doing damage to \(defender.nickname) from \(attacker.nickname)")
 						
 						if attack.category == .status {
 							view?.queue(action: .useAttack(attacker: attacker, defender: defender, attack: attack))
@@ -190,6 +196,9 @@ public struct BattleEngine {
 							
 							lastDamage = baseDamage
 						}
+						
+						print("Attacker now: \(attacker)")
+						print("Defender now: \(defender)")
 					}
 					
 					// Have to use a value in .confused(), as you can't do .confused(_) on the right-hand side of an equation
@@ -283,6 +292,8 @@ public struct BattleEngine {
 			
 			// After turns run
 			for player in [playerOne, playerTwo] {
+				
+				
 				if player.activePokemon.status == .poisoned {
 					let poisonDamage = Int(ceil(Double(player.activePokemon.baseStats.hp) / 16.0))
 					player.activePokemon.damage(poisonDamage)
@@ -304,6 +315,8 @@ public struct BattleEngine {
 					view?.queue(action: .displayText("\(player.activePokemon!) fainted!"))
 					view?.queue(action: .fainted(player.activePokemon))
 				}
+				
+				print("After turn: \(player.name)'s team: \(player.team)")
 			}
 			
 			print("\(playerOne.name)'s \(playerOne.activePokemon!) has \(playerOne.activePokemon.currentHP)/\(playerOne.activePokemon.baseStats.hp) HP")
