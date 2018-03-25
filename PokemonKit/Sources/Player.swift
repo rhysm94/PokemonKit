@@ -30,7 +30,6 @@ public class Player: Codable {
 	
 	public init(name: String) {
 		self.name = name
-//		activePokemon = team.first
 	}
 	
 	public var allFainted: Bool {

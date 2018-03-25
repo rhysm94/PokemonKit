@@ -19,8 +19,6 @@ public struct BattleEngine {
 	private(set) var winner: Player? {
 		didSet {
 			guard let winner = winner else { return }
-			print("Printing from didSet for winner")
-			print("Winner = \(winner.name)")
 			view?.notifyOfWinner(winner)
 			state = .completed
 		}
@@ -142,13 +140,9 @@ public struct BattleEngine {
 					if turn.player == playerOne {
 						attacker = playerOne.activePokemon
 						defender = playerTwo.activePokemon
-						print("Attacker === playerOne.activePokemon: \(attacker === playerOne.activePokemon)")
-						print("defender === playerTwo.activePokemon: \(defender === playerTwo.activePokemon)")
 					} else {
 						attacker = playerTwo.activePokemon
 						defender = playerOne.activePokemon
-						print("Attacker === playerTwo.activePokemon: \(attacker === playerTwo.activePokemon)")
-						print("defender === playerOne.activePokemon: \(defender === playerOne.activePokemon)")
 					}
 					
 					guard attacker.status != .fainted else { break }
@@ -169,8 +163,6 @@ public struct BattleEngine {
 					
 					func doDamage() {
 						lastDamage = 0
-						
-						print("Doing damage to \(defender.nickname) from \(attacker.nickname)")
 						
 						if attack.category == .status {
 							view?.queue(action: .useAttack(attacker: attacker, defender: defender, attack: attack))
@@ -196,9 +188,6 @@ public struct BattleEngine {
 							
 							lastDamage = baseDamage
 						}
-						
-						print("Attacker now: \(attacker)")
-						print("Defender now: \(defender)")
 					}
 					
 					// Have to use a value in .confused(), as you can't do .confused(_) on the right-hand side of an equation
@@ -315,9 +304,6 @@ public struct BattleEngine {
 					view?.queue(action: .displayText("\(player.activePokemon) fainted!"))
 					view?.queue(action: .fainted(player.activePokemon))
 				}
-				
-				print("After turn: \(player.name)'s team: \(player.team)")
-				print("player.activePokemon === player.team[0] = \(player.activePokemon === player.team[0])")
 			}
 			
 			print("\(playerOne.name)'s \(playerOne.activePokemon) has \(playerOne.activePokemon.currentHP)/\(playerOne.activePokemon.baseStats.hp) HP")
@@ -325,17 +311,6 @@ public struct BattleEngine {
 			
 			weatherCounter -= 1
 			terrainCounter -= 1
-			
-			print("Winner check now")
-			
-			print("Should playerOne win? \(playerTwo.allFainted)")
-			let playerTwoTeam = zip(playerTwo.team, playerTwo.team.map { $0.status })
-			print("playerTwo's team: \(playerTwoTeam)")
-			
-			print("Should playerTwo win? \(playerOne.allFainted)")
-			
-			let playerOneTeam = zip(playerOne.team, playerOne.team.map { $0.status })
-			print("playerOne's team: \(playerOneTeam)")
 			
 			if playerOne.allFainted { winner = playerTwo }
 			if playerTwo.allFainted { winner = playerOne }
