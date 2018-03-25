@@ -12,7 +12,7 @@ public struct BattleEngine {
 	private let maxTurnCount: Int
 	internal(set) public var state: BattleState = .running {
 		didSet {
-			if state == .completed { view?.disableButtons() }
+			if state != .running { view?.disableButtons() }
 		}
 	}
 	
@@ -304,6 +304,10 @@ public struct BattleEngine {
 				if player.activePokemon.status == .fainted {
 					view?.queue(action: .displayText("\(player.activePokemon) fainted!"))
 					view?.queue(action: .fainted(player.activePokemon))
+					
+					if !player.allFainted {
+						state = .awaitingSwitch
+					}
 				}
 			}
 			
@@ -321,6 +325,8 @@ public struct BattleEngine {
 		}
 		
 		view?.queue(action: .clear)
+		
+		
 	}
 	
 	/// Initialiser for the Battle Engine
@@ -450,6 +456,7 @@ public struct BattleEngine {
 		
 		view?.queue(action: .switchTo(pokemon, for: player))
 		view?.update(with: self)
+		state = .running
 	}
 	
 	private mutating func removeTurns(belongingTo player: Player) {
@@ -476,6 +483,6 @@ public struct BattleEngine {
 	}
 	
 	public enum BattleState: String, Codable {
-		case running, completed
+		case running, completed, awaitingSwitch
 	}
 }
