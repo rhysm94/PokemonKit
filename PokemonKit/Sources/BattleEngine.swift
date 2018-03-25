@@ -475,7 +475,7 @@ public struct BattleEngine {
 		terrainCounter = 5
 	}
 	
-	enum BattleState: String, Codable {
+	public enum BattleState: String, Codable {
 		case running, completed
 	}
 }
