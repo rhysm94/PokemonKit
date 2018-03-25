@@ -10,7 +10,7 @@ import GameplayKit
 
 public struct BattleEngine {
 	private let maxTurnCount: Int
-	var state: BattleState = .running {
+	internal(set) public var state: BattleState = .running {
 		didSet {
 			if state == .completed { view?.disableButtons() }
 		}
