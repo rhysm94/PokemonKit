@@ -23,7 +23,11 @@ public class Pokemon: Codable {
 	public let effortValues: Stats
 	public let individualValues: Stats
 	internal(set) public var attacks: [Attack]
-	internal(set) public var status: Status
+	internal(set) public var status: Status {
+		didSet {
+			print("\(nickname)'s status became \(status)")
+		}
+	}
 	internal(set) public var volatileStatus: Set<VolatileStatus> = Set()
 	public let ability: Ability
 //	private(set) var moveset: [MovesetItem] = []
@@ -224,7 +228,7 @@ public class Pokemon: Codable {
 
 extension Pokemon: CustomStringConvertible {
 	public var description: String {
-		return "\(nickname) - Lv. \(level)"
+		return "\(nickname) - Lv. \(level): \(currentHP)/\(baseStats.hp)"
 	}
 }
 

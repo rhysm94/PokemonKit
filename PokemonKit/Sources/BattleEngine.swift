@@ -315,10 +315,13 @@ public struct BattleEngine {
 			print("Winner check now")
 			
 			print("Should playerOne win? \(playerTwo.allFainted)")
-			print("playerTwo's team: \(playerTwo.team.map { $0.status })")
+			let playerTwoTeam = zip(playerTwo.team, playerTwo.team.map { $0.status })
+			print("playerTwo's team: \(playerTwoTeam)")
 			
 			print("Should playerTwo win? \(playerOne.allFainted)")
-			print("playerOne's team: \(playerOne.team.map { $0.status })")
+			
+			let playerOneTeam = zip(playerOne.team, playerOne.team.map { $0.status })
+			print("playerOne's team: \(playerOneTeam)")
 			
 			if playerOne.allFainted { winner = playerTwo }
 			if playerTwo.allFainted { winner = playerOne }
