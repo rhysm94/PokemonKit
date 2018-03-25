@@ -31,7 +31,7 @@ public enum Action: Codable, Equatable {
 		switch self {
 		case let .attack(attack):
 			try container.encode(Base.attack, forKey: .base)
-			try container.encode(attack, forKey: .attack)//(AttackParams(attack: attack), forKey: .attackParams)
+			try container.encode(attack, forKey: .attack)
 		case .switchTo(let switchIn):
 			try container.encode(Base.switchTo, forKey: .base)
 			try container.encode(switchIn, forKey: .pokemon)

@@ -19,7 +19,8 @@ public struct BattleEngine {
 	private(set) var winner: Player? {
 		didSet {
 			guard let winner = winner else { return }
-
+			print("Printing from didSet for winner")
+			print("Winner = \(winner.name)")
 			view?.notifyOfWinner(winner)
 			state = .completed
 		}
@@ -102,8 +103,6 @@ public struct BattleEngine {
 		print("---")
 		print("Turn \(turnCounter)")
 		print("---")
-		
-		view?.clear()
 		
 		while resolveTurns {
 			print("Turns currently sorted as \(turns)")
@@ -303,7 +302,7 @@ public struct BattleEngine {
 				
 				if player.activePokemon.status == .fainted {
 					view?.queue(action: .displayText("\(player.activePokemon!) fainted!"))
-					view?.notifyFainted(player: player, pokemon: player.activePokemon)
+					view?.queue(action: .fainted(player.activePokemon))
 				}
 			}
 			
