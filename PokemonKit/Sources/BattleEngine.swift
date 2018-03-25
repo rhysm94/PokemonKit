@@ -312,6 +312,8 @@ public struct BattleEngine {
 			weatherCounter -= 1
 			terrainCounter -= 1
 			
+			print("Winner check now")
+			
 			if playerOne.allFainted { winner = playerTwo }
 			if playerTwo.allFainted { winner = playerOne }
 			
