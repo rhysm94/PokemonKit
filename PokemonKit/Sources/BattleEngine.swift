@@ -314,6 +314,9 @@ public struct BattleEngine {
 			
 			print("Winner check now")
 			
+			print("Should playerOne win? \(playerTwo.allFainted)")
+			print("Should playerTwo win? \(playerOne.allFainted)")
+			
 			if playerOne.allFainted { winner = playerTwo }
 			if playerTwo.allFainted { winner = playerOne }
 			
