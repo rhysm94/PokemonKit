@@ -198,28 +198,60 @@ public struct BattleEngine {
 						doDamage()
 					}
 					
-					var shouldAttack = true
-					
 					// Have to use a value in .confused(), as you can't do .confused(_) on the right-hand side of an equation
 					// but due to .confused's == behaviour, this will return true if it contains *any* .confused(value) where value != 0
-                    if attacker.volatileStatus.contains(.confused(1)) {
-                        print("\(attacker.nickname) is confused!")
-						let diceRoll = Random.shared.d3Roll()
-						if diceRoll == 1 {
-                            view?.queue(action: .displayText("\(attacker.nickname) hurt itself in its confusion!"))
-                            let (baseDamage, _) = calculateDamage(attacker: attacker, defender: attacker, attack: Attack(name: "Confused", power: 40, basePP: 1, maxPP: 1, priority: 0, type: .typeless, category: .physical))
-                            view?.queue(action: .confusedAttack(attacker))
-                            attacker.damage(baseDamage)
+					
+					func confusionCheck() -> Bool {
+						if attacker.volatileStatus.contains(.confused(1)) {
+							print("\(attacker.nickname) is confused!")
+							let diceRoll = Random.shared.d3Roll()
+							if diceRoll == 1 {
+								view?.queue(action: .displayText("\(attacker.nickname) hurt itself in its confusion!"))
+								print("\(attacker.nickname) hurt itself in its confusion!")
+								
+								let (baseDamage, _) = calculateDamage(attacker: attacker, defender: attacker, attack: Attack(name: "Confused", power: 40, basePP: 1, maxPP: 1, priority: 0, type: .typeless, category: .physical))
+								view?.queue(action: .confusedAttack(attacker))
+								attacker.damage(baseDamage)
+								return false
+							} else {
+								if attacker.volatileStatus.remove(.confused(0)) != nil {
+									view?.queue(action: .displayText("\(attacker.nickname) snapped out of it's confusion!"))
+								}
+								return true
+							}
 						} else {
-							successfulDamage()
+							return true
 						}
-					} else {
+					}
+					
+					func paralysisCheck() -> Bool {
+						if attacker.status == .paralysed {
+							let diceRoll = Random.shared.d3Roll()
+							if diceRoll == 1 {
+								view?.queue(action: .displayText("\(attacker) is paralysed"))
+								return false
+							} else {
+								return true
+							}
+						} else {
+							return true
+						}
+					}
+					
+					func protectedCheck() -> Bool {
 						if defender.volatileStatus.contains(.protected) && !attack.breaksProtect {
-							view?.queue(action: .displayText("\(defender.nickname) is protected!"))
-							break
+							return false
 						} else {
-							successfulDamage()
+							return true
 						}
+					}
+					
+					let shouldAttack = [confusionCheck(), paralysisCheck(), protectedCheck()].reduce(true) { $0 && $1 }
+					
+					if shouldAttack {
+						successfulDamage()
+					} else {
+						break
 					}
 					
 					func runBonusEffect(attack: Attack, target: Pokemon?) {

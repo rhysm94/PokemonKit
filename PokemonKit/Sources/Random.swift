@@ -26,27 +26,31 @@ public class Random {
 	}
 	
 	func confusion() -> Int {
-		return random.nextInt(upperBound: 4)
-	}
-	
-	func d10Roll() -> Int {
-		return random.nextInt(upperBound: 10)
-	}
-	
-	func d6Roll() -> Int {
-		return random.nextInt(upperBound: 6)
-	}
-	
-	func d5Roll() -> Int {
 		return random.nextInt(upperBound: 5)
 	}
 	
+	func d10Roll() -> Int {
+		return random.nextInt(upperBound: 11)
+	}
+	
+	func d6Roll() -> Int {
+		return random.nextInt(upperBound: 7)
+	}
+	
+	func d5Roll() -> Int {
+		return random.nextInt(upperBound: 6)
+	}
+	
 	func d3Roll() -> Int {
-		return random.nextInt(upperBound: 3)
+		return random.nextInt(upperBound: 4)
 	}
 	
 	func between(minimum: Int, maximum: Int) -> Int {
-		let number = random.nextInt(upperBound: maximum)
-		return minimum > number ? minimum : number
+		let number = random.nextInt(upperBound: maximum + 1)
+		if minimum > number {
+			return minimum
+		} else {
+			return maximum
+		}
 	}
 }

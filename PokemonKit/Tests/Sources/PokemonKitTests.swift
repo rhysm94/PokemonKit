@@ -48,6 +48,20 @@ class PokemonKitTests: XCTestCase {
         super.tearDown()
     }
 	
+	func testEncodingAndDecodingTeam() {
+		let team = [bulbasaur!, pikachu!]
+		var decodedTeamData = [Pokemon]()
+		do {
+			let encodedTeamData = try JSONEncoder().encode(team)
+			print(String(data: encodedTeamData, encoding: .utf8)!)
+			decodedTeamData = try JSONDecoder().decode([Pokemon].self, from: encodedTeamData)
+		} catch let error {
+			print(error)
+			XCTFail()
+		}
+		XCTAssertEqual(team, decodedTeamData)
+	}
+	
 	func testBulbasaurName() {
 		XCTAssertEqual(bulbasaur.nickname, "Bulbasaur")
 	}
@@ -290,24 +304,10 @@ class PokemonKitTests: XCTestCase {
 		XCTAssertNotEqual(joe.activePokemon.currentHP, joe.activePokemon.baseStats.hp)
 		XCTAssertFalse(rhys.activePokemon.volatileStatus.contains(.preparingTo(solarBeam.withoutBonusEffect())))
 	}
-	
-	func testEncodingAndDecodingTeam() {
-		let team = [bulbasaur!, pikachu!]
-		var decodedTeamData = [Pokemon]()
-		do {
-			let encodedTeamData = try JSONEncoder().encode(team)
-			print(String(data: encodedTeamData, encoding: .utf8)!)
-			decodedTeamData = try JSONDecoder().decode([Pokemon].self, from: encodedTeamData)
-		} catch let error {
-			print(error)
-			XCTFail()
-		}
-		XCTAssertEqual(team, decodedTeamData)
-	}
-	
+		
 	func testSolarBeamUnderSunlightAndConfusion() {
-		// Seed tested to let Bulbasaur attack despite confusion
-		Random.shared = Random(seed: "test")
+		// Main seed ensures Rhys's Pokémon won't hurt itself in confusion
+		
 		let solarBeam = Pokedex.default.attacks["Solar Beam"]!
 		engine.setWeather(.harshSunlight)
 		rhys.activePokemon.volatileStatus.insert(.confused(3))
@@ -323,6 +323,9 @@ class PokemonKitTests: XCTestCase {
 		// having selected a multi-turn attack
 		// Will verify that the bonus effect for said multiTurnAttack *isn't* run
 		
+		// Seed guaranteed to have Rhys's active Pokémon hurt itself in confusion
+		Random.shared = Random(seed: "HurtSelfConfusion")
+		
 		let solarBeam = Pokedex.default.attacks["Solar Beam"]!
 		engine.setWeather(.harshSunlight)
 		rhys.activePokemon.volatileStatus.insert(.confused(3))
@@ -332,5 +335,67 @@ class PokemonKitTests: XCTestCase {
 		print(rhys.activePokemon.volatileStatus)
 		
 		XCTAssertFalse(rhys.activePokemon.volatileStatus.contains(.preparingTo(solarBeam.withoutBonusEffect())))
+	}
+	
+	func testProtectFasterPokemon() {
+		let protect = Pokedex.default.attacks["Protect"]!
+		
+		engine.addTurn(Turn(player: joe, action: .attack(attack: protect)))
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: gigaDrain)))
+		
+		XCTAssertEqual(joe.activePokemon.currentHP, joe.activePokemon.baseStats.hp)
+	}
+	
+	func testProtectSlowerPokemon() {
+		let protect = Pokedex.default.attacks["Protect"]!
+		engine.addTurn(Turn(player: joe, action: .attack(attack: thunderbolt)))
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: protect)))
+		
+		XCTAssertFalse(rhys.activePokemon.volatileStatus.contains(.protected))
+	}
+	
+	func testRandomD3() {
+		var generated = [Int]()
+		
+		for _ in 1...1000 {
+			generated.append(Random.shared.d3Roll())
+		}
+		
+		XCTAssertFalse(generated.contains(0))
+		XCTAssertTrue(generated.contains(1))
+		XCTAssertTrue(generated.contains(2))
+		XCTAssertTrue(generated.contains(3))
+		XCTAssertFalse(generated.contains(4))
+	}
+	
+	func testRandomD5() {
+		var generated = [Int]()
+		
+		for _ in 1...1000 {
+			generated.append(Random.shared.d5Roll())
+		}
+		
+		XCTAssertFalse(generated.contains(0))
+		XCTAssertTrue(generated.contains(1))
+		XCTAssertTrue(generated.contains(2))
+		XCTAssertTrue(generated.contains(3))
+		XCTAssertTrue(generated.contains(4))
+		XCTAssertTrue(generated.contains(5))
+		XCTAssertFalse(generated.contains(6))
+	}
+	
+	func testBattleRNG() {
+		var generated = [Double]()
+		
+		for _ in 1...2000 {
+			generated.append(Random.shared.battleRNG())
+		}
+		
+		XCTAssertFalse(generated.contains(84))
+		XCTAssertTrue(generated.contains(85))
+		XCTAssertTrue(generated.contains(90))
+		XCTAssertTrue(generated.contains(95))
+		XCTAssertTrue(generated.contains(100))
+		XCTAssertFalse(generated.contains(101))
 	}
 }

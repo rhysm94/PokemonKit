@@ -66,6 +66,7 @@ public class Pokedex {
 				print("\($0) was frozen!")
 			}
 		}),
+		"Protect": .singleTarget({ $0.volatileStatus.insert(.protected) }),
 		"Rain Dance": .setWeather(.rain),
 		"Recover": .singleTarget({
 			$0.currentHP += Int((0.5 * Double($0.baseStats.hp)))
@@ -76,8 +77,10 @@ public class Pokedex {
 		"Sparkling Aria": .singleTarget({ if $0.status == .burned { $0.status = .healthy } }),
 		"Solar Beam": .multiTurnMove(
 			condition: { return $0.weather == .harshSunlight || $0.weather == .extremelyHarshSunlight },
-			addAttack: { (attack: Attack, pokemon: Pokemon) in pokemon.volatileStatus.insert(.preparingTo(attack.withoutBonusEffect())) }
-			),
+			addAttack: { attack, pokemon in
+				pokemon.volatileStatus.insert(.preparingTo(attack.withoutBonusEffect()))
+			}
+		),
 		"Sunny Day": .setWeather(.harshSunlight),
 		"Swords Dance": .singleTarget({ $0.statStages.atk += 2 }),
 		"Thunderbolt": .singleTarget({
@@ -107,12 +110,13 @@ public class Pokedex {
 	]
 	
 	private static let targets: [String: Attack.EffectTarget] = [
+		"Giga Drain": .attacker,
 		"Hyper Beam": .attacker,
+		"Protect": .attacker,
 		"Recover": .attacker,
 		"Solar Beam": .attacker,
 		"Swords Dance": .attacker,
 		"Topsy-Turvy": .defender,
-		"Giga Drain": .attacker,
 		"Thunder Wave": .defender
 	]
 	
