@@ -290,4 +290,47 @@ class PokemonKitTests: XCTestCase {
 		XCTAssertNotEqual(joe.activePokemon.currentHP, joe.activePokemon.baseStats.hp)
 		XCTAssertFalse(rhys.activePokemon.volatileStatus.contains(.preparingTo(solarBeam.withoutBonusEffect())))
 	}
+	
+	func testEncodingAndDecodingTeam() {
+		let team = [bulbasaur!, pikachu!]
+		var decodedTeamData = [Pokemon]()
+		do {
+			let encodedTeamData = try JSONEncoder().encode(team)
+			print(String(data: encodedTeamData, encoding: .utf8)!)
+			decodedTeamData = try JSONDecoder().decode([Pokemon].self, from: encodedTeamData)
+		} catch let error {
+			print(error)
+			XCTFail()
+		}
+		XCTAssertEqual(team, decodedTeamData)
+	}
+	
+	func testSolarBeamUnderSunlightAndConfusion() {
+		// Seed tested to let Bulbasaur attack despite confusion
+		Random.shared = Random(seed: "test")
+		let solarBeam = Pokedex.default.attacks["Solar Beam"]!
+		engine.setWeather(.harshSunlight)
+		rhys.activePokemon.volatileStatus.insert(.confused(3))
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: solarBeam)))
+		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
+		
+		XCTAssertNotEqual(joe.activePokemon.currentHP, joe.activePokemon.baseStats.hp)
+		XCTAssertFalse(rhys.activePokemon.volatileStatus.contains(.preparingTo(solarBeam.withoutBonusEffect())))
+	}
+	
+	func testSolarBeamNoPreparingToAppliesWhenConfused() {
+		// Tests the condition where a Pokémon is confused, and will hurt themselves in their confusion
+		// having selected a multi-turn attack
+		// Will verify that the bonus effect for said multiTurnAttack *isn't* run
+		
+		let solarBeam = Pokedex.default.attacks["Solar Beam"]!
+		engine.setWeather(.harshSunlight)
+		rhys.activePokemon.volatileStatus.insert(.confused(3))
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: solarBeam)))
+		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
+		
+		print(rhys.activePokemon.volatileStatus)
+		
+		XCTAssertFalse(rhys.activePokemon.volatileStatus.contains(.preparingTo(solarBeam.withoutBonusEffect())))
+	}
 }

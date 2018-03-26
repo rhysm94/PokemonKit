@@ -191,31 +191,34 @@ public struct BattleEngine {
 						}
 					}
 					
+					func successfulDamage() {
+						if case .multiTurnMove(let condition, _)? = attack.bonusEffect, condition(self) {
+							attack = attack.withoutBonusEffect()
+						}
+						doDamage()
+					}
+					
+					var shouldAttack = true
+					
 					// Have to use a value in .confused(), as you can't do .confused(_) on the right-hand side of an equation
 					// but due to .confused's == behaviour, this will return true if it contains *any* .confused(value) where value != 0
-					if attacker.volatileStatus.contains(.confused(1)) {
-						print("\(attacker.nickname) is confused!")
+                    if attacker.volatileStatus.contains(.confused(1)) {
+                        print("\(attacker.nickname) is confused!")
 						let diceRoll = Random.shared.d3Roll()
 						if diceRoll == 1 {
-							view?.queue(action: .displayText("\(attacker.nickname) hurt itself in its confusion!"))
-							let (baseDamage, _) = calculateDamage(attacker: attacker, defender: attacker, attack: Attack(name: "Confused", power: 40, basePP: 1, maxPP: 1, priority: 0, type: .typeless, category: .physical))
-							view?.queue(action: .confusedAttack(attacker))
-							attacker.damage(baseDamage)
+                            view?.queue(action: .displayText("\(attacker.nickname) hurt itself in its confusion!"))
+                            let (baseDamage, _) = calculateDamage(attacker: attacker, defender: attacker, attack: Attack(name: "Confused", power: 40, basePP: 1, maxPP: 1, priority: 0, type: .typeless, category: .physical))
+                            view?.queue(action: .confusedAttack(attacker))
+                            attacker.damage(baseDamage)
 						} else {
-							if attacker.volatileStatus.remove(.confused(0)) != nil {
-								view?.queue(action: .displayText("\(attacker.nickname) snapped out of it's confusion!"))
-							}
-							doDamage()
+							successfulDamage()
 						}
 					} else {
 						if defender.volatileStatus.contains(.protected) && !attack.breaksProtect {
 							view?.queue(action: .displayText("\(defender.nickname) is protected!"))
 							break
 						} else {
-							if case .multiTurnMove(let condition, _)? = attack.bonusEffect, condition(self) {
-								attack = attack.withoutBonusEffect()
-							}
-							doDamage()
+							successfulDamage()
 						}
 					}
 					
@@ -282,8 +285,6 @@ public struct BattleEngine {
 			
 			// After turns run
 			for player in [playerOne, playerTwo] {
-				
-				
 				if player.activePokemon.status == .poisoned {
 					let poisonDamage = Int(ceil(Double(player.activePokemon.baseStats.hp) / 16.0))
 					player.activePokemon.damage(poisonDamage)
