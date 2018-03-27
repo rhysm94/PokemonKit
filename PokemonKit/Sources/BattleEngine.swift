@@ -246,7 +246,19 @@ public struct BattleEngine {
 						}
 					}
 					
-					let shouldAttack = [confusionCheck(), paralysisCheck(), protectedCheck()].reduce(true) { $0 && $1 }
+					func hitCheck() -> Bool {
+						if let accuracy = attack.accuracy {
+							let hit = Random.shared.shouldHit(chance: accuracy)
+							if !hit {
+								view?.queue(action: .displayText("\(attacker.nickname) missed!"))
+							}
+							return hit
+						} else {
+							return true
+						}
+					}
+					
+					let shouldAttack = [confusionCheck(), paralysisCheck(), protectedCheck(), hitCheck()].reduce(true) { $0 && $1 }
 					
 					if shouldAttack {
 						successfulDamage()

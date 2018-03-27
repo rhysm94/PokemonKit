@@ -405,11 +405,6 @@ class PokemonKitTests: XCTestCase {
 		for _ in 1...1000 {
 			generated.append(Random.shared.between(minimum: 2, maximum: 5))
 		}
-		print("1 count: ", generated.filter({$0 == 1}).count)
-		print("2 count: ", generated.filter({$0 == 2}).count)
-		print("3 count: ", generated.filter({$0 == 3}).count)
-		print("4 count: ", generated.filter({$0 == 4}).count)
-		print("5 count: ", generated.filter({$0 == 5}).count)
 		
 		XCTAssertFalse(generated.contains(1))
 		XCTAssertTrue(generated.contains(2))
@@ -417,5 +412,17 @@ class PokemonKitTests: XCTestCase {
 		XCTAssertTrue(generated.contains(4))
 		XCTAssertTrue(generated.contains(5))
 		XCTAssertFalse(generated.contains(6))
+	}
+	
+	/// Tests accuracy of a low-accuracy move, such as Fissure (30% chance of hitting)
+	///
+	/// Test's Random seed is known to cause attack to miss
+	func testAccuracy() {
+		let fissure = Pokedex.default.attacks["Fissure"]!
+		
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: fissure)))
+		engine.addTurn(Turn(player: joe, action: .attack(attack: gigaDrain)))
+		
+		XCTAssertEqual(joe.activePokemon.currentHP, joe.activePokemon.baseStats.hp)
 	}
 }

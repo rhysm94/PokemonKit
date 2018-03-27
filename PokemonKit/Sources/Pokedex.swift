@@ -314,7 +314,7 @@ public class Pokedex {
 		let pp = Expression<Int>("pp")
 		let type = Expression<Int>("type_id")
 		let category = Expression<Int>("damage_class_id")
-		let accuracy = Expression<Int>("accuracy")
+		let accuracy = Expression<Int?>("accuracy")
 		let priority = Expression<Int>("priority")
 		let localLanguageID = Expression<Int>("local_language_id")
 		
@@ -331,7 +331,7 @@ public class Pokedex {
 				
 				let breaksProtect = Pokedex.protectBreakingMoves.contains(moveName)
 				let effectTarget = Pokedex.targets[moveName]
-				let attack = Attack(name: moveName, power: row[power] ?? 0, basePP: row[pp], maxPP: row[pp], priority: row[priority], type: type, breaksProtect: breaksProtect, category: category, effectTarget: effectTarget, bonusEffect: Pokedex.attackBonuses[moveName])
+				let attack = Attack(name: moveName, power: row[power] ?? 0, basePP: row[pp], maxPP: row[pp], accuracy: row[accuracy], priority: row[priority], type: type, breaksProtect: breaksProtect, category: category, effectTarget: effectTarget, bonusEffect: Pokedex.attackBonuses[moveName])
 				attacks[moveName] = attack
 			}
 		} catch let error {

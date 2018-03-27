@@ -51,4 +51,20 @@ public class Random {
 		number += minimum
 		return number
 	}
+	
+	func shouldHit(chance: Int) -> Bool {
+		guard chance > 0 else { return false }
+		guard chance < 100 else { return true }
+		
+		var chances = [Bool]()
+		for _ in 1...chance {
+			chances.append(true)
+		}
+		for _ in 1...(100-chance) {
+			chances.append(false)
+		}
+		
+		chances = randomSource.arrayByShufflingObjects(in: chances) as! [Bool]
+		return chances[0]
+	}
 }

@@ -9,6 +9,18 @@
 import Foundation
 
 public struct Attack: Codable {
+	public let name: String
+	public let power: Int
+	public let basePP: Int 
+	public let maxPP: Int
+	public let accuracy: Int?
+	public let priority: Int
+	public let type: Type
+	public let breaksProtect: Bool
+	public let category: DamageCategory
+	public let effectTarget: EffectTarget?
+	public let bonusEffect: BonusEffect?
+	
 	public enum DamageCategory: String, Codable {
         case physical, special, status
 		
@@ -36,22 +48,14 @@ public struct Attack: Codable {
 		case multiTurnMove(condition: (BattleEngine) -> Bool, addAttack: (Attack, Pokemon) -> Void)
     }
     
-	public let name: String
-	public let power: Int
-	public let basePP: Int
-    public let maxPP: Int
-    public let priority: Int
-	public let type: Type
-	public let breaksProtect: Bool
-	public let category: DamageCategory
-	public let effectTarget: EffectTarget?
-	public let bonusEffect: BonusEffect?
+
     
-    public init(name: String, power: Int, basePP: Int, maxPP: Int, priority: Int, type: Type, breaksProtect: Bool = false, category: DamageCategory, effectTarget: EffectTarget? = nil, bonusEffect: BonusEffect? = nil) {
+	public init(name: String, power: Int, basePP: Int, maxPP: Int, accuracy: Int? = nil, priority: Int, type: Type, breaksProtect: Bool = false, category: DamageCategory, effectTarget: EffectTarget? = nil, bonusEffect: BonusEffect? = nil) {
         self.name = name
         self.power = power
         self.basePP = basePP
         self.maxPP = maxPP
+		self.accuracy = accuracy
         self.priority = priority
         self.type = type
         self.breaksProtect = breaksProtect
@@ -63,7 +67,7 @@ public struct Attack: Codable {
 	
 	/// Returns this Attack, but with its `bonusEffect` set to `nil`
 	public func withoutBonusEffect() -> Attack {
-		return Attack(name: self.name, power: self.power, basePP: self.basePP, maxPP: self.maxPP, priority: self.priority, type: self.type, breaksProtect: self.breaksProtect, category: self.category, effectTarget: self.effectTarget)
+		return Attack(name: self.name, power: self.power, basePP: self.basePP, maxPP: self.maxPP, accuracy: self.accuracy, priority: self.priority, type: self.type, breaksProtect: self.breaksProtect, category: self.category, effectTarget: self.effectTarget)
 	}
 	
 	enum CodingKeys: CodingKey {
@@ -71,6 +75,7 @@ public struct Attack: Codable {
 		case power
 		case basePP
 		case maxPP
+		case accuracy
 		case priority
 		case type
 		case breaksProtect
@@ -84,6 +89,7 @@ public struct Attack: Codable {
 		try container.encode(power, forKey: .power)
 		try container.encode(basePP, forKey: .basePP)
 		try container.encode(maxPP, forKey: .maxPP)
+		try container.encode(accuracy, forKey: .accuracy)
 		try container.encode(priority, forKey: .priority)
 		try container.encode(type, forKey: .type)
 		try container.encode(breaksProtect, forKey: .breaksProtect)
@@ -97,6 +103,7 @@ public struct Attack: Codable {
 		self.power = try container.decode(Int.self, forKey: .power)
 		self.basePP = try container.decode(Int.self, forKey: .basePP)
 		self.maxPP = try container.decode(Int.self, forKey: .maxPP)
+		self.accuracy = try container.decode(Int?.self, forKey: .accuracy)
 		self.priority = try container.decode(Int.self, forKey: .priority)
 		self.type = try container.decode(Type.self, forKey: .type)
 		self.breaksProtect = try container.decode(Bool.self, forKey: .breaksProtect)
