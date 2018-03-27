@@ -18,39 +18,37 @@ public class Random {
 		print("init(seed:) for Random run with seed: \(seed)")
 		let dataSeed = seed.data(using: .utf8)!
 		randomSource = GKARC4RandomSource(seed: dataSeed)
-		self.random = GKRandomDistribution(randomSource: randomSource, lowestValue: 1, highestValue: 16)
+		self.random = GKRandomDistribution(randomSource: randomSource, lowestValue: 0, highestValue: 15)
 	}
 	
 	func battleRNG() -> Double {
-		return Double(101 - random.nextInt())
+		return Double(100 - random.nextInt())
 	}
 	
 	func confusion() -> Int {
-		return random.nextInt(upperBound: 5)
+		return random.nextInt(upperBound: 4) + 1
 	}
 	
 	func d10Roll() -> Int {
-		return random.nextInt(upperBound: 11)
+		return random.nextInt(upperBound: 10) + 1
 	}
 	
 	func d6Roll() -> Int {
-		return random.nextInt(upperBound: 7)
+		return random.nextInt(upperBound: 6) + 1
 	}
 	
 	func d5Roll() -> Int {
-		return random.nextInt(upperBound: 6)
+		return random.nextInt(upperBound: 5) + 1
 	}
 	
 	func d3Roll() -> Int {
-		return random.nextInt(upperBound: 4)
+		return random.nextInt(upperBound: 3) + 1
 	}
 	
 	func between(minimum: Int, maximum: Int) -> Int {
-		let number = random.nextInt(upperBound: maximum + 1)
-		if minimum > number {
-			return minimum
-		} else {
-			return maximum
-		}
+		let upperBound = maximum + 1 - minimum
+		var number = random.nextInt(upperBound: upperBound)
+		number += minimum
+		return number
 	}
 }
