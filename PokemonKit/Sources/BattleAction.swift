@@ -14,5 +14,8 @@ public enum BattleAction {
 	case statusDamage(Status, Pokemon, Int)
 	case abilityActivation(Ability, Pokemon)
 	case fainted(Pokemon)
+	case notifyOfWinner(Player)
+	case weatherUpdate(Weather)
+	case terrainUpdate(Terrain)
 	case clear
 }

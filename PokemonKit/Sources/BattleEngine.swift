@@ -19,7 +19,7 @@ public struct BattleEngine {
 	private(set) var winner: Player? {
 		didSet {
 			guard let winner = winner else { return }
-			view?.notifyOfWinner(winner)
+			view?.queue(action: .notifyOfWinner(winner))
 			state = .completed
 		}
 	}
@@ -35,14 +35,7 @@ public struct BattleEngine {
 	
 	private(set) public var weather: Weather = .none {
 		didSet {
-			switch weather {
-			case .none:
-				view?.queue(action: .displayText("The weather calmed down"))
-			default:
-				view?.queue(action: .displayText("The weather became \(weather)"))
-			}
-			
-			view?.display(weather: weather)
+			view?.queue(action: .weatherUpdate(weather))
 		}
 	}
 	
@@ -55,7 +48,11 @@ public struct BattleEngine {
 		}
 	}
 	
-	private(set) public var terrain: Terrain = .none
+	private(set) public var terrain: Terrain = .none {
+		didSet {
+			view?.queue(action: .terrainUpdate(terrain))
+		}
+	}
 	
 	var terrainCounter = 0 {
 		didSet {
