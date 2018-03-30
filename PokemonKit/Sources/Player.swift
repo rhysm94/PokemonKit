@@ -40,7 +40,7 @@ public class Player: NSObject, Codable {
 
 extension Player: GKGameModelPlayer {
 	public var playerId: Int {
-		return self.hashValue
+		return self.name.hashValue
 	}
 }
 

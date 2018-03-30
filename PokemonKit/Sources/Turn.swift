@@ -11,17 +11,8 @@ import GameplayKit
 public class Turn: NSObject, Codable, GKGameModelUpdate {
 	public let player: Player
 	let action: Action
-
-	private var _value = 0
 	
-	public var value: Int {
-		get {
-			return _value
-		}
-		set {
-			_value = newValue
-		}
-	}
+	public var value: Int = 0
 	
 	var playerSpeed: Int {
 		switch action {

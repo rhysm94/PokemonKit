@@ -22,6 +22,8 @@ class PokemonKitTests: XCTestCase {
 	let gigaDrain = Pokedex.default.attacks["Giga Drain"]!
 	let bulletSeed = Pokedex.default.attacks["Bullet Seed"]!
 	let thunderbolt = Pokedex.default.attacks["Thunderbolt"]!
+	let thunder = Pokedex.default.attacks["Thunder"]!
+	let tackle = Pokedex.default.attacks["Tackle"]!
 	
 	let testAbility = Ability(name: "Test", description: "Test")
 	
@@ -34,7 +36,7 @@ class PokemonKitTests: XCTestCase {
 		bulbasaur = Pokemon(species: bulbasaurSpecies, level: 50, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [sludgeBomb])
 		
 		let pikachuSpecies = Pokedex.default.pokemon["pikachu"]! //PokemonSpecies(dexNum: 25, identifier: "pikachu", name: "Pikachu", type: .electric, stats: Stats(hp: 35, atk: 55, def: 40, spAtk: 50, spDef: 50, spd: 90), abilityOne: testAbility)
-		pikachu = Pokemon(species: pikachuSpecies, level: 50, nature: .timid, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [thunderbolt])
+		pikachu = Pokemon(species: pikachuSpecies, level: 50, nature: .timid, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [thunderbolt, thunder])
 		
 		rhys.add(pokemon: bulbasaur)
 		joe.add(pokemon: pikachu)
@@ -436,16 +438,46 @@ class PokemonKitTests: XCTestCase {
 	}
 	
 	func testCopy() {
-		self.engine.addTurn(Turn(player: rhys, action: .attack(attack: thunderbolt)))
-		self.engine.addTurn(Turn(player: joe, action: .attack(attack: gigaDrain)))
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: thunderbolt)))
+		engine.addTurn(Turn(player: joe, action: .attack(attack: gigaDrain)))
 		
-		let copy = self.engine.copy() as? BattleEngine
+		let copy = engine.copy() as? BattleEngine
 		
-		if let copy = copy, let engine = engine {
+		if let copy = copy, let engine = self.engine {
 			XCTAssertTrue(copy == engine)
 		} else {
 			XCTFail()
 		}
 	}
 	
+	func testPlayerIDValues() {
+		print(rhys.playerId)
+		print(joe.playerId)
+		XCTAssertNotEqual(rhys.playerId, joe.playerId)
+	}
+	
+	func testCanMakeTurn() {
+		if let activePlayer = engine.activePlayer as? Player {
+			print("Before: \(activePlayer.name)")
+		}
+		
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: gigaDrain)))
+		
+		if let activePlayer = engine.activePlayer as? Player {
+			print("After: \(activePlayer.name)")
+		}
+		
+		let ai = GKMinmaxStrategist()
+		ai.maxLookAheadDepth = 10
+		ai.gameModel = engine
+		ai.randomSource = GKARC4RandomSource()
+		
+		let backgroundQueue = DispatchQueue(label: "AI Queue")
+		backgroundQueue.async { [unowned self] in
+			let turn = ai.bestMove(for: self.joe)
+			if let turn = turn as? Turn {
+				print("Best Move: ", turn)
+			}
+		}
+	}
 }

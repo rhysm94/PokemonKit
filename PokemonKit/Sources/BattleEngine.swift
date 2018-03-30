@@ -8,7 +8,7 @@
 
 import GameplayKit
 
-public class BattleEngine: NSObject {
+public class BattleEngine: NSObject, GKGameModel {
 	private let maxTurnCount: Int
 	internal(set) public var state: BattleState = .running {
 		didSet {
@@ -527,23 +527,23 @@ public class BattleEngine: NSObject {
 	public enum BattleState: String, Codable {
 		case running, completed, awaitingSwitch
 	}
-}
-
-extension BattleEngine: GKGameModel {
+	
 	public var players: [GKGameModelPlayer]? {
 		return [playerOne, playerTwo]
 	}
 	
 	public var activePlayer: GKGameModelPlayer? {
 		if turns.first?.player == self.playerOne {
-			return playerOne
-		} else {
 			return playerTwo
+		} else {
+			return playerOne
 		}
 	}
 	
 	public func setGameModel(_ gameModel: GKGameModel) {
 		let model = gameModel as! BattleEngine
+		
+		self.turns = model.turns
 		
 		self.weather = model.weather
 		self.weatherCounter = model.weatherCounter
@@ -560,25 +560,51 @@ extension BattleEngine: GKGameModel {
 		self.poisonCounter = model.poisonCounter
 	}
 	
+	public func score(for player: GKGameModelPlayer) -> Int {
+		if let player = player as? Player, player == playerOne {
+			if player == playerOne {
+				if isWin(for: playerOne) {
+					return 1000
+				} else {
+					return -1000
+				}
+			} else {
+				if isWin(for: playerTwo) {
+					return 1000
+				} else {
+					return -1000
+				}
+			}
+		}
+		
+		return 0
+	}
+	
 	public func gameModelUpdates(for player: GKGameModelPlayer) -> [GKGameModelUpdate]? {
 		var possibleTurns: [Turn]?
 		
 		if let player = player as? Player {
 			possibleTurns = [Turn]()
 			
-			for attack in player.activePokemon.attacks {
-				if !player.activePokemon.volatileStatus.contains(.mustRecharge) {
-					possibleTurns?.append(Turn(player: player, action: .attack(attack: attack)))
-				} else {
-					possibleTurns?.append(Turn(player: player, action: .recharge))
+			if player.activePokemon.status != .fainted {
+				for attack in player.activePokemon.attacks {
+					if !player.activePokemon.volatileStatus.contains(.mustRecharge) {
+						possibleTurns?.append(Turn(player: player, action: .attack(attack: attack)))
+					} else {
+						possibleTurns?.append(Turn(player: player, action: .recharge))
+					}
+				}
+				
+				for pokemon in player.team where pokemon.status != .fainted {
+					possibleTurns?.append(Turn(player: player, action: .switchTo(pokemon)))
+				}
+				
+				possibleTurns?.append(Turn(player: player, action: .run))
+			} else {
+				for pokemon in player.team where pokemon.status != .fainted {
+					possibleTurns?.append(Turn(player: player, action: .forceSwitch(pokemon)))
 				}
 			}
-			
-			for pokemon in player.team where pokemon.status != .fainted {
-				possibleTurns?.append(Turn(player: player, action: .switchTo(pokemon)))
-			}
-			
-			possibleTurns?.append(Turn(player: player, action: .run))
 		}
 		
 		return possibleTurns
@@ -587,24 +613,28 @@ extension BattleEngine: GKGameModel {
 	public func apply(_ gameModelUpdate: GKGameModelUpdate) {
 		if let turn = gameModelUpdate as? Turn {
 			self.addTurn(turn)
+		} else {
+			print("Failure")
 		}
 	}
 	
 	public func copy(with zone: NSZone? = nil) -> Any {
 		let copy = type(of: self).init(playerOne: playerOne, playerTwo: playerTwo)
 		
+		copy.turns = self.turns
+		
 		copy.weather = self.weather
 		copy.weatherCounter = self.weatherCounter
-		
+
 		copy.terrain = self.terrain
 		copy.terrainCounter = self.terrainCounter
-		
+
 		copy.turnCounter = self.turnCounter
-		
+
 		copy.lastDamage = self.lastDamage
-		
+
 		copy.winner = self.winner
-		
+
 		copy.poisonCounter = self.poisonCounter
 		
 		return copy
@@ -613,15 +643,16 @@ extension BattleEngine: GKGameModel {
 	public static func ==(lhs: BattleEngine, rhs: BattleEngine) -> Bool {
 		let value =
 			lhs.playerOne == rhs.playerOne &&
-			lhs.playerTwo == rhs.playerTwo &&
-			lhs.weather == rhs.weather &&
-			lhs.weatherCounter == rhs.weatherCounter &&
-			lhs.terrain == rhs.terrain &&
-			lhs.terrainCounter == rhs.terrainCounter &&
-			lhs.turnCounter == rhs.turnCounter &&
-			lhs.lastDamage == rhs.lastDamage &&
-			lhs.winner == rhs.winner &&
-			lhs.poisonCounter == rhs.poisonCounter
+				lhs.playerTwo == rhs.playerTwo &&
+				lhs.weather == rhs.weather &&
+				lhs.weatherCounter == rhs.weatherCounter &&
+				lhs.terrain == rhs.terrain &&
+				lhs.turns == rhs.turns &&
+				lhs.terrainCounter == rhs.terrainCounter &&
+				lhs.turnCounter == rhs.turnCounter &&
+				lhs.lastDamage == rhs.lastDamage &&
+				lhs.winner == rhs.winner &&
+				lhs.poisonCounter == rhs.poisonCounter
 		
 		return value
 	}
@@ -645,4 +676,5 @@ extension BattleEngine: GKGameModel {
 			return false
 		}
 	}
+	
 }
