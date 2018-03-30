@@ -64,7 +64,6 @@ public struct Attack: Codable {
         self.bonusEffect = bonusEffect
     }
 	
-	
 	/// Returns this Attack, but with its `bonusEffect` set to `nil`
 	public func withoutBonusEffect() -> Attack {
 		return Attack(name: self.name, power: self.power, basePP: self.basePP, maxPP: self.maxPP, accuracy: self.accuracy, priority: self.priority, type: self.type, breaksProtect: self.breaksProtect, category: self.category, effectTarget: self.effectTarget)
@@ -119,6 +118,7 @@ extension Attack: Equatable {
             lhs.power == rhs.power &&
             lhs.basePP == rhs.basePP &&
             lhs.maxPP == rhs.maxPP &&
+			lhs.accuracy == rhs.accuracy &&
             lhs.priority == rhs.priority &&
             lhs.type == rhs.type &&
             lhs.category == rhs.category &&

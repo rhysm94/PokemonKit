@@ -39,6 +39,8 @@ public class Player: Codable {
 
 extension Player: Equatable {
 	public static func ==(lhs: Player, rhs: Player) -> Bool {
-		return lhs.name == rhs.name && lhs.team == rhs.team && lhs.activePokemon == rhs.activePokemon
+		return lhs.name == rhs.name &&
+			lhs.team == rhs.team &&
+			lhs.activePokemon == rhs.activePokemon
 	}
 }

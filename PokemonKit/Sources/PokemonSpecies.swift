@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct PokemonSpecies: Codable {
+public struct PokemonSpecies: Codable, Equatable {
 	public let dexNum: Int
 	public let identifier: String
 	public let name: String
@@ -33,12 +33,6 @@ public struct PokemonSpecies: Codable {
 	
 	public init(dexNum: Int, identifier: String, name: String, type: Type, stats: Stats, abilityOne: Ability, abilityTwo: Ability? = nil, hiddenAbility: Ability? = nil) {
 		self.init(dexNum: dexNum, identifier: identifier, name: name, typeOne: type, typeTwo: nil, stats: stats, abilityOne: abilityOne, abilityTwo: abilityTwo, hiddenAbility: hiddenAbility)
-	}
-}
-
-extension PokemonSpecies: Equatable {
-	public static func ==(lhs: PokemonSpecies, rhs: PokemonSpecies) -> Bool {
-		return lhs.dexNum == rhs.dexNum && lhs.name == rhs.name && lhs.typeOne == rhs.typeOne && lhs.typeTwo == rhs.typeTwo && lhs.baseStats == rhs.baseStats
 	}
 }
 

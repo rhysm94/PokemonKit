@@ -30,10 +30,10 @@ class PokemonKitTests: XCTestCase {
 		
 		Random.shared = Random(seed: "Testing")
 		
-		let bulbasaurSpecies = PokemonSpecies(dexNum: 1, identifier: "bulbasaur", name: "Bulbasaur", typeOne: .grass, typeTwo: .poison, stats: Stats(hp: 45, atk: 49, def: 49, spAtk: 65, spDef: 65, spd: 45), abilityOne: testAbility)
+		let bulbasaurSpecies = Pokedex.default.pokemon["bulbasaur"]! //PokemonSpecies(dexNum: 1, identifier: "bulbasaur", name: "Bulbasaur", typeOne: .grass, typeTwo: .poison, stats: Stats(hp: 45, atk: 49, def: 49, spAtk: 65, spDef: 65, spd: 45), abilityOne: testAbility)
 		bulbasaur = Pokemon(species: bulbasaurSpecies, level: 50, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [sludgeBomb])
 		
-		let pikachuSpecies = PokemonSpecies(dexNum: 25, identifier: "pikachu", name: "Pikachu", type: .electric, stats: Stats(hp: 35, atk: 55, def: 40, spAtk: 50, spDef: 50, spd: 90), abilityOne: testAbility)
+		let pikachuSpecies = Pokedex.default.pokemon["pikachu"]! //PokemonSpecies(dexNum: 25, identifier: "pikachu", name: "Pikachu", type: .electric, stats: Stats(hp: 35, atk: 55, def: 40, spAtk: 50, spDef: 50, spd: 90), abilityOne: testAbility)
 		pikachu = Pokemon(species: pikachuSpecies, level: 50, nature: .timid, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [thunderbolt])
 		
 		rhys.add(pokemon: bulbasaur)
@@ -64,6 +64,7 @@ class PokemonKitTests: XCTestCase {
 	
 	func testBulbasaurName() {
 		XCTAssertEqual(bulbasaur.nickname, "Bulbasaur")
+		dump(bulbasaur)
 	}
 	
 	func testHPStatCalculation() {
@@ -417,12 +418,21 @@ class PokemonKitTests: XCTestCase {
 	/// Tests accuracy of a low-accuracy move, such as Fissure (30% chance of hitting)
 	///
 	/// Test's Random seed is known to cause attack to miss
-	func testAccuracy() {
+	func testAccuracyLowAccuracyMove() {
 		let fissure = Pokedex.default.attacks["Fissure"]!
 		
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: fissure)))
 		engine.addTurn(Turn(player: joe, action: .attack(attack: gigaDrain)))
 		
 		XCTAssertEqual(joe.activePokemon.currentHP, joe.activePokemon.baseStats.hp)
+	}
+	
+	func testAccuracyPerfectAccuracy() {
+		let aerialAce = Pokedex.default.attacks["Aerial Ace"]!
+		
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: aerialAce)))
+		engine.addTurn(Turn(player: joe, action: .attack(attack: gigaDrain)))
+		
+		XCTAssertNotEqual(joe.activePokemon.currentHP, joe.activePokemon.baseStats.hp)
 	}
 }
