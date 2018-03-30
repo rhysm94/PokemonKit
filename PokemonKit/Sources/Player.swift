@@ -35,7 +35,7 @@ public class Player: NSObject, Codable {
 	
 	public init(player: Player) {
 		self.name = player.name
-		self.team = player.team
+		self.team = player.team.map { Pokemon(pokemon: $0) }
 	}
 	
 	public var allFainted: Bool {

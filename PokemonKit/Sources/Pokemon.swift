@@ -224,6 +224,21 @@ public class Pokemon: Codable {
 		let spdStage = try statStageContainer.decode(Int.self, forKey: .spd)
 		self._statStages = (atk: atkStage, def: defStage, spAtk: spAtkStage, spDef: spDefStage, spd: spdStage)
 	}
+	
+	init(pokemon: Pokemon) {
+		self.species = pokemon.species
+		self._nickname = pokemon._nickname
+		self._statStages = pokemon._statStages
+		self.ability = pokemon.ability
+		self.attacks = pokemon.attacks
+		self.level = pokemon.level
+		self.effortValues = pokemon.effortValues
+		self.individualValues = pokemon.individualValues
+		self.status = pokemon.status
+		self.volatileStatus = pokemon.volatileStatus
+		self.nature = pokemon.nature
+		self._currentHP = pokemon._currentHP
+	}
 }
 
 extension Pokemon: CustomStringConvertible {
