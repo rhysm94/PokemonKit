@@ -488,6 +488,12 @@ public class BattleEngine: NSObject, GKGameModel {
 		} else {
 			turns.append(turn)
 		}
+		
+		if turn.player.playerId == playerOne.playerId {
+			activePlayer = playerTwo
+		} else {
+			activePlayer = playerOne
+		}
 	}
 	
 	private func switchPokemon(player: Player, pokemon: Pokemon) {
@@ -532,13 +538,7 @@ public class BattleEngine: NSObject, GKGameModel {
 		return [playerOne, playerTwo]
 	}
 	
-	public var activePlayer: GKGameModelPlayer? {
-		if turns.first?.player == self.playerOne {
-			return playerTwo
-		} else {
-			return playerOne
-		}
-	}
+	public var activePlayer: GKGameModelPlayer?
 	
 	public func setGameModel(_ gameModel: GKGameModel) {
 		let model = gameModel as! BattleEngine
@@ -595,7 +595,7 @@ public class BattleEngine: NSObject, GKGameModel {
 					}
 				}
 				
-				for pokemon in player.team where pokemon.status != .fainted {
+				for pokemon in player.team where pokemon.status != .fainted && pokemon != player.activePokemon {
 					possibleTurns?.append(Turn(player: player, action: .switchTo(pokemon)))
 				}
 				
@@ -619,7 +619,7 @@ public class BattleEngine: NSObject, GKGameModel {
 	}
 	
 	public func copy(with zone: NSZone? = nil) -> Any {
-		let copy = type(of: self).init(playerOne: playerOne, playerTwo: playerTwo)
+		let copy = type(of: self).init(playerOne: Player(player: playerOne), playerTwo: Player(player: playerTwo))
 		
 		copy.turns = self.turns
 		

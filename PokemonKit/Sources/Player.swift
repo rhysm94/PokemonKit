@@ -33,6 +33,11 @@ public class Player: NSObject, Codable {
 		self.name = name
 	}
 	
+	public init(player: Player) {
+		self.name = player.name
+		self.team = player.team
+	}
+	
 	public var allFainted: Bool {
 		return team.reduce(false, { $1.status == .fainted })
 	}

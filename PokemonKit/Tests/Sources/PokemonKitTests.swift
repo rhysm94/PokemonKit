@@ -468,7 +468,7 @@ class PokemonKitTests: XCTestCase {
 		}
 		
 		let ai = GKMinmaxStrategist()
-		ai.maxLookAheadDepth = 10
+		ai.maxLookAheadDepth = 3
 		ai.gameModel = engine
 		ai.randomSource = GKARC4RandomSource()
 		
