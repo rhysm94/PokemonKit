@@ -64,7 +64,6 @@ class PokemonKitTests: XCTestCase {
 	
 	func testBulbasaurName() {
 		XCTAssertEqual(bulbasaur.nickname, "Bulbasaur")
-		dump(bulbasaur)
 	}
 	
 	func testHPStatCalculation() {
@@ -435,4 +434,18 @@ class PokemonKitTests: XCTestCase {
 		
 		XCTAssertNotEqual(joe.activePokemon.currentHP, joe.activePokemon.baseStats.hp)
 	}
+	
+	func testCopy() {
+		self.engine.addTurn(Turn(player: rhys, action: .attack(attack: thunderbolt)))
+		self.engine.addTurn(Turn(player: joe, action: .attack(attack: gigaDrain)))
+		
+		let copy = self.engine.copy() as? BattleEngine
+		
+		if let copy = copy, let engine = engine {
+			XCTAssertTrue(copy == engine)
+		} else {
+			XCTFail()
+		}
+	}
+	
 }

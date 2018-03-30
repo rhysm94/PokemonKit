@@ -7,8 +7,9 @@
 //
 
 import Foundation
+import GameplayKit
 
-public class Player: Codable {
+public class Player: NSObject, Codable {
 	public let name: String
 	internal(set) public var team = [Pokemon]()
 	
@@ -37,10 +38,54 @@ public class Player: Codable {
 	}
 }
 
-extension Player: Equatable {
+extension Player: GKGameModelPlayer {
+	public var playerId: Int {
+		return self.hashValue
+	}
+}
+
+extension Player {
 	public static func ==(lhs: Player, rhs: Player) -> Bool {
 		return lhs.name == rhs.name &&
 			lhs.team == rhs.team &&
 			lhs.activePokemon == rhs.activePokemon
 	}
+	
+	public static func !=(lhs: Player, rhs: Player) -> Bool {
+		return !(lhs == rhs)
+	}
+	
+	public static func ==(lhs: Player, rhs: GKGameModelPlayer) -> Bool {
+		if let right = rhs as? Player {
+			return lhs == right
+		} else {
+			return false
+		}
+	}
+	
+	public static func ==(lhs: GKGameModelPlayer, rhs: Player) -> Bool {
+		if let left = lhs as? Player {
+			return left == rhs
+		} else {
+			return false
+		}
+	}
+	
+	public static func !=(lhs: Player, rhs: GKGameModelPlayer) -> Bool {
+		if let right = rhs as? Player {
+			return lhs != right
+		} else {
+			return false
+		}
+	}
+
+	public static func !=(lhs: GKGameModelPlayer, rhs: Player) -> Bool {
+		if let left = lhs as? Player {
+			return left != rhs
+		} else {
+			return false
+		}
+	}
 }
+
+

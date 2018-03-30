@@ -8,7 +8,7 @@
 
 import GameplayKit
 
-public struct BattleEngine {
+public class BattleEngine: NSObject {
 	private let maxTurnCount: Int
 	internal(set) public var state: BattleState = .running {
 		didSet {
@@ -94,7 +94,7 @@ public struct BattleEngine {
 		}
 	}
 	
-	private mutating func run() {
+	private func run() {
 		print("---")
 		print("Turn \(turnCounter)")
 		print("---")
@@ -376,7 +376,7 @@ public struct BattleEngine {
 	/// - Parameters:
 	///   - playerOne: Player instance representing the first player
 	///   - playerTwo: Player instance representing the second player
-	public init(playerOne: Player, playerTwo: Player) {
+	public required init(playerOne: Player, playerTwo: Player) {
 		self.playerOne = playerOne
 		self.playerTwo = playerTwo
 		self.maxTurnCount = 2
@@ -476,7 +476,7 @@ public struct BattleEngine {
 		return (max(1, damage), effectiveness)
 	}
 	
-	public mutating func addTurn(_ turn: Turn) {
+	public func addTurn(_ turn: Turn) {
 		if !turns.isEmpty {
 			switch turn.action {
 			case .attack(_), .switchTo(_):
@@ -490,7 +490,7 @@ public struct BattleEngine {
 		}
 	}
 	
-	private mutating func switchPokemon(player: Player, pokemon: Pokemon) {
+	private func switchPokemon(player: Player, pokemon: Pokemon) {
 		let switchingPokemon = player.activePokemon
 		player.activePokemon = pokemon
 		
@@ -501,7 +501,7 @@ public struct BattleEngine {
 		state = .running
 	}
 	
-	private mutating func removeTurns(belongingTo player: Player) {
+	private func removeTurns(belongingTo player: Player) {
 		turns = turns.filter { turn in
 			switch turn.action {
 			case .attack(_), .switchTo(_):
@@ -512,13 +512,13 @@ public struct BattleEngine {
 		}
 	}
 	
-	mutating func setWeather(_ weather: Weather) {
+	func setWeather(_ weather: Weather) {
 		self.weather = weather
 		
 		weatherCounter = 5
 	}
 	
-	mutating func setTerrain(_ terrain: Terrain) {
+	func setTerrain(_ terrain: Terrain) {
 		self.terrain = terrain
 		
 		terrainCounter = 5
@@ -526,5 +526,123 @@ public struct BattleEngine {
 	
 	public enum BattleState: String, Codable {
 		case running, completed, awaitingSwitch
+	}
+}
+
+extension BattleEngine: GKGameModel {
+	public var players: [GKGameModelPlayer]? {
+		return [playerOne, playerTwo]
+	}
+	
+	public var activePlayer: GKGameModelPlayer? {
+		if turns.first?.player == self.playerOne {
+			return playerOne
+		} else {
+			return playerTwo
+		}
+	}
+	
+	public func setGameModel(_ gameModel: GKGameModel) {
+		let model = gameModel as! BattleEngine
+		
+		self.weather = model.weather
+		self.weatherCounter = model.weatherCounter
+		
+		self.terrain = model.terrain
+		self.terrainCounter = model.terrainCounter
+		
+		self.turnCounter = model.turnCounter
+		
+		self.lastDamage = model.lastDamage
+		
+		self.winner = model.winner
+		
+		self.poisonCounter = model.poisonCounter
+	}
+	
+	public func gameModelUpdates(for player: GKGameModelPlayer) -> [GKGameModelUpdate]? {
+		var possibleTurns: [Turn]?
+		
+		if let player = player as? Player {
+			possibleTurns = [Turn]()
+			
+			for attack in player.activePokemon.attacks {
+				if !player.activePokemon.volatileStatus.contains(.mustRecharge) {
+					possibleTurns?.append(Turn(player: player, action: .attack(attack: attack)))
+				} else {
+					possibleTurns?.append(Turn(player: player, action: .recharge))
+				}
+			}
+			
+			for pokemon in player.team where pokemon.status != .fainted {
+				possibleTurns?.append(Turn(player: player, action: .switchTo(pokemon)))
+			}
+			
+			possibleTurns?.append(Turn(player: player, action: .run))
+		}
+		
+		return possibleTurns
+	}
+	
+	public func apply(_ gameModelUpdate: GKGameModelUpdate) {
+		if let turn = gameModelUpdate as? Turn {
+			self.addTurn(turn)
+		}
+	}
+	
+	public func copy(with zone: NSZone? = nil) -> Any {
+		let copy = type(of: self).init(playerOne: playerOne, playerTwo: playerTwo)
+		
+		copy.weather = self.weather
+		copy.weatherCounter = self.weatherCounter
+		
+		copy.terrain = self.terrain
+		copy.terrainCounter = self.terrainCounter
+		
+		copy.turnCounter = self.turnCounter
+		
+		copy.lastDamage = self.lastDamage
+		
+		copy.winner = self.winner
+		
+		copy.poisonCounter = self.poisonCounter
+		
+		return copy
+	}
+	
+	public static func ==(lhs: BattleEngine, rhs: BattleEngine) -> Bool {
+		let value =
+			lhs.playerOne == rhs.playerOne &&
+			lhs.playerTwo == rhs.playerTwo &&
+			lhs.weather == rhs.weather &&
+			lhs.weatherCounter == rhs.weatherCounter &&
+			lhs.terrain == rhs.terrain &&
+			lhs.terrainCounter == rhs.terrainCounter &&
+			lhs.turnCounter == rhs.turnCounter &&
+			lhs.lastDamage == rhs.lastDamage &&
+			lhs.winner == rhs.winner &&
+			lhs.poisonCounter == rhs.poisonCounter
+		
+		return value
+	}
+	
+	public static func !=(lhs: BattleEngine, rhs: BattleEngine) -> Bool {
+		return !(lhs == rhs)
+	}
+	
+	public func isWin(for player: GKGameModelPlayer) -> Bool {
+		if let winner = winner {
+			return winner == player
+		} else {
+			return false
+		}
+	}
+	
+	public func isLoss(for player: GKGameModelPlayer) -> Bool {
+		if let winner = winner {
+			return winner != player
+		} else {
+			return false
+		}
 	}
 }
