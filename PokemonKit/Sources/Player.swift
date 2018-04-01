@@ -43,6 +43,7 @@ public class Player: NSObject, Codable, GKGameModelPlayer {
 		
 		super.init()
 
+		self.playerId = player.playerId
 		let indexOfActivePokemon = player.team.index(of: player.activePokemon)
 		
 		if let index = indexOfActivePokemon {
@@ -58,6 +59,7 @@ public class Player: NSObject, Codable, GKGameModelPlayer {
 extension Player {
 	public static func ==(lhs: Player, rhs: Player) -> Bool {
 		return lhs.name == rhs.name &&
+			lhs.playerId == rhs.playerId &&
 			lhs.team == rhs.team &&
 			lhs.activePokemon == rhs.activePokemon
 	}

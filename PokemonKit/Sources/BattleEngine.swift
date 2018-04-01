@@ -603,15 +603,6 @@ public class BattleEngine: NSObject, GKGameModel {
 		
 		var score = 0
 		
-		print("Player being checked")
-		dump(player)
-
-		print("Player One")
-		dump(playerOne)
-
-		print("Player Two")
-		dump(playerTwo)
-		
 		guard let player = player as? Player else { return .min }
 		
 		let opponent: Player
