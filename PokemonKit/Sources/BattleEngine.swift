@@ -19,6 +19,9 @@ public class BattleEngine: NSObject, GKGameModel {
 	private(set) var winner: Player? {
 		didSet {
 			guard let winner = winner else { return }
+			print("Setting winner as \(winner)")
+			print("Player One all fainted? \(playerOne.allFainted)")
+			print("Player Two all fainted? \(playerTwo.allFainted)")
 			view?.queue(action: .notifyOfWinner(winner))
 			state = .completed
 		}
