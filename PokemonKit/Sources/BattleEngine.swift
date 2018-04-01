@@ -532,7 +532,7 @@ public class BattleEngine: NSObject, GKGameModel {
 		
 		switchingPlayer.switchPokemon(pokemon: pokemon)
 		
-		view?.queue(action: .switchTo(pokemon, for: player))
+		view?.queue(action: .switchTo(Pokemon(pokemon: pokemon), for: player))
 		state = .running
 	}
 	
