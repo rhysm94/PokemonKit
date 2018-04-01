@@ -112,6 +112,12 @@ public struct Attack: Codable {
 	}
 }
 
+extension Attack: CustomStringConvertible {
+	public var description: String {
+		return name
+	}
+}
+
 extension Attack: Equatable {
 	public static func ==(lhs: Attack, rhs: Attack) -> Bool {
         return lhs.name == rhs.name &&

@@ -574,7 +574,6 @@ public class BattleEngine: NSObject, GKGameModel {
 			self.winner = Player(player: winner)
 		}
 		
-		
 		self.playerOne = Player(player: model.playerOne)
 		self.playerTwo = Player(player: model.playerTwo)
 		
@@ -717,8 +716,6 @@ public class BattleEngine: NSObject, GKGameModel {
 	}
 	
 	public func apply(_ gameModelUpdate: GKGameModelUpdate) {
-		print(gameModelUpdate)
-		
 		if let turn = gameModelUpdate as? Turn {
 			self.addTurn(turn)
 		} else {

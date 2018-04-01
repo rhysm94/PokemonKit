@@ -242,7 +242,6 @@ class PokemonKitTests: XCTestCase {
 	func testTopsyTurvy() {
 		let swordsDance = Pokedex.default.attacks["Swords Dance"]!
 		let topsyTurvy = Pokedex.default.attacks["Topsy-Turvy"]!
-		print(topsyTurvy)
 		
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: swordsDance)))
 		engine.addTurn(Turn(player: joe, action: .attack(attack: thunderbolt)))
