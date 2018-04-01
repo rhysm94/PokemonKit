@@ -14,7 +14,7 @@ public class Player: NSObject, Codable, GKGameModelPlayer {
 	internal(set) public var team = [Pokemon]()
 	
 	public lazy var playerId: Int = {
-		return self.name.hashValue
+		return GKRandomSource.sharedRandom().nextInt()
 	}()
 	
 	internal(set) public lazy var activePokemon: Pokemon = {
