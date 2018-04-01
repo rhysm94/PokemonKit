@@ -146,6 +146,12 @@
 		91BEEFE7204C7F9300AF5792 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BEEFDA204C748B00AF5792 /* SQLite.framework */; };
 		91DF932120499BD100F6C67B /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DF932020499BD100F6C67B /* GameKit.framework */; };
 		91DF932320499BD700F6C67B /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DF932220499BD700F6C67B /* GameKit.framework */; };
+		91EA215E206F859800C4B26D /* VolatileStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EA215D206F859800C4B26D /* VolatileStatus.swift */; };
+		91EA215F206F859800C4B26D /* VolatileStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EA215D206F859800C4B26D /* VolatileStatus.swift */; };
+		91EA2160206F859800C4B26D /* VolatileStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EA215D206F859800C4B26D /* VolatileStatus.swift */; };
+		91EA2161206F859800C4B26D /* VolatileStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EA215D206F859800C4B26D /* VolatileStatus.swift */; };
+		91EA2162206F859800C4B26D /* VolatileStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EA215D206F859800C4B26D /* VolatileStatus.swift */; };
+		91EA2163206F859800C4B26D /* VolatileStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EA215D206F859800C4B26D /* VolatileStatus.swift */; };
 		91EB0E062062E34C00512F16 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919A288A2062B28A0013DF83 /* Constants.swift */; };
 		91EB0E072062E34C00512F16 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919A288A2062B28A0013DF83 /* Constants.swift */; };
 		91EB0E082062E34D00512F16 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919A288A2062B28A0013DF83 /* Constants.swift */; };
@@ -232,6 +238,7 @@
 		91BEEFDE204C757C00AF5792 /* pokedex.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = pokedex.sqlite; sourceTree = "<group>"; };
 		91DF932020499BD100F6C67B /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		91DF932220499BD700F6C67B /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/GameKit.framework; sourceTree = DEVELOPER_DIR; };
+		91EA215D206F859800C4B26D /* VolatileStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolatileStatus.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -342,6 +349,7 @@
 				91A0DB242047072800D7B67A /* Random.swift */,
 				91A0DB302047072A00D7B67A /* Stats.swift */,
 				91A0DB322047072A00D7B67A /* Status.swift */,
+				91EA215D206F859800C4B26D /* VolatileStatus.swift */,
 				91A0DB252047072800D7B67A /* Terrain.swift */,
 				91A0DB282047072900D7B67A /* Turn.swift */,
 				91A0DB2B2047072900D7B67A /* Type.swift */,
@@ -792,6 +800,7 @@
 				91A0DBBE2047150E00D7B67A /* Weather.swift in Sources */,
 				91A0DBB42047150E00D7B67A /* Player.swift in Sources */,
 				91A0DBB02047150E00D7B67A /* BattleEngine.swift in Sources */,
+				91EA215E206F859800C4B26D /* VolatileStatus.swift in Sources */,
 				91A0DBBD2047150E00D7B67A /* Type.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -819,6 +828,7 @@
 				91A0DBE42047150F00D7B67A /* Weather.swift in Sources */,
 				91A0DBDA2047150F00D7B67A /* Player.swift in Sources */,
 				91A0DBD62047150F00D7B67A /* BattleEngine.swift in Sources */,
+				91EA2160206F859800C4B26D /* VolatileStatus.swift in Sources */,
 				91A0DBE32047150F00D7B67A /* Type.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -846,6 +856,7 @@
 				91A0DC0A2047151100D7B67A /* Weather.swift in Sources */,
 				91A0DC002047151100D7B67A /* Player.swift in Sources */,
 				91A0DBFC2047151100D7B67A /* BattleEngine.swift in Sources */,
+				91EA2162206F859800C4B26D /* VolatileStatus.swift in Sources */,
 				91A0DC092047151100D7B67A /* Type.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -871,6 +882,7 @@
 				91A0DBD02047150F00D7B67A /* Type.swift in Sources */,
 				91A0DBCA2047150F00D7B67A /* PokemonSpecies.swift in Sources */,
 				91A0DBCD2047150F00D7B67A /* Status.swift in Sources */,
+				91EA215F206F859800C4B26D /* VolatileStatus.swift in Sources */,
 				91A0DBC82047150F00D7B67A /* Pokedex.swift in Sources */,
 				91A0DBC52047150F00D7B67A /* MovesetItem.swift in Sources */,
 				91A0DBC72047150F00D7B67A /* Player.swift in Sources */,
@@ -899,6 +911,7 @@
 				91A0DBEC2047151000D7B67A /* Nature.swift in Sources */,
 				91A0DBF42047151000D7B67A /* Terrain.swift in Sources */,
 				91A0DBF72047151000D7B67A /* Weather.swift in Sources */,
+				91EA2161206F859800C4B26D /* VolatileStatus.swift in Sources */,
 				91FF59C220472F9C00CBEBD5 /* PokemonKitTests.swift in Sources */,
 				91A0DBED2047151000D7B67A /* Player.swift in Sources */,
 				91A0DBE92047151000D7B67A /* BattleEngine.swift in Sources */,
@@ -927,6 +940,7 @@
 				91A0DC122047151100D7B67A /* Nature.swift in Sources */,
 				91A0DC1A2047151100D7B67A /* Terrain.swift in Sources */,
 				91A0DC1D2047151100D7B67A /* Weather.swift in Sources */,
+				91EA2163206F859800C4B26D /* VolatileStatus.swift in Sources */,
 				91FF59C320472F9D00CBEBD5 /* PokemonKitTests.swift in Sources */,
 				91A0DC132047151100D7B67A /* Player.swift in Sources */,
 				91A0DC0F2047151100D7B67A /* BattleEngine.swift in Sources */,

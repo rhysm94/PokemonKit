@@ -12,7 +12,11 @@ public class Turn: NSObject, Codable, GKGameModelUpdate {
 	public let player: Player
 	let action: Action
 	
-	public var value: Int = 0
+	public var value: Int = 0 {
+		didSet {
+			print("Value for \(self) = \(value)")
+		}
+	}
 	
 	var playerSpeed: Int {
 		switch action {
@@ -45,6 +49,11 @@ public class Turn: NSObject, Codable, GKGameModelUpdate {
 	public init(player: Player, action: Action) {
 		self.player = player
 		self.action = action
+	}
+	
+	init(turn: Turn) {
+		self.player = Player(player: turn.player)
+		self.action = turn.action
 	}
 }
 

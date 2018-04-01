@@ -9,9 +9,13 @@
 import Foundation
 import GameplayKit
 
-public class Player: NSObject, Codable {
+public class Player: NSObject, Codable, GKGameModelPlayer {	
 	public let name: String
 	internal(set) public var team = [Pokemon]()
+	
+	public lazy var playerId: Int = {
+		return self.name.hashValue
+	}()
 	
 	internal(set) public lazy var activePokemon: Pokemon = {
 		return self.team[0]
@@ -36,16 +40,18 @@ public class Player: NSObject, Codable {
 	public init(player: Player) {
 		self.name = player.name
 		self.team = player.team.map { Pokemon(pokemon: $0) }
+		
+		super.init()
+
+		let indexOfActivePokemon = player.team.index(of: player.activePokemon)
+		
+		if let index = indexOfActivePokemon {
+			self.activePokemon = self.team[index]
+		}
 	}
 	
 	public var allFainted: Bool {
 		return team.reduce(false, { $1.status == .fainted })
-	}
-}
-
-extension Player: GKGameModelPlayer {
-	public var playerId: Int {
-		return self.name.hashValue
 	}
 }
 

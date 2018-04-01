@@ -225,6 +225,9 @@ public class Pokemon: Codable {
 		self._statStages = (atk: atkStage, def: defStage, spAtk: spAtkStage, spDef: spDefStage, spd: spdStage)
 	}
 	
+	/// Copy constructor for a Pokemon
+	///
+	/// - parameter pokemon: The Pokemon object you want a copy of
 	init(pokemon: Pokemon) {
 		self.species = pokemon.species
 		self._nickname = pokemon._nickname
@@ -249,12 +252,19 @@ extension Pokemon: CustomStringConvertible {
 
 extension Pokemon: Equatable {
 	public static func ==(lhs: Pokemon, rhs: Pokemon) -> Bool {
-		return lhs.species == rhs.species &&
-			lhs._currentHP == rhs._currentHP &&
+		return
+			lhs.species == rhs.species &&
 			lhs._nickname == rhs._nickname &&
 			lhs._statStages == rhs._statStages &&
 			lhs.ability == rhs.ability &&
-			lhs.baseStats == rhs.baseStats
+			lhs.attacks == rhs.attacks &&
+			lhs.level == rhs.level &&
+			lhs.effortValues == rhs.effortValues &&
+			lhs.individualValues == rhs.individualValues &&
+			lhs.status == rhs.status &&
+			lhs.volatileStatus == rhs.volatileStatus &&
+			lhs.nature == rhs.nature &&
+			lhs._currentHP == rhs._currentHP
 	}
 }
 
