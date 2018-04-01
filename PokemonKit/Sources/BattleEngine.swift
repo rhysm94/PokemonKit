@@ -19,7 +19,7 @@ public class BattleEngine: NSObject, GKGameModel {
 	private(set) var winner: Player? {
 		didSet {
 			guard let winner = winner else { return }
-			print("Setting winner as \(winner)")
+			print("Setting winner as \(winner.name)")
 			print("Player One all fainted? \(playerOne.allFainted)")
 			print("Player Two all fainted? \(playerTwo.allFainted)")
 			view?.queue(action: .notifyOfWinner(winner))
@@ -371,8 +371,8 @@ public class BattleEngine: NSObject, GKGameModel {
 				}
 			}
 			
-			print("\(playerOne.name)'s \(playerOne.activePokemon) has \(playerOne.activePokemon.currentHP)/\(playerOne.activePokemon.baseStats.hp) HP")
-			print("\(playerTwo.name)'s \(playerTwo.activePokemon) has \(playerTwo.activePokemon.currentHP)/\(playerTwo.activePokemon.baseStats.hp) HP")
+			print("\(playerOne.name)'s \(playerOne.activePokemon) has \(playerOne.activePokemon.currentHP)/\(playerOne.activePokemon.baseStats.hp) HP remaining")
+			print("\(playerTwo.name)'s \(playerTwo.activePokemon) has \(playerTwo.activePokemon.currentHP)/\(playerTwo.activePokemon.baseStats.hp) HP remaining")
 			
 			weatherCounter -= 1
 			terrainCounter -= 1

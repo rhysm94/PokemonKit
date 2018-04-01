@@ -52,7 +52,7 @@ public class Player: NSObject, Codable, GKGameModelPlayer {
 	}
 	
 	public var allFainted: Bool {
-		return team.reduce(true, { $1.status == .fainted })
+		return team.reduce(true, { $0 && $1.status == .fainted })
 	}
 }
 
