@@ -224,7 +224,7 @@ public class Pokemon: Codable {
 	/// Copy constructor for a Pokemon
 	///
 	/// - parameter pokemon: The Pokemon object you want a copy of
-	init(pokemon: Pokemon) {
+	public init(pokemon: Pokemon) {
 		self.species = pokemon.species
 		self._nickname = pokemon._nickname
 		self._statStages = pokemon._statStages
