@@ -6,10 +6,18 @@
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
 //
 
-public class Turn: Codable {
+import GameplayKit
+
+public class Turn: NSObject, Codable, GKGameModelUpdate {
 	public let player: Player
 	let action: Action
-
+	
+	public var value: Int = 0 {
+		didSet {
+			print("Value for \(self) = \(value)")
+		}
+	}
+	
 	var playerSpeed: Int {
 		switch action {
 		case .attack(_):
@@ -42,9 +50,14 @@ public class Turn: Codable {
 		self.player = player
 		self.action = action
 	}
+	
+	init(turn: Turn) {
+		self.player = Player(player: turn.player)
+		self.action = turn.action
+	}
 }
 
-extension Turn: Equatable {
+extension Turn {
 	public static func ==(lhs: Turn, rhs: Turn) -> Bool {
 		return lhs.playerSpeed == rhs.playerSpeed &&
 			lhs.priority == rhs.priority &&
@@ -52,9 +65,8 @@ extension Turn: Equatable {
 	}
 }
 
-extension Turn: CustomStringConvertible {
-	public var description: String {
-		
+extension Turn {
+	public override var description: String {
 		switch action {
 		case let .attack(attack):
 			return "\(player.name)'s \(player.activePokemon.nickname) is going to use attack \(attack.name)"

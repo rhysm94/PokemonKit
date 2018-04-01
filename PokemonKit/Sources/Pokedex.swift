@@ -56,6 +56,8 @@ public class Pokedex {
 		"Giga Drain": .singleTargetUsingDamage({ pokemon, damage in
 			let restoreHP = Int(gameFreakRound(Double(damage) * 0.5))
 			pokemon.currentHP += restoreHP
+			
+			print("\(pokemon.nickname) will restore by \(restoreHP) capped at their max. HP")
 		}),
 		"Growl": .singleTarget({ $0.statStages.atk -= 1 }),
 		"Hyper Beam": .singleTarget({ $0.volatileStatus.insert(.mustRecharge) }),
@@ -68,11 +70,8 @@ public class Pokedex {
 		}),
 		"Protect": .singleTarget({ $0.volatileStatus.insert(.protected) }),
 		"Rain Dance": .setWeather(.rain),
-		"Recover": .singleTarget({
-			$0.currentHP += Int((0.5 * Double($0.baseStats.hp)))
-			if $0.currentHP > $0.baseStats.hp {
-				$0.currentHP = $0.baseStats.hp
-			}
+		"Recover": .singleTarget({ pokemon in
+			pokemon.currentHP += Int((0.5 * Double(pokemon.baseStats.hp)))
 		}),
 		"Sparkling Aria": .singleTarget({ if $0.status == .burned { $0.status = .healthy } }),
 		"Solar Beam": .multiTurnMove(

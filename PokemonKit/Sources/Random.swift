@@ -55,16 +55,18 @@ public class Random {
 	func shouldHit(chance: Int) -> Bool {
 		guard chance > 0 else { return false }
 		guard chance < 100 else { return true }
-		
-		var chances = [Bool]()
-		for _ in 1...chance {
-			chances.append(true)
-		}
-		for _ in 1...(100-chance) {
-			chances.append(false)
-		}
-		
-		chances = randomSource.arrayByShufflingObjects(in: chances) as! [Bool]
-		return chances[0]
+
+		return random.nextUniform() <= (Float(chance) / 100.0)
+
+//		var chances = [Bool]()
+//		for _ in 1...chance {
+//			chances.append(true)
+//		}
+//		for _ in 1...(100-chance) {
+//			chances.append(false)
+//		}
+//
+//		chances = randomSource.arrayByShufflingObjects(in: chances) as! [Bool]
+//		return chances[0]
 	}
 }

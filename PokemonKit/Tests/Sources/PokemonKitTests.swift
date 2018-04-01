@@ -22,6 +22,8 @@ class PokemonKitTests: XCTestCase {
 	let gigaDrain = Pokedex.default.attacks["Giga Drain"]!
 	let bulletSeed = Pokedex.default.attacks["Bullet Seed"]!
 	let thunderbolt = Pokedex.default.attacks["Thunderbolt"]!
+	let thunder = Pokedex.default.attacks["Thunder"]!
+	let tackle = Pokedex.default.attacks["Tackle"]!
 	
 	let testAbility = Ability(name: "Test", description: "Test")
 	
@@ -31,10 +33,10 @@ class PokemonKitTests: XCTestCase {
 		Random.shared = Random(seed: "Testing")
 		
 		let bulbasaurSpecies = Pokedex.default.pokemon["bulbasaur"]! //PokemonSpecies(dexNum: 1, identifier: "bulbasaur", name: "Bulbasaur", typeOne: .grass, typeTwo: .poison, stats: Stats(hp: 45, atk: 49, def: 49, spAtk: 65, spDef: 65, spd: 45), abilityOne: testAbility)
-		bulbasaur = Pokemon(species: bulbasaurSpecies, level: 50, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [sludgeBomb])
+		bulbasaur = Pokemon(species: bulbasaurSpecies, level: 50, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [sludgeBomb, gigaDrain])
 		
 		let pikachuSpecies = Pokedex.default.pokemon["pikachu"]! //PokemonSpecies(dexNum: 25, identifier: "pikachu", name: "Pikachu", type: .electric, stats: Stats(hp: 35, atk: 55, def: 40, spAtk: 50, spDef: 50, spd: 90), abilityOne: testAbility)
-		pikachu = Pokemon(species: pikachuSpecies, level: 50, nature: .timid, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [thunderbolt])
+		pikachu = Pokemon(species: pikachuSpecies, level: 50, nature: .timid, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [thunderbolt, thunder])
 		
 		rhys.add(pokemon: bulbasaur)
 		joe.add(pokemon: pikachu)
@@ -62,9 +64,12 @@ class PokemonKitTests: XCTestCase {
 		XCTAssertEqual(team, decodedTeamData)
 	}
 	
+	func testActivePokemon() {
+		XCTAssertTrue(rhys.activePokemon === rhys.team[0])
+	}
+	
 	func testBulbasaurName() {
 		XCTAssertEqual(bulbasaur.nickname, "Bulbasaur")
-		dump(bulbasaur)
 	}
 	
 	func testHPStatCalculation() {
@@ -143,6 +148,8 @@ class PokemonKitTests: XCTestCase {
 	}
 	
 	func testParalysisApplied() {
+		Random.shared = Random(seed: "willhit")
+		
 		engine.addTurn(Turn(player: joe, action: .attack(attack: Pokedex.default.attacks["Thunder Wave"]!)))
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: rhys.activePokemon.attacks[0])))
 		
@@ -183,6 +190,22 @@ class PokemonKitTests: XCTestCase {
 		XCTAssert(engine.turns.count == 1)
 	}
 	
+	func testAddingForceSwitch() {
+		let gengarSpecies = Pokedex.default.pokemon[93]
+		let gengar = Pokemon(species: gengarSpecies, level: 50, ability: gengarSpecies.abilityOne, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 0, spAtk: 252, spDef: 6, spd: 252), individualValues: .fullIVs, attacks: [sludgeBomb])
+		
+		engine.state = .awaitingSwitch
+		
+		joe.add(pokemon: gengar)
+		joe.activePokemon.currentHP = 0
+		
+		engine.addTurn(Turn(player: joe, action: .forceSwitch(gengar)))
+		
+		XCTAssertEqual(joe.activePokemon, gengar)
+		XCTAssertEqual(engine.turns.count, 0)
+		XCTAssertEqual(engine.state, .running)
+	}
+	
 	func testHealingMove() {
 		// Rhys's Pokémon - Bulbasaur - is slower, so Joe's Pokémon - Pikachu - will attack first
 		// As established in a previous test, the damage is less than half of Bulbasaur's HP
@@ -196,7 +219,11 @@ class PokemonKitTests: XCTestCase {
 	}
 	
 	func testNeedToRecharge() {
-		engine.addTurn(Turn(player: joe, action: .attack(attack: Pokedex.default.attacks["Hyper Beam"]!)))
+		Random.shared = Random(seed: "willhit")
+		
+		let hyperBeam = Pokedex.default.attacks["Hyper Beam"]!
+
+		engine.addTurn(Turn(player: joe, action: .attack(attack: hyperBeam)))
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: gigaDrain)))
 		
 		XCTAssert(joe.activePokemon.volatileStatus.contains(.mustRecharge))
@@ -234,17 +261,15 @@ class PokemonKitTests: XCTestCase {
 	}
 	
 	func testGigaDrain() {
-		let swordsDance = Pokedex.default.attacks["Swords Dance"]!
-
 		let beforeTurnHP = rhys.activePokemon.currentHP
 		
 		engine.addTurn(Turn(player: joe, action: .attack(attack: thunderbolt)))
-		engine.addTurn(Turn(player: rhys, action: .attack(attack: swordsDance)))
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: gigaDrain)))
 		
 		print("Before Turn: \(rhys.activePokemon.nickname)'s HP: \(beforeTurnHP)")
 		print("After Turn: \(rhys.activePokemon.nickname)'s HP: \(rhys.activePokemon.currentHP)")
 		
-		XCTAssertNotEqual(rhys.activePokemon.currentHP, beforeTurnHP)
+		XCTAssertEqual(rhys.activePokemon.currentHP, beforeTurnHP)
 	}
 	
 	func testSuperEffectiveDamage() {
@@ -435,4 +460,106 @@ class PokemonKitTests: XCTestCase {
 		
 		XCTAssertNotEqual(joe.activePokemon.currentHP, joe.activePokemon.baseStats.hp)
 	}
+	
+	func testCopy() {
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: thunderbolt)))
+		engine.addTurn(Turn(player: joe, action: .attack(attack: gigaDrain)))
+		
+		let copy = engine.copy() as? BattleEngine
+		
+		if let copy = copy, let engine = self.engine {
+			XCTAssertTrue(copy == engine)
+		} else {
+			XCTFail()
+		}
+	}
+	
+	func testPlayerIDValues() {
+		print(rhys.playerId)
+		print(joe.playerId)
+		XCTAssertNotEqual(rhys.playerId, joe.playerId)
+	}
+	
+	// MARK:- GKMinmaxStrategist tests
+
+	func testAICanMakeTurn() {
+		joe.activePokemon.attacks.append(Pokedex.default.attacks["Hyper Beam"]!)
+		joe.activePokemon.attacks.append(Pokedex.default.attacks["Protect"]!)
+		
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: gigaDrain)))
+		
+		let ai = GKMinmaxStrategist()
+		ai.maxLookAheadDepth = 3
+		ai.gameModel = engine
+		ai.randomSource = GKARC4RandomSource()
+		
+		var turn: GKGameModelUpdate?
+		
+		DispatchQueue.global().sync { [unowned self] in
+			turn = ai.bestMove(for: self.joe)
+		}
+		
+		if let turn = turn as? Turn {
+			print("Best Move: \(turn)")
+			print("Move Value: \(turn.value)")
+		} else {
+			XCTFail()
+		}
+	}
+	
+	
+	func testAIWillForceSwitch() {
+		let gengarSpecies = Pokedex.default.pokemon[93]
+		let gengar = Pokemon(species: gengarSpecies, level: 50, ability: gengarSpecies.abilityOne, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 0, spAtk: 252, spDef: 6, spd: 252), individualValues: .fullIVs, attacks: [sludgeBomb])
+		
+		joe.add(pokemon: gengar)
+		
+		// Set up engine as if a turn had occurred, and Rhys knocked out Joe's active Pokémon
+		joe.activePokemon.currentHP = 0
+		engine.state = .awaitingSwitch
+		engine.activePlayer = engine.playerTwo
+		
+		// Set up AI
+		let ai = GKMinmaxStrategist()
+		ai.maxLookAheadDepth = 3
+		ai.gameModel = engine
+		ai.randomSource = GKARC4RandomSource()
+		
+		var turn: GKGameModelUpdate?
+		
+		DispatchQueue.global().sync { [unowned self] in
+			turn = ai.bestMove(for: self.joe)
+		}
+		
+		if let turn = turn as? Turn {
+			print("Best Move: \(turn)")
+			print("Move Value: \(turn.value)")
+			engine.addTurn(turn)
+		} else {
+			XCTFail()
+		}
+		
+		XCTAssertEqual(joe.activePokemon, gengar)
+		XCTAssertTrue(engine.turns.count == 0)
+	}
+	
+	func testPokemonCopyConstructor() {
+		bulbasaur.volatileStatus.insert(.flinch)
+		bulbasaur.volatileStatus.insert(.mustRecharge)
+		
+		let bulbasaurCopy = Pokemon(pokemon: bulbasaur)
+		
+		XCTAssertEqual(bulbasaur, bulbasaurCopy)
+	}
+	
+	func testPokemonCopyConstructorTwo() {
+		let bulbasaurCopy = Pokemon(pokemon: bulbasaur)
+		
+		bulbasaur.volatileStatus.insert(.flinch)
+		bulbasaur.volatileStatus.insert(.mustRecharge)
+		
+		XCTAssertNotEqual(bulbasaur, bulbasaurCopy)
+	}
+	
+
 }

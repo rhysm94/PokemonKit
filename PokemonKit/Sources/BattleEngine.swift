@@ -8,7 +8,7 @@
 
 import GameplayKit
 
-public struct BattleEngine {
+public class BattleEngine: NSObject, GKGameModel {
 	private let maxTurnCount: Int
 	internal(set) public var state: BattleState = .running {
 		didSet {
@@ -67,7 +67,6 @@ public struct BattleEngine {
 	private var multiHitMoveRunning = false
 	private var resolveTurns = false {
 		didSet {
-			print("resolveTurns was set as \(resolveTurns)")
 			if resolveTurns {
 				run()
 			}
@@ -94,7 +93,7 @@ public struct BattleEngine {
 		}
 	}
 	
-	private mutating func run() {
+	private func run() {
 		print("---")
 		print("Turn \(turnCounter)")
 		print("---")
@@ -129,13 +128,15 @@ public struct BattleEngine {
 				}
 				
 				let turn = turns.removeFirst()
+				turnHistory.append(turn)
 				
 				switch turn.action {
 				case var .attack(attack):
 					var attacker: Pokemon
 					var defender: Pokemon
 
-					if turn.player == playerOne {
+					
+					if turn.player.playerId == playerOne.playerId {
 						attacker = playerOne.activePokemon
 						defender = playerTwo.activePokemon
 					} else {
@@ -162,17 +163,19 @@ public struct BattleEngine {
 					func doDamage() {
 						lastDamage = 0
 						
-						if attack.category == .status {
-							view?.queue(action: .useAttack(attacker: attacker, defender: defender, attack: attack))
-						}
-						guard attack.power > 0 else { return }
+						// Skips doing damage if this is the first half of a multi-turn move, but still queues the relevant .useAttack
 						if case .multiTurnMove(_,_)? = attack.bonusEffect {
 							view?.queue(action: .useAttack(attacker: attacker, defender: defender, attack: attack))
 							return
 						}
-						if case .multiHitMove(_,_)? = attack.bonusEffect { return }
 						
-						if [.physical, .special].contains(attack.category) {
+						// Skips doing damage if this is the first instance of a multi-hit move
+						if case .multiHitMove(_,_)? = attack.bonusEffect {
+							return
+						}
+						
+						switch attack.category {
+						case .physical, .special:
 							let (baseDamage, effectiveness) = calculateDamage(attacker: attacker, defender: defender, attack: attack)
 							if effectiveness != .notEffective {
 								print("\(attack.name) is going to do \(baseDamage) HP of damage against \(defender)")
@@ -185,6 +188,9 @@ public struct BattleEngine {
 							}
 							
 							lastDamage = baseDamage
+						case .status:
+							print("\(attacker) is going to use \(attack.name) against \(defender)")
+							view?.queue(action: .useAttack(attacker: attacker, defender: defender, attack: attack))
 						}
 					}
 					
@@ -192,7 +198,9 @@ public struct BattleEngine {
 						if case .multiTurnMove(let condition, _)? = attack.bonusEffect, condition(self) {
 							attack = attack.withoutBonusEffect()
 						}
+						
 						doDamage()
+						
 					}
 					
 					// Have to use a value in .confused(), as you can't do .confused(_) on the right-hand side of an equation
@@ -268,10 +276,13 @@ public struct BattleEngine {
 						case .singleTarget(let bonusEffect)?:
 							guard let moveTarget = target else { return }
 							bonusEffect(moveTarget)
+							
 						case .setWeather(let weather)?:
 							setWeather(weather)
+							
 						case .setTerrain(let terrain)?:
 							setTerrain(terrain)
+							
 						case let .multiHitMove(minHits, maxHits)?:
 							let numberOfHits = Random.shared.between(minimum: minHits, maximum: maxHits)
 							view?.queue(action: .displayText("\(attack.name) will hit \(numberOfHits) times!"))
@@ -279,14 +290,17 @@ public struct BattleEngine {
 							for _ in 1...numberOfHits {
 								turns.insert(Turn(player: turn.player, action: .attack(attack: replacementAttack)), at: turns.startIndex)
 							}
+							
 						case let .singleTargetUsingDamage(bonusEffect)?:
 							guard let moveTarget = target else { return }
 							bonusEffect(moveTarget, lastDamage)
+							
 						case .multiTurnMove(let condition, let addAttack)?:
 							guard let moveTarget = target else { return }
 							if !condition(self) {
 								addAttack(attack, moveTarget)
 							}
+							
 						case .none, .instanceOfMultiHit?:
 							break
 						}
@@ -344,6 +358,7 @@ public struct BattleEngine {
 				player.activePokemon.volatileStatus = Set(player.activePokemon.volatileStatus.map { $0.turn() })
 				
 				if player.activePokemon.status == .fainted {
+					
 					view?.queue(action: .displayText("\(player.activePokemon) fainted!"))
 					view?.queue(action: .fainted(player.activePokemon))
 					
@@ -367,16 +382,15 @@ public struct BattleEngine {
 		}
 		
 		view?.queue(action: .clear)
-		
-		
 	}
+	
 	
 	/// Initialiser for the Battle Engine
 	///
 	/// - Parameters:
 	///   - playerOne: Player instance representing the first player
 	///   - playerTwo: Player instance representing the second player
-	public init(playerOne: Player, playerTwo: Player) {
+	public required init(playerOne: Player, playerTwo: Player) {
 		self.playerOne = playerOne
 		self.playerTwo = playerTwo
 		self.maxTurnCount = 2
@@ -476,7 +490,7 @@ public struct BattleEngine {
 		return (max(1, damage), effectiveness)
 	}
 	
-	public mutating func addTurn(_ turn: Turn) {
+	public func addTurn(_ turn: Turn) {
 		if !turns.isEmpty {
 			switch turn.action {
 			case .attack(_), .switchTo(_):
@@ -488,11 +502,25 @@ public struct BattleEngine {
 		} else {
 			turns.append(turn)
 		}
+		
+		if turn.player.playerId == playerOne.playerId {
+			activePlayer = playerTwo
+		} else {
+			activePlayer = playerOne
+		}
 	}
 	
-	private mutating func switchPokemon(player: Player, pokemon: Pokemon) {
-		let switchingPokemon = player.activePokemon
-		player.activePokemon = pokemon
+	private func switchPokemon(player: Player, pokemon: Pokemon) {
+		var switchingPlayer: Player
+		
+		if player.playerId == playerOne.playerId {
+			switchingPlayer = playerOne
+		} else {
+			switchingPlayer = playerTwo
+		}
+		
+		let switchingPokemon = switchingPlayer.activePokemon
+		switchingPlayer.activePokemon = pokemon
 		
 		switchingPokemon.volatileStatus.removeAll()
 		
@@ -501,7 +529,7 @@ public struct BattleEngine {
 		state = .running
 	}
 	
-	private mutating func removeTurns(belongingTo player: Player) {
+	private func removeTurns(belongingTo player: Player) {
 		turns = turns.filter { turn in
 			switch turn.action {
 			case .attack(_), .switchTo(_):
@@ -512,13 +540,13 @@ public struct BattleEngine {
 		}
 	}
 	
-	mutating func setWeather(_ weather: Weather) {
+	func setWeather(_ weather: Weather) {
 		self.weather = weather
 		
 		weatherCounter = 5
 	}
 	
-	mutating func setTerrain(_ terrain: Terrain) {
+	func setTerrain(_ terrain: Terrain) {
 		self.terrain = terrain
 		
 		terrainCounter = 5
@@ -527,4 +555,229 @@ public struct BattleEngine {
 	public enum BattleState: String, Codable {
 		case running, completed, awaitingSwitch
 	}
+	
+	// MARK:- GameplayKit Methods
+	
+	public var players: [GKGameModelPlayer]? {
+		return [playerOne, playerTwo]
+	}
+	
+	public lazy var activePlayer: GKGameModelPlayer? = {
+		return self.playerOne
+	}()
+	
+	public func setGameModel(_ gameModel: GKGameModel) {
+		let model = gameModel as! BattleEngine
+		
+		self.state = model.state
+		if let winner = model.winner {
+			self.winner = Player(player: winner)
+		}
+		
+		
+		self.playerOne = Player(player: model.playerOne)
+		self.playerTwo = Player(player: model.playerTwo)
+		
+		self.turnHistory = model.turnHistory
+		
+		self.turnCounter = model.turnCounter
+		
+		self.lastDamage = model.lastDamage
+		
+		self.weather = model.weather
+		self.weatherCounter = model.weatherCounter
+		
+		self.terrain = model.terrain
+		self.terrainCounter = model.terrainCounter
+		
+		self.multiHitMoveRunning = model.multiHitMoveRunning
+
+		self.resolveTurns = model.resolveTurns
+		self.turns = model.turns
+		
+		self.poisonCounter = model.poisonCounter
+		self.activePlayer = model.activePlayer
+	}
+	
+	public func score(for player: GKGameModelPlayer) -> Int {
+		
+		var score = 0
+		
+		print("Player being checked")
+		dump(player)
+
+		print("Player One")
+		dump(playerOne)
+
+		print("Player Two")
+		dump(playerTwo)
+		
+		guard let player = player as? Player else { return .min }
+		
+		let opponent: Player
+		if player.playerId == playerOne.playerId {
+			opponent = playerTwo
+		} else {
+			opponent = playerOne
+		}
+		
+		guard player.playerId == playerOne.playerId || player.playerId == playerTwo.playerId else { return .min }
+		
+		func scoreValue(for number: Double) -> Int {
+			switch number {
+			case 0.9..<1: return 10
+			case 0.8..<0.9: return 20
+			case 0.7..<0.8: return 30
+			case 0.6..<0.7: return 40
+			case 0.5..<0.6: return 50
+			case 0.4..<0.5: return 60
+			case 0.3..<0.4: return 70
+			case 0.2..<0.3: return 80
+			case 0.1..<0.2: return 90
+			case 0: return 100
+			default: return -10
+			}
+		}
+		
+		score += scoreValue(for: Double(opponent.activePokemon.currentHP) / Double(opponent.activePokemon.baseStats.hp))
+		
+		score -= scoreValue(for: Double(player.activePokemon.currentHP) / Double(player.activePokemon.baseStats.hp))
+		
+		if player.activePokemon.status == .fainted {
+			score -= 100
+		}
+		
+		if !player.activePokemon.volatileStatus.isEmpty {
+			for status in player.activePokemon.volatileStatus {
+				switch status {
+				case .confused(let counter):
+					if counter > 0 {
+						score -= 20
+					}
+				case .protected:
+					score += 40
+				case .flinch:
+					score -= 30
+				case .mustRecharge:
+					score -= 20
+				case .preparingTo(_):
+					score -= 20
+				}
+			}
+		}
+		
+		if isWin(for: player) {
+			score += 500
+		} else if isWin(for: opponent) {
+			score -= 500
+		}
+		
+		print("Score for state = \(score)")
+		return score
+	}
+	
+	public func gameModelUpdates(for player: GKGameModelPlayer) -> [GKGameModelUpdate]? {
+		
+		var possibleTurns: [Turn]?
+		
+		if let player = player as? Player {
+			
+			possibleTurns = [Turn]()
+			
+			switch state {
+			case .running:
+				if player.activePokemon.status != .fainted {
+					for status in player.activePokemon.volatileStatus {
+						switch status {
+						case .mustRecharge:
+							possibleTurns?.append(Turn(player: player, action: .recharge))
+							return possibleTurns
+						case .preparingTo(let attack):
+							possibleTurns?.append(Turn(player: player, action: .attack(attack: attack.withoutBonusEffect())))
+							return possibleTurns
+						default: break
+						}
+					}
+					
+					for attack in player.activePokemon.attacks {
+						possibleTurns?.append(Turn(player: player, action: .attack(attack: attack)))
+					}
+					
+					for pokemon in player.team where pokemon.status != .fainted && pokemon != player.activePokemon {
+						possibleTurns?.append(Turn(player: player, action: .switchTo(pokemon)))
+					}
+				}
+			case .completed:
+				return nil
+			case .awaitingSwitch:
+				if player.activePokemon.status == .fainted {
+					if !player.allFainted {
+						for pokemon in player.team where pokemon.status != .fainted {
+							possibleTurns?.append(Turn(player: player, action: .forceSwitch(pokemon)))
+						}
+					} else {
+						return nil
+					}
+				}
+			}
+		}
+		
+		return possibleTurns
+	}
+	
+	public func apply(_ gameModelUpdate: GKGameModelUpdate) {
+		print(gameModelUpdate)
+		
+		if let turn = gameModelUpdate as? Turn {
+			self.addTurn(turn)
+		} else {
+			print("Failure")
+		}
+	}
+	
+	public func copy(with zone: NSZone? = nil) -> Any {
+		let copy = type(of: self).init(playerOne: playerOne, playerTwo: playerTwo)
+		
+		copy.setGameModel(self)
+		
+		return copy
+	}
+	
+	public static func ==(lhs: BattleEngine, rhs: BattleEngine) -> Bool {
+		let value =
+			lhs.playerOne == rhs.playerOne &&
+				lhs.playerTwo == rhs.playerTwo &&
+				lhs.weather == rhs.weather &&
+				lhs.weatherCounter == rhs.weatherCounter &&
+				lhs.terrain == rhs.terrain &&
+				lhs.turns == rhs.turns &&
+				lhs.terrainCounter == rhs.terrainCounter &&
+				lhs.turnCounter == rhs.turnCounter &&
+				lhs.lastDamage == rhs.lastDamage &&
+				lhs.winner == rhs.winner &&
+				lhs.poisonCounter == rhs.poisonCounter
+		
+		return value
+	}
+	
+	public static func !=(lhs: BattleEngine, rhs: BattleEngine) -> Bool {
+		return !(lhs == rhs)
+	}
+	
+	public func isWin(for player: GKGameModelPlayer) -> Bool {
+		if let winner = winner {
+			return winner == player
+		} else {
+			return false
+		}
+	}
+	
+	public func isLoss(for player: GKGameModelPlayer) -> Bool {
+		if let winner = winner {
+			return winner != player
+		} else {
+			return false
+		}
+	}
+	
 }
