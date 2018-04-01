@@ -526,7 +526,6 @@ class PokemonKitTests: XCTestCase {
 		}
 	}
 	
-	
 	func testAIWillForceSwitch() {
 		let gengarSpecies = Pokedex.default.pokemon[93]
 		let gengar = Pokemon(species: gengarSpecies, level: 50, ability: gengarSpecies.abilityOne, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 0, spAtk: 252, spDef: 6, spd: 252), individualValues: .fullIVs, attacks: [sludgeBomb])
