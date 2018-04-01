@@ -368,6 +368,8 @@ public class BattleEngine: NSObject, GKGameModel {
 						state = .awaitingSwitch
 					}
 					
+					print("Player whose Pokémon has fainted is: \(player.name)")
+					
 					if player.playerId == playerOne.playerId {
 						activePlayer = playerOne
 					} else {
