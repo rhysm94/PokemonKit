@@ -528,14 +528,11 @@ public class BattleEngine: NSObject, GKGameModel {
 		}
 		
 		let switchingPokemon = switchingPlayer.activePokemon
-//		switchingPlayer.activePokemon = pokemon
+		switchingPokemon.volatileStatus.removeAll()
 		
 		switchingPlayer.switchPokemon(pokemon: pokemon)
 		
-		switchingPokemon.volatileStatus.removeAll()
-		
 		view?.queue(action: .switchTo(pokemon, for: player))
-		view?.update(with: self)
 		state = .running
 	}
 	

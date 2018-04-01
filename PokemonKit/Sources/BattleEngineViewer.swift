@@ -7,7 +7,6 @@
 //
 
 public protocol BattleEngineViewer: class {
-	func update(with state: BattleEngine)
 	func queue(action: BattleAction)
 	func disableButtons()
 }
