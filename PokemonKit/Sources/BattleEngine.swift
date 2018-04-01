@@ -401,6 +401,7 @@ public class BattleEngine: NSObject, GKGameModel {
 	public required init(playerOne: Player, playerTwo: Player) {
 		self.playerOne = playerOne
 		self.playerTwo = playerTwo
+		self.activePlayer = playerOne
 		self.maxTurnCount = 2
 	}
 	
@@ -569,9 +570,13 @@ public class BattleEngine: NSObject, GKGameModel {
 		return [playerOne, playerTwo]
 	}
 	
-	public lazy var activePlayer: GKGameModelPlayer? = {
-		return self.playerOne
-	}()
+	public var activePlayer: GKGameModelPlayer? {
+		didSet {
+			if let player = activePlayer as? Player {
+				print("Setting active player to \(player.name)")
+			}
+		}
+	}
 	
 	public func setGameModel(_ gameModel: GKGameModel) {
 		let model = gameModel as! BattleEngine
