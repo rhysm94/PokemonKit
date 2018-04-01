@@ -523,7 +523,9 @@ public class BattleEngine: NSObject, GKGameModel {
 		}
 		
 		let switchingPokemon = switchingPlayer.activePokemon
-		switchingPlayer.activePokemon = pokemon
+//		switchingPlayer.activePokemon = pokemon
+		
+		switchingPlayer.switchPokemon(pokemon: pokemon)
 		
 		switchingPokemon.volatileStatus.removeAll()
 		

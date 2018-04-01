@@ -171,6 +171,25 @@ class PokemonKitTests: XCTestCase {
 		XCTAssertEqual(activationMessage, "Greninja became Grass type")
 	}
 	
+	func testAllFainted() {
+		let greninjaSpecies = PokemonSpecies(dexNum: 658, identifier: "greninja", name: "Greninja", typeOne: .water, typeTwo: .dark, stats: Stats(hp: 72, atk: 95, def: 67, spAtk: 103, spDef: 71, spd: 122), abilityOne: Ability(name: "Some", description: "Ability"), hiddenAbility: Ability(name: "Protean", description: "Changes Pokémon type to move type", activationMessage: Pokedex.activationMessage["Protean"]))
+		let greninja = Pokemon(species: greninjaSpecies, level: 100, ability: greninjaSpecies.hiddenAbility!, nature: .timid, effortValues: .empty, individualValues: .fullIVs, attacks: [])
+		
+		rhys.add(pokemon: greninja)
+		
+		XCTAssertFalse(rhys.allFainted)
+		
+		rhys.activePokemon.currentHP = 0
+		
+		XCTAssertFalse(rhys.allFainted)
+		
+		rhys.switchPokemon(pokemon: greninja)
+		
+		rhys.activePokemon.currentHP = 0
+		
+		XCTAssertTrue(rhys.allFainted)
+	}
+	
 	func testImportingFromDatabase() {
 		XCTAssertEqual(Pokedex.default.pokemon.count, 802)
 		let charizardSpecies = Pokedex.default.pokemon["charizard"]
@@ -194,9 +213,10 @@ class PokemonKitTests: XCTestCase {
 		let gengarSpecies = Pokedex.default.pokemon[93]
 		let gengar = Pokemon(species: gengarSpecies, level: 50, ability: gengarSpecies.abilityOne, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 0, spAtk: 252, spDef: 6, spd: 252), individualValues: .fullIVs, attacks: [sludgeBomb])
 		
+		joe.add(pokemon: gengar)
+		
 		engine.state = .awaitingSwitch
 		
-		joe.add(pokemon: gengar)
 		joe.activePokemon.currentHP = 0
 		
 		engine.addTurn(Turn(player: joe, action: .forceSwitch(gengar)))

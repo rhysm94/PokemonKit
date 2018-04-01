@@ -17,9 +17,9 @@ public class Player: NSObject, Codable, GKGameModelPlayer {
 		return GKRandomSource.sharedRandom().nextInt()
 	}()
 	
-	internal(set) public lazy var activePokemon: Pokemon = {
+	public var activePokemon: Pokemon {
 		return self.team[0]
-	}()
+	}
 	
 	public var teamMembers: Int {
 		return team.count
@@ -44,15 +44,17 @@ public class Player: NSObject, Codable, GKGameModelPlayer {
 		super.init()
 
 		self.playerId = player.playerId
-		let indexOfActivePokemon = player.team.index(of: player.activePokemon)
-		
-		if let index = indexOfActivePokemon {
-			self.activePokemon = self.team[index]
-		}
 	}
 	
 	public var allFainted: Bool {
 		return team.reduce(true, { $0 && $1.status == .fainted })
+	}
+	
+	public func switchPokemon(pokemon: Pokemon) {
+		if let switchInIndex = team.index(of: pokemon) {
+			(team[0], team[switchInIndex]) = (team[switchInIndex], team[0])
+			print("Switch success! New activePokemon = \(activePokemon)")
+		}
 	}
 }
 
