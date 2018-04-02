@@ -572,13 +572,7 @@ public class BattleEngine: NSObject, GKGameModel {
 		return [playerOne, playerTwo]
 	}
 	
-	public var activePlayer: GKGameModelPlayer? {
-		didSet {
-			if let player = activePlayer as? Player {
-				print("Setting active player to \(player.name)")
-			}
-		}
-	}
+	public var activePlayer: GKGameModelPlayer?
 	
 	public func setGameModel(_ gameModel: GKGameModel) {
 		let model = gameModel as! BattleEngine
