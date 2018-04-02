@@ -712,19 +712,19 @@ public class BattleEngine: NSObject, GKGameModel {
 					}
 				}
 			case .completed:
-				return nil
+				break
 			case .awaitingSwitch:
 				if player.activePokemon.status == .fainted {
 					if !player.allFainted {
 						for pokemon in player.team where pokemon.status != .fainted {
 							possibleTurns?.append(Turn(player: player, action: .forceSwitch(pokemon)))
 						}
-					} else {
-						return nil
 					}
 				}
 			}
 		}
+		
+		print("Possible turns for state = \(possibleTurns ?? []))")
 		
 		return possibleTurns
 	}
