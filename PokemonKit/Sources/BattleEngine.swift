@@ -361,7 +361,6 @@ public class BattleEngine: NSObject, GKGameModel {
 				player.activePokemon.volatileStatus = Set(player.activePokemon.volatileStatus.map { $0.turn() })
 				
 				if player.activePokemon.status == .fainted {
-					view?.queue(action: .displayText("\(player.activePokemon) fainted!"))
 					view?.queue(action: .fainted(player.activePokemon))
 					
 					if !player.allFainted {
