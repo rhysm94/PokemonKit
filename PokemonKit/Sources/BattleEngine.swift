@@ -616,7 +616,10 @@ public class BattleEngine: NSObject, GKGameModel {
 		
 		var score = 0
 		
-		guard let player = player as? Player else { return .min }
+		guard let player = player as? Player else {
+			print("Couldn't let player = player, so returning .min, which will be truncated to -16777216")
+			return .min
+		}
 		
 		let opponent: Player
 		if player.playerId == playerOne.playerId {
@@ -625,7 +628,10 @@ public class BattleEngine: NSObject, GKGameModel {
 			opponent = playerOne
 		}
 		
-		guard player.playerId == playerOne.playerId || player.playerId == playerTwo.playerId else { return .min }
+		guard player.playerId == playerOne.playerId || player.playerId == playerTwo.playerId else {
+			print("playerId != playerOne.playerId nor playerTwo.playerId, so returning .min, which will be truncated to -16777216")
+			return .min
+		}
 		
 		func scoreValue(for number: Double) -> Int {
 			switch number {
