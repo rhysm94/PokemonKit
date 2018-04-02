@@ -301,7 +301,8 @@ public class BattleEngine: NSObject, GKGameModel {
 						case .multiTurnMove(let condition, let addAttack)?:
 							guard let moveTarget = target else { return }
 							if !condition(self) {
-								addAttack(attack, moveTarget)
+								let textToAdd = addAttack(attack, moveTarget)
+								view?.queue(action: .displayText(textToAdd))
 							}
 							
 						case .none, .instanceOfMultiHit?:

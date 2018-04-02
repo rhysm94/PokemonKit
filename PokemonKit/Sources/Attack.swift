@@ -45,7 +45,7 @@ public struct Attack: Codable {
         case setTerrain(Terrain)
 		case multiHitMove(minHits: Int, maxHits: Int)
 		case instanceOfMultiHit
-		case multiTurnMove(condition: (BattleEngine) -> Bool, addAttack: (Attack, Pokemon) -> Void)
+		case multiTurnMove(condition: (BattleEngine) -> Bool, addAttack: (Attack, Pokemon) -> String)
     }
     
 

@@ -78,6 +78,7 @@ public class Pokedex {
 			condition: { return $0.weather == .harshSunlight || $0.weather == .extremelyHarshSunlight },
 			addAttack: { attack, pokemon in
 				pokemon.volatileStatus.insert(.preparingTo(attack.withoutBonusEffect()))
+				return "\(pokemon.nickname) took in sunlight!"
 			}
 		),
 		"Sunny Day": .setWeather(.harshSunlight),
