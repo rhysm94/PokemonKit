@@ -502,6 +502,12 @@ public class BattleEngine: NSObject, GKGameModel {
 	}
 	
 	public func addTurn(_ turn: Turn) {
+		if turn.player.playerId == playerOne.playerId {
+			activePlayer = playerTwo
+		} else {
+			activePlayer = playerOne
+		}
+		
 		if !turns.isEmpty {
 			switch turn.action {
 			case .attack(_), .switchTo(_):
@@ -512,12 +518,6 @@ public class BattleEngine: NSObject, GKGameModel {
 			}
 		} else {
 			turns.append(turn)
-		}
-		
-		if turn.player.playerId == playerOne.playerId {
-			activePlayer = playerTwo
-		} else {
-			activePlayer = playerOne
 		}
 	}
 	
