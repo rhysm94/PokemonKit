@@ -36,9 +36,15 @@ public class BattleEngine: NSObject, GKGameModel {
 	private var turnCounter = 1
 	private var lastDamage = 0
 	
-	private(set) public var weather: Weather = .none {
+	internal(set) public var weather: Weather = .none {
 		didSet {
-			view?.queue(action: .weatherUpdate(weather))
+			switch weather {
+			case .none:
+				view?.queue(action: .displayText(oldValue.disappearMessage))
+			default:
+				view?.queue(action: .weatherUpdate(weather))
+			}
+			
 		}
 	}
 	
@@ -51,7 +57,7 @@ public class BattleEngine: NSObject, GKGameModel {
 		}
 	}
 	
-	private(set) public var terrain: Terrain = .none {
+	internal(set) public var terrain: Terrain = .none {
 		didSet {
 			view?.queue(action: .terrainUpdate(terrain))
 		}
@@ -248,6 +254,8 @@ public class BattleEngine: NSObject, GKGameModel {
 					
 					func protectedCheck() -> Bool {
 						if defender.volatileStatus.contains(.protected) && !attack.breaksProtect {
+							view?.queue(action: .displayText("\(attacker.nickname) used \(attack.name)"))
+							view?.queue(action: .displayText("\(defender.nickname) is protected!"))
 							return false
 						} else {
 							return true
@@ -258,7 +266,8 @@ public class BattleEngine: NSObject, GKGameModel {
 						if let accuracy = attack.accuracy {
 							let hit = Random.shared.shouldHit(chance: accuracy)
 							if !hit {
-								view?.queue(action: .displayText("\(attacker.nickname) missed!"))
+								view?.queue(action: .displayText("\(attacker.nickname) used \(attack.name)"))
+								view?.queue(action: .displayText("But it missed!"))
 							}
 							return hit
 						} else {
@@ -492,7 +501,20 @@ public class BattleEngine: NSObject, GKGameModel {
 
 		print("Effectiveness = \(typeOneEff * typeTwoEff)")
 		
-		let damage = Int(floor(gameFreakRound(floor(Double(innerBrackets) * rng) * stab) * effectivenessMultiplier))
+		var weatherModifier: Double = 1
+		
+		if attack.type == .fire {
+			weatherModifier = weather.fireModifier
+		} else if attack.type == .water {
+			weatherModifier = weather.waterModifier
+		}
+		
+		var modifiedDamage = floor(innerBrackets * weatherModifier)
+			modifiedDamage = floor(modifiedDamage * rng)
+			modifiedDamage = floor(modifiedDamage * stab)
+			modifiedDamage = floor(modifiedDamage * effectivenessMultiplier)
+		
+		let damage = Int(modifiedDamage)
 		
 		print("Final damage = \(damage)")
 		
@@ -622,10 +644,7 @@ public class BattleEngine: NSObject, GKGameModel {
 			opponent = playerOne
 		}
 		
-		guard player.playerId == playerOne.playerId || player.playerId == playerTwo.playerId else {
-			print("playerId != playerOne.playerId nor playerTwo.playerId, so returning .min, which will be truncated to -16777216")
-			return .min
-		}
+		guard player.playerId == playerOne.playerId || player.playerId == playerTwo.playerId else { return .min }
 		
 		func scoreValue(for number: Double) -> Int {
 			switch number {
@@ -647,8 +666,8 @@ public class BattleEngine: NSObject, GKGameModel {
 		
 		score -= scoreValue(for: Double(player.activePokemon.currentHP) / Double(player.activePokemon.baseStats.hp))
 		
-		if player.activePokemon.status == .fainted {
-			score -= 150
+		if opponent.activePokemon.status != .healthy {
+			score += 30
 		}
 		
 		if !player.activePokemon.volatileStatus.isEmpty {

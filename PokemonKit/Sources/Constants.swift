@@ -9,7 +9,7 @@
 import Darwin.C
 
 func gameFreakRound(_ value: Double) -> Double {
-	if value > 0.5 {
+	if value.truncatingRemainder(dividingBy: 1) > 0.5 {
 		return ceil(value)
 	} else {
 		return floor(value)

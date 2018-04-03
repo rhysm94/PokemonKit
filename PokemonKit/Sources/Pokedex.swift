@@ -54,7 +54,7 @@ public class Pokedex {
 			}
 		}),
 		"Giga Drain": .singleTargetUsingDamage({ pokemon, damage in
-			let restoreHP = Int(gameFreakRound(Double(damage) * 0.5))
+			let restoreHP = Int(Double(damage) * 0.5)
 			pokemon.currentHP += restoreHP
 			
 			print("\(pokemon.nickname) will restore by \(restoreHP) capped at their max. HP")

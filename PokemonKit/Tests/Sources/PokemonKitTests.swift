@@ -32,10 +32,10 @@ class PokemonKitTests: XCTestCase {
 		
 		Random.shared = Random(seed: "Testing")
 		
-		let bulbasaurSpecies = Pokedex.default.pokemon["bulbasaur"]! //PokemonSpecies(dexNum: 1, identifier: "bulbasaur", name: "Bulbasaur", typeOne: .grass, typeTwo: .poison, stats: Stats(hp: 45, atk: 49, def: 49, spAtk: 65, spDef: 65, spd: 45), abilityOne: testAbility)
+		let bulbasaurSpecies = Pokedex.default.pokemon["bulbasaur"]!
 		bulbasaur = Pokemon(species: bulbasaurSpecies, level: 50, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [sludgeBomb, gigaDrain])
 		
-		let pikachuSpecies = Pokedex.default.pokemon["pikachu"]! //PokemonSpecies(dexNum: 25, identifier: "pikachu", name: "Pikachu", type: .electric, stats: Stats(hp: 35, atk: 55, def: 40, spAtk: 50, spDef: 50, spd: 90), abilityOne: testAbility)
+		let pikachuSpecies = Pokedex.default.pokemon["pikachu"]!
 		pikachu = Pokemon(species: pikachuSpecies, level: 50, nature: .timid, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [thunderbolt, thunder])
 		
 		rhys.add(pokemon: bulbasaur)
@@ -280,6 +280,8 @@ class PokemonKitTests: XCTestCase {
 	}
 	
 	func testGigaDrain() {
+		Random.shared = Random(seed: "tst")
+		
 		let beforeTurnHP = rhys.activePokemon.currentHP
 		
 		engine.addTurn(Turn(player: joe, action: .attack(attack: thunderbolt)))
@@ -561,6 +563,8 @@ class PokemonKitTests: XCTestCase {
 		XCTAssertTrue(engine.turns.count == 0)
 	}
 	
+	// MARK:- Test Copy Constructors
+	
 	func testPokemonCopyConstructor() {
 		bulbasaur.volatileStatus.insert(.flinch)
 		bulbasaur.volatileStatus.insert(.mustRecharge)
@@ -579,5 +583,14 @@ class PokemonKitTests: XCTestCase {
 		XCTAssertNotEqual(bulbasaur, bulbasaurCopy)
 	}
 	
+	// MARK:- Weather Tests
+	func testFireMoveInSunlight() {
+		engine.weather = .harshSunlight
+		
+		let (damage, _) = engine.calculateDamage(attacker: pikachu, defender: bulbasaur, attack: Pokedex.default.attacks["Flamethrower"]!)
 
+		
+		XCTAssertGreaterThanOrEqual(damage, 124)
+		XCTAssertLessThanOrEqual(damage, 146)
+	}
 }

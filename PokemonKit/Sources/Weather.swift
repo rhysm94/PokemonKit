@@ -18,35 +18,56 @@ public enum Weather: CustomStringConvertible {
 	public var description: String {
 		switch self {
 		case .harshSunlight:
-			return "harsh sunlight"
+			return "The sunlight turned harsh!"
 		case .extremelyHarshSunlight:
-			return "extremely harsh sunlight"
+			return "The sunlight turned extremely harsh!"
 		case .rain:
-			return "rain"
+			return "It started to rain!"
 		case .heavyRain:
-			return "heavy rain"
+			return "A heavy rain started to fall!"
 		case .sandstorm:
-			return "sandstorm"
+			return "A sandstorm kicked up!"
 		case .hail:
-			return "hail"
+			return "It started to hail!"
 		case .none:
 			return "no active weather"
 		}
 	}
 	
-//	var fireModifier: Double {
-//		switch self {
-//		case .harshSunlight, .extremelyHarshSunlight: return 1.5
-//		case .rain, .heavyRain: return 0.5
-//		default: return 1
-//		}
-//	}
-//
-//	var waterModifier: Double {
-//		switch self {
-//		case .rain, .heavyRain: return 1.5
-//		case .harshSunlight, .extremelyHarshSunlight: return 0.5
-//		default: return 1
-//		}
-//	}
+	public var disappearMessage: String {
+		switch self {
+		case .none:
+			return "This shouldn't occur"
+		case .harshSunlight:
+			return "The sunlight faded."
+		case .extremelyHarshSunlight:
+			return "The harsh sunlight faded."
+		case .rain:
+			return "The rain stopped."
+		case .heavyRain:
+			return "The heavy rain has lifted!"
+		case .sandstorm:
+			return "The sandstorm subsided."
+		case .hail:
+			return "The hail stopped."
+		}
+	}
+	
+	var fireModifier: Double {
+		switch self {
+		case .harshSunlight, .extremelyHarshSunlight: return 1.5
+		case .rain: return 0.5
+		case .heavyRain: return 0
+		default: return 1
+		}
+	}
+
+	var waterModifier: Double {
+		switch self {
+		case .rain, .heavyRain: return 1.5
+		case .harshSunlight: return 0.5
+		case .extremelyHarshSunlight: return 0
+		default: return 1
+		}
+	}
 }
