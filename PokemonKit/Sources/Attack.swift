@@ -24,7 +24,7 @@ public struct Attack: Codable {
 	public enum DamageCategory: String, Codable {
         case physical, special, status
 		
-		init(from number: Int) {
+		init(with number: Int) {
 			switch number {
 			case 1: self = .status
 			case 2: self = .physical

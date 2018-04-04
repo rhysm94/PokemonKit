@@ -329,7 +329,7 @@ public class Pokedex {
 				let moveName = row[moveName]
 				
 				let type = Type(from: row[type])
-				let category = Attack.DamageCategory(from: row[category])
+				let category = Attack.DamageCategory(with: row[category])
 				
 				let breaksProtect = Pokedex.protectBreakingMoves.contains(moveName)
 				let effectTarget = Pokedex.targets[moveName]
