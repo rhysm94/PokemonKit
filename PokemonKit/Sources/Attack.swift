@@ -48,8 +48,6 @@ public struct Attack: Codable {
 		case multiTurnMove(condition: (BattleEngine) -> Bool, addAttack: (Attack, Pokemon) -> String)
     }
     
-
-    
 	public init(name: String, power: Int, basePP: Int, maxPP: Int, accuracy: Int? = nil, priority: Int, type: Type, breaksProtect: Bool = false, category: DamageCategory, effectTarget: EffectTarget? = nil, bonusEffect: BonusEffect? = nil) {
         self.name = name
         self.power = power
@@ -118,7 +116,11 @@ extension Attack: CustomStringConvertible {
 	}
 }
 
-extension Attack: Equatable {
+extension Attack: Equatable, Hashable {
+	public var hashValue: Int {
+		return self.name.hashValue
+	}
+	
 	public static func ==(lhs: Attack, rhs: Attack) -> Bool {
         return lhs.name == rhs.name &&
             lhs.power == rhs.power &&

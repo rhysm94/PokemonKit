@@ -8,7 +8,16 @@
 
 import Foundation
 
-public enum Status: Codable, Equatable {
+public enum Status: Equatable, Codable {
+	case paralysed
+	case poisoned
+	case badlyPoisoned
+	case burned
+	case frozen
+	case asleep(Int)
+	case fainted
+	case healthy
+	
 	enum CodingKeys: CodingKey {
 		case base, counter
 	}
@@ -72,36 +81,4 @@ public enum Status: Codable, Equatable {
 			try container.encode(Base.healthy, forKey: .base)
 		}
 	}
-	
-    case paralysed
-    case poisoned
-    case badlyPoisoned
-    case burned
-    case frozen
-    case asleep(Int)
-    case fainted
-    case healthy
-    
-    public static func ==(lhs: Status, rhs: Status) -> Bool {
-        switch (lhs, rhs) {
-        case (.paralysed, .paralysed):
-            return true
-        case (.poisoned, .poisoned):
-            return true
-        case (.badlyPoisoned, .badlyPoisoned):
-            return true
-        case (.burned, .burned):
-            return true
-        case (.frozen, .frozen):
-            return true
-        case let (.asleep(leftSleep), .asleep(rightSleep)):
-            return leftSleep == rightSleep
-        case (.fainted, .fainted):
-            return true
-        case (.healthy, .healthy):
-            return true
-        default:
-            return false
-        }
-    }
 }

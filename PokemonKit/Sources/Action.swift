@@ -24,7 +24,6 @@ public enum Action: Codable, Equatable {
 	}
 	
 	// MARK:- Codable
-	// MARK: Encoder
 	public func encode(to encoder: Encoder) throws {
 		var container = encoder.container(keyedBy: CodingKeys.self)
 		
@@ -45,7 +44,6 @@ public enum Action: Codable, Equatable {
 		}
 	}
 	
-	// MARK: Decodable
 	public init(from decoder: Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
 		let base = try container.decode(Base.self, forKey: .base)
@@ -64,21 +62,6 @@ public enum Action: Codable, Equatable {
 			self = .recharge
 		case .run:
 			self = .run
-		}
-	}
-	
-	public static func ==(lhs: Action, rhs: Action) -> Bool {
-		switch (lhs, rhs) {
-		case let (.attack(leftAttack), .attack(rightAttack)):
-			return leftAttack == rightAttack
-		case let (.switchTo(leftPokemon), .switchTo(rightPokemon)):
-			return leftPokemon == rightPokemon
-		case (.recharge, .recharge):
-			return true
-		case (.run, .run):
-			return true
-		default:
-			return false
 		}
 	}
 }

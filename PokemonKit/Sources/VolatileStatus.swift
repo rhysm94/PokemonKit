@@ -6,55 +6,12 @@
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
 //
 
-public enum VolatileStatus: Codable, CustomStringConvertible, Hashable {
+public enum VolatileStatus: Codable, Equatable, Hashable {
 	case confused(Int)
 	case protected
 	case flinch
 	case mustRecharge
 	case preparingTo(Attack)
-	
-	public static func ==(lhs: VolatileStatus, rhs: VolatileStatus) -> Bool {
-		switch (lhs, rhs) {
-		case let (.confused(leftConfused), .confused(rightConfused)):
-			switch (leftConfused, rightConfused) {
-			case (0, 0):
-				return true
-			case (0, _), (_, 0):
-				return false
-			case (_, _):
-				return true
-			}
-		case (.protected, .protected):
-			return true
-		case (.flinch, .flinch):
-			return true
-		case (.mustRecharge, .mustRecharge):
-			return true
-		case let (.preparingTo(leftAttack), .preparingTo(rightAttack)):
-			return leftAttack == rightAttack
-		default:
-			return false
-		}
-	}
-	
-	public var description: String {
-		switch self {
-		case .confused(let turns):
-			return "confused for \(turns) more turns"
-		case .protected:
-			return "protected"
-		case .flinch:
-			return "flinch"
-		case .mustRecharge:
-			return "must recharge"
-		case .preparingTo(let attack):
-			return "preparing to use \(attack.name)"
-		}
-	}
-	
-	public var hashValue: Int {
-		return self.description.hashValue
-	}
 	
 	public func turn() -> VolatileStatus {
 		switch self {

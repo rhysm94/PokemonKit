@@ -53,7 +53,6 @@ public class Player: NSObject, Codable, GKGameModelPlayer {
 	public func switchPokemon(pokemon: Pokemon) {
 		if let switchInIndex = team.index(of: pokemon) {
 			(team[0], team[switchInIndex]) = (team[switchInIndex], team[0])
-			print("Switch success! New activePokemon = \(activePokemon)")
 		}
 	}
 }

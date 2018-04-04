@@ -35,6 +35,7 @@ public class Pokedex {
 			$0.statStages.spDef += 1
 		}),
 		"Confuse Ray": .singleTarget({
+			for case .confused(_) in $0.volatileStatus { return	}
 			let diceRoll = Random.shared.confusion()
 			$0.volatileStatus.insert(.confused(diceRoll))
 			print("\($0.nickname) became confused for \(diceRoll) turns!")
@@ -110,6 +111,7 @@ public class Pokedex {
 	]
 	
 	private static let targets: [String: Attack.EffectTarget] = [
+		"Confuse Ray": .defender,
 		"Giga Drain": .attacker,
 		"Hyper Beam": .attacker,
 		"Protect": .attacker,

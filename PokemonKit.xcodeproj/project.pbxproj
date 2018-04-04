@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		919A288B2062B28A0013DF83 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919A288A2062B28A0013DF83 /* Constants.swift */; };
-		919A288C2062B28A0013DF83 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919A288A2062B28A0013DF83 /* Constants.swift */; };
-		919A288D2062B28A0013DF83 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919A288A2062B28A0013DF83 /* Constants.swift */; };
 		91A0DB79204710C600D7B67A /* PokemonKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB78204710C600D7B67A /* PokemonKitTests.swift */; };
 		91A0DB7B204710C600D7B67A /* PokemonKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91A0DB5020470FFD00D7B67A /* PokemonKit.framework */; };
 		91A0DB8A204710D000D7B67A /* PokemonKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91A0DB5D2047101A00D7B67A /* PokemonKit.framework */; };
@@ -152,9 +149,6 @@
 		91EA2161206F859800C4B26D /* VolatileStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EA215D206F859800C4B26D /* VolatileStatus.swift */; };
 		91EA2162206F859800C4B26D /* VolatileStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EA215D206F859800C4B26D /* VolatileStatus.swift */; };
 		91EA2163206F859800C4B26D /* VolatileStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EA215D206F859800C4B26D /* VolatileStatus.swift */; };
-		91EB0E062062E34C00512F16 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919A288A2062B28A0013DF83 /* Constants.swift */; };
-		91EB0E072062E34C00512F16 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919A288A2062B28A0013DF83 /* Constants.swift */; };
-		91EB0E082062E34D00512F16 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919A288A2062B28A0013DF83 /* Constants.swift */; };
 		91FF59C220472F9C00CBEBD5 /* PokemonKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB78204710C600D7B67A /* PokemonKitTests.swift */; };
 		91FF59C320472F9D00CBEBD5 /* PokemonKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB78204710C600D7B67A /* PokemonKitTests.swift */; };
 /* End PBXBuildFile section */
@@ -197,7 +191,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		919A288A2062B28A0013DF83 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		91A0DB19204706FA00D7B67A /* PokemonKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PokemonKit.h; sourceTree = "<group>"; };
 		91A0DB212047072800D7B67A /* BattleAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BattleAction.swift; sourceTree = "<group>"; };
 		91A0DB222047072800D7B67A /* PokemonSpecies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PokemonSpecies.swift; sourceTree = "<group>"; };
@@ -334,7 +327,6 @@
 			isa = PBXGroup;
 			children = (
 				91A0DB292047072900D7B67A /* Ability.swift */,
-				919A288A2062B28A0013DF83 /* Constants.swift */,
 				91A0DB262047072800D7B67A /* Action.swift */,
 				91A0DB272047072800D7B67A /* Attack.swift */,
 				91A0DB212047072800D7B67A /* BattleAction.swift */,
@@ -796,7 +788,6 @@
 				91A0DBBA2047150E00D7B67A /* Status.swift in Sources */,
 				91A0DBB32047150E00D7B67A /* Nature.swift in Sources */,
 				91A0DBBB2047150E00D7B67A /* Terrain.swift in Sources */,
-				919A288B2062B28A0013DF83 /* Constants.swift in Sources */,
 				91A0DBBE2047150E00D7B67A /* Weather.swift in Sources */,
 				91A0DBB42047150E00D7B67A /* Player.swift in Sources */,
 				91A0DBB02047150E00D7B67A /* BattleEngine.swift in Sources */,
@@ -824,7 +815,6 @@
 				91A0DBE02047150F00D7B67A /* Status.swift in Sources */,
 				91A0DBD92047150F00D7B67A /* Nature.swift in Sources */,
 				91A0DBE12047150F00D7B67A /* Terrain.swift in Sources */,
-				919A288C2062B28A0013DF83 /* Constants.swift in Sources */,
 				91A0DBE42047150F00D7B67A /* Weather.swift in Sources */,
 				91A0DBDA2047150F00D7B67A /* Player.swift in Sources */,
 				91A0DBD62047150F00D7B67A /* BattleEngine.swift in Sources */,
@@ -852,7 +842,6 @@
 				91A0DC062047151100D7B67A /* Status.swift in Sources */,
 				91A0DBFF2047151100D7B67A /* Nature.swift in Sources */,
 				91A0DC072047151100D7B67A /* Terrain.swift in Sources */,
-				919A288D2062B28A0013DF83 /* Constants.swift in Sources */,
 				91A0DC0A2047151100D7B67A /* Weather.swift in Sources */,
 				91A0DC002047151100D7B67A /* Player.swift in Sources */,
 				91A0DBFC2047151100D7B67A /* BattleEngine.swift in Sources */,
@@ -876,7 +865,6 @@
 				91A0DB79204710C600D7B67A /* PokemonKitTests.swift in Sources */,
 				91A0DBC92047150F00D7B67A /* Pokemon.swift in Sources */,
 				91A0DBCB2047150F00D7B67A /* Random.swift in Sources */,
-				91EB0E062062E34C00512F16 /* Constants.swift in Sources */,
 				91A0DBC22047150F00D7B67A /* BattleAction.swift in Sources */,
 				91A0DBC12047150F00D7B67A /* Attack.swift in Sources */,
 				91A0DBD02047150F00D7B67A /* Type.swift in Sources */,
@@ -905,7 +893,6 @@
 				91A0DBE72047151000D7B67A /* Attack.swift in Sources */,
 				91A0DBEA2047151000D7B67A /* BattleEngineViewer.swift in Sources */,
 				91A0DBEF2047151000D7B67A /* Pokemon.swift in Sources */,
-				91EB0E072062E34C00512F16 /* Constants.swift in Sources */,
 				91A0DBE82047151000D7B67A /* BattleAction.swift in Sources */,
 				91A0DBF32047151000D7B67A /* Status.swift in Sources */,
 				91A0DBEC2047151000D7B67A /* Nature.swift in Sources */,
@@ -934,7 +921,6 @@
 				91A0DC0D2047151100D7B67A /* Attack.swift in Sources */,
 				91A0DC102047151100D7B67A /* BattleEngineViewer.swift in Sources */,
 				91A0DC152047151100D7B67A /* Pokemon.swift in Sources */,
-				91EB0E082062E34D00512F16 /* Constants.swift in Sources */,
 				91A0DC0E2047151100D7B67A /* BattleAction.swift in Sources */,
 				91A0DC192047151100D7B67A /* Status.swift in Sources */,
 				91A0DC122047151100D7B67A /* Nature.swift in Sources */,

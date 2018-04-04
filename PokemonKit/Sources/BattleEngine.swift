@@ -162,8 +162,8 @@ public class BattleEngine: NSObject, GKGameModel {
 					}
 					
 					// Removes .preparingTo(Attack) volatile status, as it's no longer useful here
-					if attacker.volatileStatus.contains(.preparingTo(attack.withoutBonusEffect())) {
-						attacker.volatileStatus.remove(.preparingTo(attack.withoutBonusEffect()))
+					for case let .preparingTo(attack) in attacker.volatileStatus {
+						attacker.volatileStatus.remove(.preparingTo(attack))
 					}
 					
 					print("\(playerOne.name)'s \(playerOne.activePokemon) - Lv. \(playerOne.activePokemon.level) has \(playerOne.activePokemon.currentHP)/\(playerOne.activePokemon.baseStats.hp) HP")
@@ -186,10 +186,16 @@ public class BattleEngine: NSObject, GKGameModel {
 						switch attack.category {
 						case .physical, .special:
 							let (baseDamage, effectiveness) = calculateDamage(attacker: attacker, defender: defender, attack: attack)
-							if effectiveness != .notEffective {
+							let weatherBlocked = weather.blocks(type: attack.type)
+							
+							if effectiveness != .notEffective && !weatherBlocked {
 								print("\(attack.name) is going to do \(baseDamage) HP of damage against \(defender)")
-								defender.damage(baseDamage)
+								defender.damage(max(1, baseDamage))
 								view?.queue(action: .useAttack(attacker: attacker, defender: defender, attack: attack))
+							} else if weatherBlocked {
+								lastDamage = 0
+								guard let message = weather.blockMessage else { break }
+								view?.queue(action: .displayText(message))
 							}
 							
 							if effectiveness != .normallyEffective {
@@ -203,39 +209,32 @@ public class BattleEngine: NSObject, GKGameModel {
 						}
 					}
 					
-					func successfulDamage() {
-						if case .multiTurnMove(let condition, _)? = attack.bonusEffect, condition(self) {
-							attack = attack.withoutBonusEffect()
-						}
-						
-						doDamage()
-						
-					}
-					
-					// Have to use a value in .confused(), as you can't do .confused(_) on the right-hand side of an equation
-					// but due to .confused's == behaviour, this will return true if it contains *any* .confused(value) where value != 0
-					
 					func confusionCheck() -> Bool {
-						if attacker.volatileStatus.contains(.confused(1)) {
-							print("\(attacker.nickname) is confused!")
-							let diceRoll = Random.shared.d3Roll()
-							if diceRoll == 1 {
-								view?.queue(action: .displayText("\(attacker.nickname) hurt itself in its confusion!"))
-								print("\(attacker.nickname) hurt itself in its confusion!")
-								
-								let (baseDamage, _) = calculateDamage(attacker: attacker, defender: attacker, attack: Attack(name: "Confused", power: 40, basePP: 1, maxPP: 1, priority: 0, type: .typeless, category: .physical))
-								view?.queue(action: .confusedAttack(attacker))
-								attacker.damage(baseDamage)
-								return false
-							} else {
-								if attacker.volatileStatus.remove(.confused(0)) != nil {
-									view?.queue(action: .displayText("\(attacker.nickname) snapped out of it's confusion!"))
-								}
+						for case let .confused(number) in attacker.volatileStatus {
+							view?.queue(action: .displayText("\(attacker.nickname) is confused!"))
+							
+							if number == 0 {
+								attacker.volatileStatus.remove(.confused(0))
+								view?.queue(action: .displayText("\(attacker.nickname) snapped out of its confusion!"))
 								return true
+							} else {
+								let diceRoll = Random.shared.d3Roll()
+								
+								if diceRoll == 1 {
+									view?.queue(action: .displayText("\(attacker.nickname) hurt itself in its confusion!"))
+									print("\(attacker.nickname) hurt itself in its confusion!")
+									
+									let (baseDamage, _) = calculateDamage(attacker: attacker, defender: attacker, attack: Attack(name: "Confused", power: 40, basePP: 1, maxPP: 1, priority: 0, type: .typeless, category: .physical))
+									view?.queue(action: .confusedAttack(attacker))
+									attacker.damage(baseDamage)
+									return false
+								} else {
+									return true
+								}
 							}
-						} else {
-							return true
 						}
+						
+						return true
 					}
 					
 					func paralysisCheck() -> Bool {
@@ -265,10 +264,12 @@ public class BattleEngine: NSObject, GKGameModel {
 					func hitCheck() -> Bool {
 						if let accuracy = attack.accuracy {
 							let hit = Random.shared.shouldHit(chance: accuracy)
+							
 							if !hit {
 								view?.queue(action: .displayText("\(attacker.nickname) used \(attack.name)"))
 								view?.queue(action: .displayText("But it missed!"))
 							}
+							
 							return hit
 						} else {
 							return true
@@ -276,6 +277,16 @@ public class BattleEngine: NSObject, GKGameModel {
 					}
 					
 					let shouldAttack = [confusionCheck(), paralysisCheck(), protectedCheck(), hitCheck()].reduce(true) { $0 && $1 }
+					
+					func successfulDamage() {
+						// If the condition for a multi-turn move is matched, use it immediately (e.g.
+						if case .multiTurnMove(let condition, _)? = attack.bonusEffect, condition(self) {
+							attack = attack.withoutBonusEffect()
+						}
+						
+						doDamage()
+						
+					}
 					
 					if shouldAttack {
 						successfulDamage()
@@ -520,7 +531,7 @@ public class BattleEngine: NSObject, GKGameModel {
 		
 		print("---")
 		
-		return (max(1, damage), effectiveness)
+		return (damage, effectiveness)
 	}
 	
 	public func addTurn(_ turn: Turn) {

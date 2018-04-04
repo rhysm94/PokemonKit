@@ -70,4 +70,26 @@ public enum Weather: CustomStringConvertible {
 		default: return 1
 		}
 	}
+	
+	func blocks(type: Type) -> Bool {
+		switch(self, type) {
+		case (.heavyRain, .fire):
+			return true
+		case (.extremelyHarshSunlight, .water):
+			return true
+		case(_,_):
+			return false
+		}
+	}
+	
+	var blockMessage: String? {
+		switch self {
+		case .extremelyHarshSunlight:
+			return ""
+		case .heavyRain:
+			return "The Fire-type attack fizzled out in the heavy rain!"
+		default:
+			return nil
+		}
+	}
 }
