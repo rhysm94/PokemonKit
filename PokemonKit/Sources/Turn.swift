@@ -52,7 +52,7 @@ public class Turn: NSObject, Codable, GKGameModelUpdate {
 	}
 	
 	init(turn: Turn) {
-		self.player = Player(player: turn.player)
+		self.player = Player(copying: turn.player)
 		self.action = turn.action
 	}
 }

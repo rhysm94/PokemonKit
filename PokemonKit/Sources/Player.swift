@@ -37,13 +37,13 @@ public class Player: NSObject, Codable, GKGameModelPlayer {
 		self.name = name
 	}
 	
-	public init(player: Player) {
-		self.name = player.name
-		self.team = player.team.map { Pokemon(pokemon: $0) }
+	public init(copying: Player) {
+		self.name = copying.name
+		self.team = copying.team.map { Pokemon(pokemon: $0) }
 		
 		super.init()
 
-		self.playerId = player.playerId
+		self.playerId = copying.playerId
 	}
 	
 	public var allFainted: Bool {

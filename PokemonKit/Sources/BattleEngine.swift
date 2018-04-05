@@ -137,7 +137,6 @@ public class BattleEngine: NSObject, GKGameModel {
 				}
 				
 				let turn = turns.removeFirst()
-				turnHistory.append(turn)
 				
 				switch turn.action {
 				case var .attack(attack):
@@ -612,11 +611,8 @@ public class BattleEngine: NSObject, GKGameModel {
 		
 		self.state = model.state
 		if let winner = model.winner {
-			self.winner = Player(player: winner)
+			self.winner = Player(copying: winner)
 		}
-		
-		self.playerOne = Player(player: model.playerOne)
-		self.playerTwo = Player(player: model.playerTwo)
 		
 		self.turnHistory = model.turnHistory
 		
@@ -768,9 +764,9 @@ public class BattleEngine: NSObject, GKGameModel {
 	}
 	
 	public func copy(with zone: NSZone? = nil) -> Any {
-		let copy = type(of: self).init(playerOne: playerOne, playerTwo: playerTwo)
+		let copy = type(of: self).init(playerOne: Player(copying: playerOne), playerTwo: Player(copying: playerTwo))
 		
-//		copy.setGameModel(self)
+		copy.setGameModel(self)
 		
 		return copy
 	}
