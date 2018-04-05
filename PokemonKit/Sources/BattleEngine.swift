@@ -640,7 +640,6 @@ public class BattleEngine: NSObject, GKGameModel {
 		var score = 0
 		
 		guard let player = player as? Player else {
-			print("Couldn't let player = player, so returning .min, which will be truncated to -16777216")
 			return .min
 		}
 		
@@ -655,17 +654,17 @@ public class BattleEngine: NSObject, GKGameModel {
 		
 		func scoreValue(for number: Double) -> Int {
 			switch number {
-			case 0.9..<1: return 1
-			case 0.8..<0.9: return 2
-			case 0.7..<0.8: return 3
-			case 0.6..<0.7: return 4
-			case 0.5..<0.6: return 5
-			case 0.4..<0.5: return 6
-			case 0.3..<0.4: return 7
-			case 0.2..<0.3: return 8
-			case 0.1..<0.2: return 9
-			case 0: return 10
-			default: return -1
+			case 0.9..<1: return 10
+			case 0.8..<0.9: return 20
+			case 0.7..<0.8: return 30
+			case 0.6..<0.7: return 40
+			case 0.5..<0.6: return 50
+			case 0.4..<0.5: return 60
+			case 0.3..<0.4: return 70
+			case 0.2..<0.3: return 80
+			case 0.1..<0.2: return 90
+			case 0: return 100
+			default: return -10
 			}
 		}
 		
@@ -674,7 +673,7 @@ public class BattleEngine: NSObject, GKGameModel {
 		score -= scoreValue(for: Double(player.activePokemon.currentHP) / Double(player.activePokemon.baseStats.hp))
 		
 		if opponent.activePokemon.status != .healthy {
-			score += 3
+			score += 30
 		}
 		
 		if !player.activePokemon.volatileStatus.isEmpty {
@@ -682,24 +681,24 @@ public class BattleEngine: NSObject, GKGameModel {
 				switch status {
 				case .confused(let counter):
 					if counter > 0 {
-						score -= 2
+						score -= 20
 					}
 				case .protected:
-					score += 4
+					score += 40
 				case .flinch:
-					score -= 3
+					score -= 30
 				case .mustRecharge:
-					score -= 2
+					score -= 20
 				case .preparingTo(_):
-					score -= 2
+					score -= 20
 				}
 			}
 		}
 		
 		if isWin(for: player) {
-			score += 50
+			score += 500
 		} else if isWin(for: opponent) {
-			score -= 50
+			score -= 500
 		}
 		
 		print("Score for state = \(score)")
@@ -801,11 +800,7 @@ public class BattleEngine: NSObject, GKGameModel {
 	}
 	
 	public func isLoss(for player: GKGameModelPlayer) -> Bool {
-		if let winner = winner {
-			return winner != player
-		} else {
-			return false
-		}
+		return !isWin(for: player)
 	}
 	
 }
