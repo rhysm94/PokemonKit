@@ -279,7 +279,7 @@ public class BattleEngine: NSObject, GKGameModel {
 					let shouldAttack = [confusionCheck(), paralysisCheck(), protectedCheck(), hitCheck()].reduce(true) { $0 && $1 }
 					
 					func successfulDamage() {
-						// If the condition for a multi-turn move is matched, use it immediately (e.g.
+						// If the condition for a multi-turn move is matched, use it immediately (e.g. in the case of Solar Beam, if the weather is sunny)
 						if case .multiTurnMove(let condition, _)? = attack.bonusEffect, condition(self) {
 							attack = attack.withoutBonusEffect()
 						}
@@ -608,7 +608,7 @@ public class BattleEngine: NSObject, GKGameModel {
 	public var activePlayer: GKGameModelPlayer?
 	
 	public func setGameModel(_ gameModel: GKGameModel) {
-		let model = gameModel as! BattleEngine
+		guard let model = gameModel as? BattleEngine else { fatalError() }
 		
 		self.state = model.state
 		if let winner = model.winner {
@@ -659,17 +659,17 @@ public class BattleEngine: NSObject, GKGameModel {
 		
 		func scoreValue(for number: Double) -> Int {
 			switch number {
-			case 0.9..<1: return 10
-			case 0.8..<0.9: return 20
-			case 0.7..<0.8: return 30
-			case 0.6..<0.7: return 40
-			case 0.5..<0.6: return 50
-			case 0.4..<0.5: return 60
-			case 0.3..<0.4: return 70
-			case 0.2..<0.3: return 80
-			case 0.1..<0.2: return 90
-			case 0: return 100
-			default: return -10
+			case 0.9..<1: return 1
+			case 0.8..<0.9: return 2
+			case 0.7..<0.8: return 3
+			case 0.6..<0.7: return 4
+			case 0.5..<0.6: return 5
+			case 0.4..<0.5: return 6
+			case 0.3..<0.4: return 7
+			case 0.2..<0.3: return 8
+			case 0.1..<0.2: return 9
+			case 0: return 10
+			default: return -1
 			}
 		}
 		
@@ -678,7 +678,7 @@ public class BattleEngine: NSObject, GKGameModel {
 		score -= scoreValue(for: Double(player.activePokemon.currentHP) / Double(player.activePokemon.baseStats.hp))
 		
 		if opponent.activePokemon.status != .healthy {
-			score += 30
+			score += 3
 		}
 		
 		if !player.activePokemon.volatileStatus.isEmpty {
@@ -686,24 +686,24 @@ public class BattleEngine: NSObject, GKGameModel {
 				switch status {
 				case .confused(let counter):
 					if counter > 0 {
-						score -= 20
+						score -= 2
 					}
 				case .protected:
-					score += 40
+					score += 4
 				case .flinch:
-					score -= 30
+					score -= 3
 				case .mustRecharge:
-					score -= 20
+					score -= 2
 				case .preparingTo(_):
-					score -= 20
+					score -= 2
 				}
 			}
 		}
 		
 		if isWin(for: player) {
-			score += 500
+			score += 50
 		} else if isWin(for: opponent) {
-			score -= 500
+			score -= 50
 		}
 		
 		print("Score for state = \(score)")
@@ -770,7 +770,7 @@ public class BattleEngine: NSObject, GKGameModel {
 	public func copy(with zone: NSZone? = nil) -> Any {
 		let copy = type(of: self).init(playerOne: playerOne, playerTwo: playerTwo)
 		
-		copy.setGameModel(self)
+//		copy.setGameModel(self)
 		
 		return copy
 	}

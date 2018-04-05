@@ -62,6 +62,8 @@ class PokemonKitTests: XCTestCase {
 			XCTFail()
 		}
 		XCTAssertEqual(team, decodedTeamData)
+		
+		
 	}
 	
 	func testActivePokemon() {
@@ -714,5 +716,20 @@ class PokemonKitTests: XCTestCase {
 		
 		XCTAssertGreaterThanOrEqual(damage, 114)
 		XCTAssertLessThanOrEqual(damage, 135)
+	}
+	
+	func testRandomCopy() {
+		let randomCopy = Random.shared.copy()
+		
+		var sharedNumbers: [Int] = []
+		var copyNumbers: [Int] = []
+		
+		for _ in 1...10 {
+			sharedNumbers.append(Random.shared.d10Roll())
+			copyNumbers.append(randomCopy.d10Roll())
+		}
+		print(sharedNumbers)
+		print(copyNumbers)
+		XCTAssertEqual(sharedNumbers, copyNumbers)
 	}
 }

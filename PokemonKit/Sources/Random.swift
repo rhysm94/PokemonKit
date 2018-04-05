@@ -11,13 +11,18 @@ import GameplayKit
 
 public class Random {
 	public static var shared: Random!
-	var randomSource: GKARC4RandomSource!
+	var randomSource: GKRandomSource!
 	let random: GKRandomDistribution
 	
 	public init(seed: String) {
 		print("init(seed:) for Random run with seed: \(seed)")
 		let dataSeed = seed.data(using: .utf8)!
 		randomSource = GKARC4RandomSource(seed: dataSeed)
+		self.random = GKRandomDistribution(randomSource: randomSource, lowestValue: 0, highestValue: 15)
+	}
+	
+	private init(source: GKRandomSource) {
+		self.randomSource = source
 		self.random = GKRandomDistribution(randomSource: randomSource, lowestValue: 0, highestValue: 15)
 	}
 	
@@ -68,5 +73,11 @@ public class Random {
 //
 //		chances = randomSource.arrayByShufflingObjects(in: chances) as! [Bool]
 //		return chances[0]
+	}
+	
+	func copy() -> Random {
+		let copyRandomSource = self.randomSource.copy() as! GKRandomSource
+		
+		return Random(source: copyRandomSource)
 	}
 }
