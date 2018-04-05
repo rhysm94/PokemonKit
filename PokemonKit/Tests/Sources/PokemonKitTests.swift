@@ -414,6 +414,7 @@ class PokemonKitTests: XCTestCase {
 	}
 		
 	func testSolarBeamUnderSunlightAndConfusion() {
+		Random.shared = Random(seed: "Testing")
 		// Main seed ensures Rhys's Pokémon won't hurt itself in confusion
 		
 		let solarBeam = Pokedex.default.attacks["Solar Beam"]!
@@ -526,6 +527,7 @@ class PokemonKitTests: XCTestCase {
 	///
 	/// Test's Random seed is known to cause attack to miss
 	func testAccuracyLowAccuracyMove() {
+		Random.shared = Random(seed: "Testing")
 		let fissure = Pokedex.default.attacks["Fissure"]!
 		
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: fissure)))
@@ -577,14 +579,13 @@ class PokemonKitTests: XCTestCase {
 		
 		var turn: GKGameModelUpdate?
 		
-		DispatchQueue.global().sync { [unowned self] in
-			turn = ai.bestMove(for: self.joe)
-		}
+		turn = ai.bestMove(for: self.joe)
 		
 		if let turn = turn as? Turn {
 			print("Best Move: \(turn)")
 			print("Move Value: \(turn.value)")
 		} else {
+			dump(turn)
 			XCTFail()
 		}
 	}

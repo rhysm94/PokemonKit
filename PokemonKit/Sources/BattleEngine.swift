@@ -800,7 +800,11 @@ public class BattleEngine: NSObject, GKGameModel {
 	}
 	
 	public func isLoss(for player: GKGameModelPlayer) -> Bool {
-		return !isWin(for: player)
+		if let winner = winner {
+			return winner != player
+		} else {
+			return false
+		}
 	}
 	
 }
