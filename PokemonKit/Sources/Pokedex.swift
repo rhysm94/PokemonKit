@@ -62,6 +62,17 @@ public class Pokedex {
 		}),
 		"Growl": .singleTarget({ $0.statStages.atk -= 1 }),
 		"Hyper Beam": .singleTarget({ $0.volatileStatus.insert(.mustRecharge) }),
+		"Hypnosis": .singleTarget({ pokemon in
+			guard pokemon.status == .healthy else { return }
+			
+			let sleepTurns = Random.shared.between(minimum: 1, maximum: 3)
+			
+			pokemon.status = .asleep(sleepTurns)
+		}),
+		"Rest": .singleTarget({ pokemon in
+			pokemon.currentHP = pokemon.baseStats.hp
+			pokemon.status = .asleep(2)
+		}),
 		"Ice Beam": .singleTarget({
 			let diceRoll = Random.shared.d10Roll()
 			if diceRoll == 1 && $0.status == .healthy {
@@ -116,6 +127,8 @@ public class Pokedex {
 		"Hyper Beam": .attacker,
 		"Protect": .attacker,
 		"Recover": .attacker,
+		"Hypnosis": .defender,
+		"Rest": .attacker,
 		"Solar Beam": .attacker,
 		"Swords Dance": .attacker,
 		"Topsy-Turvy": .defender,
