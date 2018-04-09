@@ -149,15 +149,6 @@ class PokemonKitTests: XCTestCase {
 		XCTAssertLessThanOrEqual(joe.activePokemon.currentHP, 17)
 	}
 	
-	func testParalysisApplied() {
-		Random.shared = Random(seed: "willhit")
-		
-		engine.addTurn(Turn(player: joe, action: .attack(attack: Pokedex.default.attacks["Thunder Wave"]!)))
-		engine.addTurn(Turn(player: rhys, action: .attack(attack: rhys.activePokemon.attacks[0])))
-		
-		XCTAssert(rhys.activePokemon.status == .paralysed)
-	}
-	
 	func testProteanMessage() {
 		let greninjaSpecies = PokemonSpecies(dexNum: 658, identifier: "greninja", name: "Greninja", typeOne: .water, typeTwo: .dark, stats: Stats(hp: 72, atk: 95, def: 67, spAtk: 103, spDef: 71, spd: 122), abilityOne: Ability(name: "Some", description: "Ability"), hiddenAbility: Ability(name: "Protean", description: "Changes Pokémon type to move type", activationMessage: Pokedex.activationMessage["Protean"]))
 		let greninja = Pokemon(species: greninjaSpecies, level: 100, ability: greninjaSpecies.hiddenAbility!, nature: .timid, effortValues: .empty, individualValues: .fullIVs, attacks: [])
@@ -273,14 +264,6 @@ class PokemonKitTests: XCTestCase {
 		XCTAssertEqual(rhys.activePokemon.statStages.atk, -2)
 	}
 	
-	func testConfusedVolatileStatus() {
-		var confusion = VolatileStatus.confused(1)
-		confusion = confusion.turn()
-		
-		XCTAssertEqual(VolatileStatus.confused(0), confusion)
-		XCTAssertNotEqual(VolatileStatus.confused(1), confusion)
-	}
-	
 	func testGigaDrain() {
 		
 		let beforeTurnHP = rhys.activePokemon.currentHP
@@ -298,66 +281,6 @@ class PokemonKitTests: XCTestCase {
 		let flamethrower = Pokedex.default.attacks["Flamethrower"]!
 		let (_, effectiveness) = engine.calculateDamage(attacker: rhys.activePokemon, defender: bulbasaur, attack: flamethrower)
 		XCTAssertEqual(effectiveness, Type.Effectiveness.superEffective)
-	}
-	
-	func testConfusion() {
-		// Seed guaranteed to cause Joe's active Pokémon to hurt itself in its confusion
-		Random.shared = Random(seed: "confused")
-		
-		joe.activePokemon.volatileStatus.insert(.confused(3))
-		
-		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
-		engine.addTurn(Turn(player: rhys, action: .attack(attack: tackle)))
-		
-		// This is true when Joe's Pokémon hasn't been able to attack - e.g. due to confusion
-		XCTAssertEqual(rhys.activePokemon.currentHP, rhys.activePokemon.baseStats.hp)
-	}
-	
-	func testConfusionWearsOff() {
-		Random.shared = Random(seed: "confused")
-		
-		joe.activePokemon.volatileStatus.insert(.confused(1))
-		
-		XCTAssertTrue(joe.activePokemon.volatileStatus.contains(.confused(1)))
-		XCTAssertFalse(joe.activePokemon.volatileStatus.contains(.confused(0)))
-		
-		engine.addTurn(Turn(player: rhys, action: .attack(attack: tackle)))
-		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
-		
-		XCTAssertFalse(joe.activePokemon.volatileStatus.contains(.confused(1)))
-		XCTAssertTrue(joe.activePokemon.volatileStatus.contains(.confused(0)))
-		
-		engine.addTurn(Turn(player: rhys, action: .attack(attack: tackle)))
-		engine.addTurn(Turn(player: joe, action: .attack(attack: tackle)))
-		
-		var containsConfused = false
-		// Checks for *any* occurence of confusion in Pokémon's volatile status
-		for case let .confused(number) in joe.activePokemon.volatileStatus {
-			print(".confused(\(number))")
-			containsConfused = true
-		}
-		
-		XCTAssertFalse(containsConfused)
-	}
-	
-	func testConfusionAppliesOnce() {
-		Random.shared = Random(seed: "confused")
-		
-		joe.activePokemon.volatileStatus.insert(.confused(2))
-		
-		let confuseRay = Pokedex.default.attacks["Confuse Ray"]!
-		
-		engine.addTurn(Turn(player: rhys, action: .attack(attack: confuseRay)))
-		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
-		
-		var confusionOccurences = 0
-		
-		for case let .confused(number) in joe.activePokemon.volatileStatus {
-			print(".confused(\(number))")
-			confusionOccurences += 1
-		}
-		
-		XCTAssertEqual(confusionOccurences, 1)
 	}
 	
 	func testNotEffectiveDamage() {

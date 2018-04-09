@@ -149,6 +149,9 @@
 		91EA2161206F859800C4B26D /* VolatileStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EA215D206F859800C4B26D /* VolatileStatus.swift */; };
 		91EA2162206F859800C4B26D /* VolatileStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EA215D206F859800C4B26D /* VolatileStatus.swift */; };
 		91EA2163206F859800C4B26D /* VolatileStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EA215D206F859800C4B26D /* VolatileStatus.swift */; };
+		91EA5317207BE150005A62CC /* StatusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EA5316207BE150005A62CC /* StatusTests.swift */; };
+		91EA5318207BE150005A62CC /* StatusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EA5316207BE150005A62CC /* StatusTests.swift */; };
+		91EA5319207BE150005A62CC /* StatusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EA5316207BE150005A62CC /* StatusTests.swift */; };
 		91FF59C220472F9C00CBEBD5 /* PokemonKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB78204710C600D7B67A /* PokemonKitTests.swift */; };
 		91FF59C320472F9D00CBEBD5 /* PokemonKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB78204710C600D7B67A /* PokemonKitTests.swift */; };
 /* End PBXBuildFile section */
@@ -232,6 +235,7 @@
 		91DF932020499BD100F6C67B /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		91DF932220499BD700F6C67B /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/GameKit.framework; sourceTree = DEVELOPER_DIR; };
 		91EA215D206F859800C4B26D /* VolatileStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolatileStatus.swift; sourceTree = "<group>"; };
+		91EA5316207BE150005A62CC /* StatusTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -426,6 +430,7 @@
 			isa = PBXGroup;
 			children = (
 				91A0DB78204710C600D7B67A /* PokemonKitTests.swift */,
+				91EA5316207BE150005A62CC /* StatusTests.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -867,6 +872,7 @@
 				91A0DBCB2047150F00D7B67A /* Random.swift in Sources */,
 				91A0DBC22047150F00D7B67A /* BattleAction.swift in Sources */,
 				91A0DBC12047150F00D7B67A /* Attack.swift in Sources */,
+				91EA5317207BE150005A62CC /* StatusTests.swift in Sources */,
 				91A0DBD02047150F00D7B67A /* Type.swift in Sources */,
 				91A0DBCA2047150F00D7B67A /* PokemonSpecies.swift in Sources */,
 				91A0DBCD2047150F00D7B67A /* Status.swift in Sources */,
@@ -895,6 +901,7 @@
 				91A0DBEF2047151000D7B67A /* Pokemon.swift in Sources */,
 				91A0DBE82047151000D7B67A /* BattleAction.swift in Sources */,
 				91A0DBF32047151000D7B67A /* Status.swift in Sources */,
+				91EA5318207BE150005A62CC /* StatusTests.swift in Sources */,
 				91A0DBEC2047151000D7B67A /* Nature.swift in Sources */,
 				91A0DBF42047151000D7B67A /* Terrain.swift in Sources */,
 				91A0DBF72047151000D7B67A /* Weather.swift in Sources */,
@@ -923,6 +930,7 @@
 				91A0DC152047151100D7B67A /* Pokemon.swift in Sources */,
 				91A0DC0E2047151100D7B67A /* BattleAction.swift in Sources */,
 				91A0DC192047151100D7B67A /* Status.swift in Sources */,
+				91EA5319207BE150005A62CC /* StatusTests.swift in Sources */,
 				91A0DC122047151100D7B67A /* Nature.swift in Sources */,
 				91A0DC1A2047151100D7B67A /* Terrain.swift in Sources */,
 				91A0DC1D2047151100D7B67A /* Weather.swift in Sources */,

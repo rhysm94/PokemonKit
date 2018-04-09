@@ -237,16 +237,28 @@ public class BattleEngine: NSObject, GKGameModel {
 					}
 					
 					func paralysisCheck() -> Bool {
-						if attacker.status == .paralysed {
-							let diceRoll = Random.shared.d3Roll()
-							if diceRoll == 1 {
-								view?.queue(action: .displayText("\(attacker) is paralysed"))
-								return false
-							} else {
-								return true
-							}
+						// Early return if Pokémon status isn't paralysed
+						guard attacker.status == .paralysed else { return true }
+						
+						let diceRoll = Random.shared.d3Roll()
+						if diceRoll == 1 {
+							view?.queue(action: .displayText("\(attacker) is paralysed"))
+							return false
 						} else {
 							return true
+						}
+					}
+					
+					func sleepCheck() -> Bool {
+						// Early return if Pokémon's status isn't asleep
+						guard case let .asleep(counter) = attacker.status else { return true }
+						
+						if counter == 0 {
+							attacker.status = .healthy
+							view?.queue(action: .displayText("\(attacker) woke up!"))
+							return true
+						} else {
+							return false
 						}
 					}
 					
@@ -275,7 +287,7 @@ public class BattleEngine: NSObject, GKGameModel {
 						}
 					}
 					
-					let shouldAttack = [confusionCheck(), paralysisCheck(), protectedCheck(), hitCheck()].reduce(true) { $0 && $1 }
+					let shouldAttack = [confusionCheck(), sleepCheck(), paralysisCheck(), protectedCheck(), hitCheck()].reduce(true) { $0 && $1 }
 					
 					func successfulDamage() {
 						// If the condition for a multi-turn move is matched, use it immediately (e.g. in the case of Solar Beam, if the weather is sunny)
@@ -373,6 +385,10 @@ public class BattleEngine: NSObject, GKGameModel {
 					let poisonDamage = Int(ceil((Double(poisonCounter) / 16.0) * Double(player.activePokemon.baseStats.hp)))
 					player.activePokemon.damage(poisonDamage)
 					view?.queue(action: .statusDamage(.badlyPoisoned, player.activePokemon, poisonDamage))
+				}
+				
+				if case let .asleep(counter) = player.activePokemon.status {
+					player.activePokemon.status = .asleep(counter - 1)
 				}
 				
 				player.activePokemon.volatileStatus.remove(.protected)
