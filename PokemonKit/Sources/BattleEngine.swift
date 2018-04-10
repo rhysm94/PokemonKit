@@ -131,7 +131,7 @@ public class BattleEngine: NSObject, GKGameModel {
 				if
 					let lookahead = turns.first,
 					case let .attack(attack) = lookahead.action,
-					case .multiHitMove(_,_)? = attack.bonusEffect
+					case .multiHitMove(_, _)? = attack.bonusEffect
 				{
 					multiHitMoveRunning = true
 				}
@@ -142,7 +142,6 @@ public class BattleEngine: NSObject, GKGameModel {
 				case var .attack(attack):
 					var attacker: Pokemon
 					var defender: Pokemon
-
 					
 					if turn.player.playerId == playerOne.playerId {
 						attacker = playerOne.activePokemon
@@ -172,13 +171,13 @@ public class BattleEngine: NSObject, GKGameModel {
 						lastDamage = 0
 						
 						// Skips doing damage if this is the first half of a multi-turn move, but still queues the relevant .useAttack
-						if case .multiTurnMove(_,_)? = attack.bonusEffect {
+						if case .multiTurnMove(_, _)? = attack.bonusEffect {
 							view?.queue(action: .useAttack(attacker: attacker, defender: defender, attack: attack))
 							return
 						}
 						
 						// Skips doing damage if this is the first instance of a multi-hit move
-						if case .multiHitMove(_,_)? = attack.bonusEffect {
+						if case .multiHitMove(_, _)? = attack.bonusEffect {
 							return
 						}
 						
@@ -287,10 +286,17 @@ public class BattleEngine: NSObject, GKGameModel {
 						}
 					}
 					
-					let shouldAttack = [confusionCheck(), sleepCheck(), paralysisCheck(), protectedCheck(), hitCheck()].reduce(true) { $0 && $1 }
+					let shouldAttack = [
+						confusionCheck(),
+						sleepCheck(),
+						paralysisCheck(),
+						protectedCheck(),
+						hitCheck()
+					].reduce(true) { $0 && $1 }
 					
 					func successfulDamage() {
-						// If the condition for a multi-turn move is matched, use it immediately (e.g. in the case of Solar Beam, if the weather is sunny)
+						// If the condition for a multi-turn move is matched, use it immediately
+						// (e.g. in the case of Solar Beam, if the weather is sunny)
 						if case .multiTurnMove(let condition, _)? = attack.bonusEffect, condition(self) {
 							attack = attack.withoutBonusEffect()
 						}
@@ -429,7 +435,6 @@ public class BattleEngine: NSObject, GKGameModel {
 		view?.queue(action: .clear)
 	}
 	
-	
 	/// Initialiser for the Battle Engine
 	///
 	/// - Parameters:
@@ -558,7 +563,7 @@ public class BattleEngine: NSObject, GKGameModel {
 		
 		if !turns.isEmpty {
 			switch turn.action {
-			case .attack(_), .switchTo(_):
+			case .attack, .switchTo:
 				removeTurns(belongingTo: turn.player)
 				turns.append(turn)
 			default:
@@ -590,7 +595,7 @@ public class BattleEngine: NSObject, GKGameModel {
 	private func removeTurns(belongingTo player: Player) {
 		turns = turns.filter { turn in
 			switch turn.action {
-			case .attack(_), .switchTo(_):
+			case .attack, .switchTo:
 				return turn.player != player
 			default:
 				return true
@@ -614,7 +619,7 @@ public class BattleEngine: NSObject, GKGameModel {
 		case running, completed, awaitingSwitch
 	}
 	
-	// MARK:- GameplayKit Methods
+	// MARK: - GameplayKit Methods
 	
 	public var players: [GKGameModelPlayer]? {
 		return [playerOne, playerTwo]
@@ -705,7 +710,7 @@ public class BattleEngine: NSObject, GKGameModel {
 					score -= 30
 				case .mustRecharge:
 					score -= 20
-				case .preparingTo(_):
+				case .preparingTo:
 					score -= 20
 				}
 			}
@@ -786,7 +791,7 @@ public class BattleEngine: NSObject, GKGameModel {
 		return copy
 	}
 	
-	public static func ==(lhs: BattleEngine, rhs: BattleEngine) -> Bool {
+	public static func == (lhs: BattleEngine, rhs: BattleEngine) -> Bool {
 		let value =
 			lhs.playerOne == rhs.playerOne &&
 				lhs.playerTwo == rhs.playerTwo &&
@@ -803,7 +808,7 @@ public class BattleEngine: NSObject, GKGameModel {
 		return value
 	}
 	
-	public static func !=(lhs: BattleEngine, rhs: BattleEngine) -> Bool {
+	public static func != (lhs: BattleEngine, rhs: BattleEngine) -> Bool {
 		return !(lhs == rhs)
 	}
 	

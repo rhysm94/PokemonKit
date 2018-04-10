@@ -38,7 +38,12 @@ public struct Stats: Codable {
 }
 
 extension Stats: Equatable {
-	public static func ==(lhs: Stats, rhs: Stats) -> Bool {
-		return lhs.hp == rhs.hp && lhs.atk == rhs.atk && lhs.spAtk == rhs.spAtk && lhs.spDef == rhs.spDef && lhs.spd == rhs.spd
+	public static func == (lhs: Stats, rhs: Stats) -> Bool {
+		return
+			lhs.hp == rhs.hp &&
+			lhs.atk == rhs.atk &&
+			lhs.spAtk == rhs.spAtk &&
+			lhs.spDef == rhs.spDef &&
+			lhs.spd == rhs.spd
 	}
 }

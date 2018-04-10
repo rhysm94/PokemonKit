@@ -121,7 +121,7 @@ extension Attack: Equatable, Hashable {
 		return self.name.hashValue
 	}
 	
-	public static func ==(lhs: Attack, rhs: Attack) -> Bool {
+	public static func == (lhs: Attack, rhs: Attack) -> Bool {
         return lhs.name == rhs.name &&
             lhs.power == rhs.power &&
             lhs.basePP == rhs.basePP &&

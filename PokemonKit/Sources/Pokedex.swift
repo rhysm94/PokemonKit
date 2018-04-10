@@ -216,7 +216,6 @@ public class Pokedex {
 			
 			let languageID = Expression<Int>("local_language_id")
 			
-			
 			let query = """
 			select p.id, p.identifier, ps.name,
 			(select tn.name from type_names as tn

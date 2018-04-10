@@ -58,12 +58,9 @@ class PokemonKitTests: XCTestCase {
 			print(String(data: encodedTeamData, encoding: .utf8)!)
 			decodedTeamData = try JSONDecoder().decode([Pokemon].self, from: encodedTeamData)
 		} catch let error {
-			print(error)
-			XCTFail()
+			XCTFail(error.localizedDescription)
 		}
 		XCTAssertEqual(team, decodedTeamData)
-		
-		
 	}
 	
 	func testActivePokemon() {
@@ -296,7 +293,6 @@ class PokemonKitTests: XCTestCase {
 		XCTAssertEqual(effectiveness, Type.Effectiveness.notEffective)
 	}
 	
-	
 	/// Checks that Solar Beam applies the correct volatile status to the Pokémon that uses it, and does no damage on the first turn
 	func testSolarBeamFirstTurn() {
 		let solarBeam = Pokedex.default.attacks["Solar Beam"]!
@@ -487,7 +483,7 @@ class PokemonKitTests: XCTestCase {
 		XCTAssertNotEqual(rhys.playerId, joe.playerId)
 	}
 	
-	// MARK:- GKMinmaxStrategist tests
+	// MARK: - GKMinmaxStrategist tests
 
 	func testAICanMakeTurn() {
 		joe.activePokemon.attacks.append(Pokedex.default.attacks["Hyper Beam"]!)
@@ -548,7 +544,7 @@ class PokemonKitTests: XCTestCase {
 		XCTAssertTrue(engine.turns.count == 0)
 	}
 	
-	// MARK:- Test Copy Constructors
+	// MARK: - Test Copy Constructors
 	
 	func testPokemonCopyConstructor() {
 		bulbasaur.volatileStatus.insert(.flinch)
@@ -568,7 +564,7 @@ class PokemonKitTests: XCTestCase {
 		XCTAssertNotEqual(bulbasaur, bulbasaurCopy)
 	}
 	
-	// MARK:- Weather Tests
+	// MARK: - Weather Tests
 	func testFireMoveInSunlight() {
 		engine.weather = .harshSunlight
 		

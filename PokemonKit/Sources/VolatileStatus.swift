@@ -15,14 +15,14 @@ public enum VolatileStatus: Codable, Equatable, Hashable {
 	
 	public func turn() -> VolatileStatus {
 		switch self {
-		case .confused(let c):
-			return .confused(c - 1)
+		case .confused(let counter):
+			return .confused(counter - 1)
 		default:
 			return self
 		}
 	}
 	
-	// MARK:- Codable implementation
+	// MARK: - Codable implementation
 	enum CodingKeys: CodingKey {
 		case base, counter, attack
 	}

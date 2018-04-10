@@ -20,7 +20,7 @@ public class Turn: NSObject, Codable, GKGameModelUpdate {
 	
 	var playerSpeed: Int {
 		switch action {
-		case .attack(_):
+		case .attack:
 			if player.activePokemon.status == .paralysed {
 				return player.activePokemon.baseStats.spd / 2
 			} else {
@@ -35,9 +35,9 @@ public class Turn: NSObject, Codable, GKGameModelUpdate {
 		switch action {
 		case let .attack(attack):
 			return attack.priority
-		case .switchTo(_):
+		case .switchTo:
 			return 6
-		case .forceSwitch(_):
+		case .forceSwitch:
 			return 7
 		case .run:
 			return 7
@@ -58,7 +58,7 @@ public class Turn: NSObject, Codable, GKGameModelUpdate {
 }
 
 extension Turn {
-	public static func ==(lhs: Turn, rhs: Turn) -> Bool {
+	public static func == (lhs: Turn, rhs: Turn) -> Bool {
 		return lhs.playerSpeed == rhs.playerSpeed &&
 			lhs.priority == rhs.priority &&
 			lhs.action == rhs.action

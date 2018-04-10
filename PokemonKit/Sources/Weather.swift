@@ -77,7 +77,7 @@ public enum Weather: CustomStringConvertible {
 			return true
 		case (.extremelyHarshSunlight, .water):
 			return true
-		case(_,_):
+		case(_, _):
 			return false
 		}
 	}

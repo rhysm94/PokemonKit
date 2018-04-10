@@ -23,7 +23,7 @@ public enum Action: Codable, Equatable {
 		case attack, switchTo, forceSwitch, recharge, run
 	}
 	
-	// MARK:- Codable
+	// MARK: - Codable
 	public func encode(to encoder: Encoder) throws {
 		var container = encoder.container(keyedBy: CodingKeys.self)
 		

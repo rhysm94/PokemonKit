@@ -247,7 +247,7 @@ extension Pokemon: CustomStringConvertible {
 }
 
 extension Pokemon: Equatable {
-	public static func ==(lhs: Pokemon, rhs: Pokemon) -> Bool {
+	public static func == (lhs: Pokemon, rhs: Pokemon) -> Bool {
 		return
 			lhs.species == rhs.species &&
 			lhs._nickname == rhs._nickname &&
@@ -263,5 +263,3 @@ extension Pokemon: Equatable {
 			lhs._currentHP == rhs._currentHP
 	}
 }
-
-

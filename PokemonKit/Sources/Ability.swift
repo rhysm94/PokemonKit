@@ -38,7 +38,7 @@ public struct Ability: Codable {
 }
 
 extension Ability: Equatable {
-	public static func ==(lhs: Ability, rhs: Ability) -> Bool {
+	public static func == (lhs: Ability, rhs: Ability) -> Bool {
 		return lhs.name == rhs.name
 	}
 }

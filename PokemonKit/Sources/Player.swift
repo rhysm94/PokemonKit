@@ -58,18 +58,18 @@ public class Player: NSObject, Codable, GKGameModelPlayer {
 }
 
 extension Player {
-	public static func ==(lhs: Player, rhs: Player) -> Bool {
+	public static func == (lhs: Player, rhs: Player) -> Bool {
 		return lhs.name == rhs.name &&
 			lhs.playerId == rhs.playerId &&
 			lhs.team == rhs.team &&
 			lhs.activePokemon == rhs.activePokemon
 	}
 	
-	public static func !=(lhs: Player, rhs: Player) -> Bool {
+	public static func != (lhs: Player, rhs: Player) -> Bool {
 		return !(lhs == rhs)
 	}
 	
-	public static func ==(lhs: Player, rhs: GKGameModelPlayer) -> Bool {
+	public static func == (lhs: Player, rhs: GKGameModelPlayer) -> Bool {
 		if let right = rhs as? Player {
 			return lhs == right
 		} else {
@@ -77,7 +77,7 @@ extension Player {
 		}
 	}
 	
-	public static func ==(lhs: GKGameModelPlayer, rhs: Player) -> Bool {
+	public static func == (lhs: GKGameModelPlayer, rhs: Player) -> Bool {
 		if let left = lhs as? Player {
 			return left == rhs
 		} else {
@@ -85,7 +85,7 @@ extension Player {
 		}
 	}
 	
-	public static func !=(lhs: Player, rhs: GKGameModelPlayer) -> Bool {
+	public static func != (lhs: Player, rhs: GKGameModelPlayer) -> Bool {
 		if let right = rhs as? Player {
 			return lhs != right
 		} else {
@@ -93,7 +93,7 @@ extension Player {
 		}
 	}
 
-	public static func !=(lhs: GKGameModelPlayer, rhs: Player) -> Bool {
+	public static func != (lhs: GKGameModelPlayer, rhs: Player) -> Bool {
 		if let left = lhs as? Player {
 			return left != rhs
 		} else {
@@ -101,5 +101,3 @@ extension Player {
 		}
 	}
 }
-
-

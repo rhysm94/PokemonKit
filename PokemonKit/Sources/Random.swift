@@ -76,7 +76,7 @@ public class Random {
 	}
 	
 	func copy() -> Random {
-		let copyRandomSource = self.randomSource.copy() as! GKRandomSource
+		guard let copyRandomSource = self.randomSource.copy() as? GKRandomSource else { fatalError() }
 		
 		return Random(source: copyRandomSource)
 	}
