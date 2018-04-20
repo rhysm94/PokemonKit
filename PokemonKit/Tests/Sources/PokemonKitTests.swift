@@ -30,8 +30,6 @@ class PokemonKitTests: XCTestCase {
     override func setUp() {
         super.setUp()
 		
-		Random.shared = Random(seed: UUID().uuidString)
-		
 		let bulbasaurSpecies = Pokedex.default.pokemon["bulbasaur"]!
 		bulbasaur = Pokemon(species: bulbasaurSpecies, level: 50, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [sludgeBomb, gigaDrain])
 		

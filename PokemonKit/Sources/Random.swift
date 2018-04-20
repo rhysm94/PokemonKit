@@ -10,14 +10,15 @@ import Foundation
 import GameplayKit
 
 public class Random {
-	public static var shared: Random!
-	var randomSource: GKRandomSource!
+	public static var shared = Random(seed: UUID().uuidString)
+	
+	let randomSource: GKRandomSource
 	let random: GKRandomDistribution
 	
 	public init(seed: String) {
 		print("init(seed:) for Random run with seed: \(seed)")
 		let dataSeed = seed.data(using: .utf8)!
-		randomSource = GKARC4RandomSource(seed: dataSeed)
+		self.randomSource = GKARC4RandomSource(seed: dataSeed)
 		self.random = GKRandomDistribution(randomSource: randomSource, lowestValue: 0, highestValue: 15)
 	}
 	
