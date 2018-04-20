@@ -87,7 +87,7 @@ public class BattleEngine: NSObject, GKGameModel {
 			guard !multiHitMoveRunning else { return }
 			
 			let containsForceSwitch = !turns.filter {
-				if case .forceSwitch(_) = $0.action { return true }
+				if case .forceSwitch = $0.action { return true }
 				return false
 			}.isEmpty
 			
@@ -131,7 +131,7 @@ public class BattleEngine: NSObject, GKGameModel {
 				if
 					let lookahead = turns.first,
 					case let .attack(attack) = lookahead.action,
-					case .multiHitMove(_, _)? = attack.bonusEffect
+					case .multiHitMove? = attack.bonusEffect
 				{
 					multiHitMoveRunning = true
 				}
@@ -171,13 +171,13 @@ public class BattleEngine: NSObject, GKGameModel {
 						lastDamage = 0
 						
 						// Skips doing damage if this is the first half of a multi-turn move, but still queues the relevant .useAttack
-						if case .multiTurnMove(_, _)? = attack.bonusEffect {
+						if case .multiTurnMove? = attack.bonusEffect {
 							view?.queue(action: .useAttack(attacker: attacker, defender: defender, attack: attack))
 							return
 						}
 						
 						// Skips doing damage if this is the first instance of a multi-hit move
-						if case .multiHitMove(_, _)? = attack.bonusEffect {
+						if case .multiHitMove? = attack.bonusEffect {
 							return
 						}
 						

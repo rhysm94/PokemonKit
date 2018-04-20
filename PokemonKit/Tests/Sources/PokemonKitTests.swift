@@ -274,6 +274,14 @@ class PokemonKitTests: XCTestCase {
 		XCTAssertEqual(rhys.activePokemon.currentHP, beforeTurnHP)
 	}
 	
+	func testBulletSeedHitsWithSlowerPokemon() {
+		engine.addTurn(Turn(player: joe, action: .attack(attack: tackle)))
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: bulletSeed)))
+		
+		XCTAssertNotEqual(joe.activePokemon.currentHP, joe.activePokemon.baseStats.hp)
+		XCTAssertNotEqual(rhys.activePokemon.currentHP, rhys.activePokemon.baseStats.hp)
+	}
+	
 	func testSuperEffectiveDamage() {
 		let flamethrower = Pokedex.default.attacks["Flamethrower"]!
 		let (_, effectiveness) = engine.calculateDamage(attacker: rhys.activePokemon, defender: bulbasaur, attack: flamethrower)

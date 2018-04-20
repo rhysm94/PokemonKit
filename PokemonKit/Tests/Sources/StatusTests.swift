@@ -123,6 +123,21 @@ class StatusTests: XCTestCase {
 		XCTAssertEqual(confusionOccurences, 1)
 	}
 	
+	func testConfusionPreventsBonusEffect() {
+		// Seed guaranteed to cause Joe's active Pokémon to hurt itself in its confusion
+		Random.shared = Random(seed: "confused")
+		let hypnosis = Pokedex.default.attacks["Hypnosis"]!
+		
+		joe.activePokemon.volatileStatus.insert(.confused(3))
+		
+		engine.addTurn(Turn(player: joe, action: .attack(attack: hypnosis)))
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: tackle)))
+		
+		if case .asleep = rhys.activePokemon.status {
+			XCTFail("Rhys's Pokémon is asleep despite Joe's Pokémon not attacking")
+		}
+	}
+	
 	func testSleepPreventsAttack() {
 		joe.activePokemon.status = .asleep(1)
 		
