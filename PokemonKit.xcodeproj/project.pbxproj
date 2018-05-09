@@ -128,6 +128,9 @@
 		91A0DC1B2047151100D7B67A /* Turn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB282047072900D7B67A /* Turn.swift */; };
 		91A0DC1C2047151100D7B67A /* Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB2B2047072900D7B67A /* Type.swift */; };
 		91A0DC1D2047151100D7B67A /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB312047072A00D7B67A /* Weather.swift */; };
+		91AA191920A29996004BF788 /* Generation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91AA191820A29996004BF788 /* Generation.swift */; };
+		91AA191A20A29996004BF788 /* Generation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91AA191820A29996004BF788 /* Generation.swift */; };
+		91AA191B20A29996004BF788 /* Generation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91AA191820A29996004BF788 /* Generation.swift */; };
 		91BEEFD3204C73E800AF5792 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BEEFD2204C73E800AF5792 /* SQLite.framework */; };
 		91BEEFD6204C743F00AF5792 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BEEFD5204C743F00AF5792 /* SQLite.framework */; };
 		91BEEFD9204C747C00AF5792 /* SQLite.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91BEEFD8204C747C00AF5792 /* SQLite.framework.dSYM */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -227,6 +230,7 @@
 		91A0DB89204710D000D7B67A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		91A0DB94204710D900D7B67A /* PokemonKit_tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PokemonKit_tvOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		91A0DB98204710D900D7B67A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		91AA191820A29996004BF788 /* Generation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Generation.swift; sourceTree = "<group>"; };
 		91BEEFD2204C73E800AF5792 /* SQLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SQLite.framework; path = Carthage/Build/iOS/SQLite.framework; sourceTree = "<group>"; };
 		91BEEFD5204C743F00AF5792 /* SQLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SQLite.framework; path = Carthage/Build/Mac/SQLite.framework; sourceTree = "<group>"; };
 		91BEEFD8204C747C00AF5792 /* SQLite.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; path = SQLite.framework.dSYM; sourceTree = "<group>"; };
@@ -341,6 +345,7 @@
 				91A0DB2C2047072900D7B67A /* Player.swift */,
 				91A0DB2F2047072A00D7B67A /* Pokedex.swift */,
 				91A0DB2D2047072900D7B67A /* Pokemon.swift */,
+				91AA191820A29996004BF788 /* Generation.swift */,
 				91A0DB222047072800D7B67A /* PokemonSpecies.swift */,
 				91A0DB242047072800D7B67A /* Random.swift */,
 				91A0DB302047072A00D7B67A /* Stats.swift */,
@@ -797,6 +802,7 @@
 				91A0DBB42047150E00D7B67A /* Player.swift in Sources */,
 				91A0DBB02047150E00D7B67A /* BattleEngine.swift in Sources */,
 				91EA215E206F859800C4B26D /* VolatileStatus.swift in Sources */,
+				91AA191920A29996004BF788 /* Generation.swift in Sources */,
 				91A0DBBD2047150E00D7B67A /* Type.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -824,6 +830,7 @@
 				91A0DBDA2047150F00D7B67A /* Player.swift in Sources */,
 				91A0DBD62047150F00D7B67A /* BattleEngine.swift in Sources */,
 				91EA2160206F859800C4B26D /* VolatileStatus.swift in Sources */,
+				91AA191A20A29996004BF788 /* Generation.swift in Sources */,
 				91A0DBE32047150F00D7B67A /* Type.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -851,6 +858,7 @@
 				91A0DC002047151100D7B67A /* Player.swift in Sources */,
 				91A0DBFC2047151100D7B67A /* BattleEngine.swift in Sources */,
 				91EA2162206F859800C4B26D /* VolatileStatus.swift in Sources */,
+				91AA191B20A29996004BF788 /* Generation.swift in Sources */,
 				91A0DC092047151100D7B67A /* Type.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
