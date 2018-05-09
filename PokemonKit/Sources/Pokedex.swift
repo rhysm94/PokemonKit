@@ -17,6 +17,29 @@ public class Pokedex {
 	static let dbPath = Bundle(for: Pokedex.self).path(forResource: "pokedex", ofType: "sqlite")
 	
 	public let pokemon: [PokemonSpecies]
+	
+	public var kantoPokemon: [PokemonSpecies] {
+		return pokemon.filter { $0.generation == .kanto }
+	}
+	public var johtoPokemon: [PokemonSpecies] {
+		return pokemon.filter { $0.generation == .johto }
+	}
+	public var hoennPokemon: [PokemonSpecies] {
+		return pokemon.filter { $0.generation == .hoenn }
+	}
+	public var sinnohPokemon: [PokemonSpecies] {
+		return pokemon.filter { $0.generation == .sinnoh }
+	}
+	public var unovaPokemon: [PokemonSpecies] {
+		return pokemon.filter { $0.generation == .unova }
+	}
+	public var kalosPokemon: [PokemonSpecies] {
+		return pokemon.filter { $0.generation == .kalos }
+	}
+	public var alolaPokemon: [PokemonSpecies] {
+		return pokemon.filter { $0.generation == .alola }
+	}
+	
 	public let abilities: [String: Ability]
 	public let attacks: [String: Attack]
 	

@@ -9,7 +9,7 @@
 public enum Generation: String, Codable {
 	case kanto, johto, hoenn, sinnoh, unova, kalos, alola, unknown
 	
-	init(from pokedexNumber: Int) {
+	init(with pokedexNumber: Int) {
 		switch pokedexNumber {
 		case 1...151: self = .kanto
 		case 152...251: self = .johto

@@ -30,7 +30,7 @@ public struct PokemonSpecies: Codable, Equatable {
 		self.abilityOne = abilityOne
 		self.abilityTwo = abilityTwo
 		self.hiddenAbility = hiddenAbility
-		self.generation = Generation(from: dexNum)
+		self.generation = Generation(with: dexNum)
 	}
 	
 	public init(dexNum: Int, identifier: String, name: String, type: Type, stats: Stats, abilityOne: Ability, abilityTwo: Ability? = nil, hiddenAbility: Ability? = nil) {
