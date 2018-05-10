@@ -131,6 +131,9 @@
 		91AA191920A29996004BF788 /* Generation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91AA191820A29996004BF788 /* Generation.swift */; };
 		91AA191A20A29996004BF788 /* Generation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91AA191820A29996004BF788 /* Generation.swift */; };
 		91AA191B20A29996004BF788 /* Generation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91AA191820A29996004BF788 /* Generation.swift */; };
+		91AA192120A3CC93004BF788 /* Generation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91AA191820A29996004BF788 /* Generation.swift */; };
+		91AA192220A3CC93004BF788 /* Generation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91AA191820A29996004BF788 /* Generation.swift */; };
+		91AA192320A3CC94004BF788 /* Generation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91AA191820A29996004BF788 /* Generation.swift */; };
 		91BEEFD3204C73E800AF5792 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BEEFD2204C73E800AF5792 /* SQLite.framework */; };
 		91BEEFD6204C743F00AF5792 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BEEFD5204C743F00AF5792 /* SQLite.framework */; };
 		91BEEFD9204C747C00AF5792 /* SQLite.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91BEEFD8204C747C00AF5792 /* SQLite.framework.dSYM */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -887,6 +890,7 @@
 				91EA215F206F859800C4B26D /* VolatileStatus.swift in Sources */,
 				91A0DBC82047150F00D7B67A /* Pokedex.swift in Sources */,
 				91A0DBC52047150F00D7B67A /* MovesetItem.swift in Sources */,
+				91AA192120A3CC93004BF788 /* Generation.swift in Sources */,
 				91A0DBC72047150F00D7B67A /* Player.swift in Sources */,
 				91A0DBC32047150F00D7B67A /* BattleEngine.swift in Sources */,
 			);
@@ -916,6 +920,7 @@
 				91EA2161206F859800C4B26D /* VolatileStatus.swift in Sources */,
 				91FF59C220472F9C00CBEBD5 /* PokemonKitTests.swift in Sources */,
 				91A0DBED2047151000D7B67A /* Player.swift in Sources */,
+				91AA192220A3CC93004BF788 /* Generation.swift in Sources */,
 				91A0DBE92047151000D7B67A /* BattleEngine.swift in Sources */,
 				91A0DBF62047151000D7B67A /* Type.swift in Sources */,
 			);
@@ -945,6 +950,7 @@
 				91EA2163206F859800C4B26D /* VolatileStatus.swift in Sources */,
 				91FF59C320472F9D00CBEBD5 /* PokemonKitTests.swift in Sources */,
 				91A0DC132047151100D7B67A /* Player.swift in Sources */,
+				91AA192320A3CC94004BF788 /* Generation.swift in Sources */,
 				91A0DC0F2047151100D7B67A /* BattleEngine.swift in Sources */,
 				91A0DC1C2047151100D7B67A /* Type.swift in Sources */,
 			);
