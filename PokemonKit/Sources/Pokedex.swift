@@ -44,9 +44,9 @@ public class Pokedex {
 	public let attacks: [String: Attack]
 	
 	init() {
-		self.abilities = Pokedex.getAbilities()
-		self.pokemon = Pokedex.getPokemon(abilities: abilities)
 		self.attacks = Pokedex.getAttacks()
+		self.abilities = Pokedex.getAbilities()
+		self.pokemon = Pokedex.getPokemon(abilities: abilities, attacks: attacks)
 	}
 	
 	private static let protectBreakingMoves = ["Feint", "Hyperspace Fury", "Hyperspace Hole", "Phantom Force", "Shadow Force"]
@@ -210,7 +210,7 @@ public class Pokedex {
 		return abilities
 	}
 	
-	static func getPokemon(abilities: [String: Ability]) -> [PokemonSpecies] {
+	static func getPokemon(abilities: [String: Ability], attacks: [String: Attack]) -> [PokemonSpecies] {
 		var pokemon = [PokemonSpecies]()
 		var database: Connection?
 		
@@ -315,7 +315,9 @@ public class Pokedex {
 					return Type(rawValue: value)
 				}
 				
-				let pokemonSpecies = PokemonSpecies(dexNum: Int(pokedexNumber), identifier: identifier, name: pokemonName, typeOne: typeOne, typeTwo: typeTwo, stats: Stats(hp: Int(hp), atk: Int(atk), def: Int(def), spAtk: Int(spAtk), spDef: Int(spDef), spd: Int(spd)), abilityOne: ability1, abilityTwo: ability2, hiddenAbility: hiddenAbility)
+				let moveset = Pokedex.getAttacksForPokemon(Int(pokedexNumber), database: db, attacks: attacks)
+				
+				let pokemonSpecies = PokemonSpecies(dexNum: Int(pokedexNumber), identifier: identifier, name: pokemonName, typeOne: typeOne, typeTwo: typeTwo, stats: Stats(hp: Int(hp), atk: Int(atk), def: Int(def), spAtk: Int(spAtk), spDef: Int(spDef), spd: Int(spd)), abilityOne: ability1, abilityTwo: ability2, hiddenAbility: hiddenAbility, moveset: moveset)
 				
 				pokemon.append(pokemonSpecies)
 			}
@@ -376,6 +378,55 @@ public class Pokedex {
 		}
 		
 		return attacks
+	}
+	
+	static func getAttacksForPokemon(_ pokemon: Int, database: Connection, attacks: [String: Attack]) -> [MovesetItem] {
+		var moveset: [MovesetItem] = []
+		
+		let pokemonMoves = Table("pokemon_moves")
+		let pokemonNames = Table("pokemon_species_names")
+		let moveNames = Table("move_names")
+		
+		let id = Expression<Int>("pokemon_id")
+		let speciesID = Expression<Int>("pokemon_species_id")
+		let moveID = Expression<Int>("move_id")
+		let name = Expression<String>("name")
+		let learnMethod = Expression<Int>("pokemon_move_method_id")
+		let learnLevel = Expression<Int>("level")
+		let version = Expression<Int>("version_group_id")
+		let language = Expression<Int>("local_language_id")
+		
+		let query = pokemonMoves.select(pokemonNames[name], moveNames[name], pokemonMoves[learnMethod], pokemonMoves[learnLevel])
+			.join(pokemonNames, on: pokemonMoves[id] == pokemonNames[speciesID])
+			.join(moveNames, on: pokemonMoves[moveID] == moveNames[moveID])
+			.filter(pokemonMoves[version] == 18 && pokemonNames[language] == 9 && moveNames[language] == 9 && pokemonMoves[id] == pokemon)
+		
+		do {
+			for row in try database.prepare(query) {
+				let attackName = row[moveNames[name]]
+				let learnMethod = row[learnMethod]
+				let level = row[learnLevel]
+				
+				let attack = attacks[attackName, default: Attack(name: "Dummy", power: 0, basePP: 0, maxPP: 0, priority: 0, type: .typeless, category: .status)]
+				let moveLearnMethod: MovesetItem.MoveLearnMethod
+				
+				switch learnMethod {
+				case 1: moveLearnMethod = .levelUp(level)
+				case 2: moveLearnMethod = .egg
+				case 3: moveLearnMethod = .moveTutor
+				case 4: moveLearnMethod = .machine
+				case 6: moveLearnMethod = .lightBallEgg
+				case 10: moveLearnMethod = .formChange
+				default: moveLearnMethod = .levelUp(0)
+				}
+				
+				moveset.append(MovesetItem(move: attack, moveLearnMethod: moveLearnMethod))
+			}
+		} catch let error {
+			print(error)
+		}
+		
+		return moveset
 	}
 }
 

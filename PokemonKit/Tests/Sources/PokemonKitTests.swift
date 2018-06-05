@@ -184,6 +184,10 @@ class PokemonKitTests: XCTestCase {
 		XCTAssertNotNil(charizardSpecies)
 	}
 	
+	func testPichuMovesetCount() {
+		XCTAssertEqual(Pokedex.default.pokemon["pichu"]!.moveset.count, 48)
+	}
+	
 	func testAddingMultipleAttacks() {
 		engine.addTurn(Turn(player: joe, action: .attack(attack: Pokedex.default.attacks["Thunder Wave"]!)))
 		engine.addTurn(Turn(player: joe, action: .attack(attack: Pokedex.default.attacks["Thunderbolt"]!)))
