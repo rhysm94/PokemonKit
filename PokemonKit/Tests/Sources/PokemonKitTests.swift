@@ -630,7 +630,6 @@ class PokemonKitTests: XCTestCase {
 		
 		let (damage, _) = engine.calculateDamage(attacker: bulbasaur, defender: pikachu, attack: Pokedex.default.attacks["Hydro Pump"]!)
 		
-		
 		XCTAssertGreaterThanOrEqual(damage, 0)
 		XCTAssertLessThanOrEqual(damage, 0)
 	}

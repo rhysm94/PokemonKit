@@ -26,7 +26,6 @@ public class Pokemon: Codable {
 	internal(set) public var status: Status
 	internal(set) public var volatileStatus: Set<VolatileStatus> = Set()
 	public let ability: Ability
-//	private(set) var moveset: [MovesetItem] = []
 	
 	private lazy var _currentHP: Int = {
 		return baseStats.hp
