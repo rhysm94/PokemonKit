@@ -179,7 +179,7 @@ class PokemonKitTests: XCTestCase {
 	}
 	
 	func testImportingFromDatabase() {
-		XCTAssertEqual(Pokedex.default.pokemon.count, 802)
+		XCTAssertEqual(Pokedex.default.pokemon.count, 807)
 		let charizardSpecies = Pokedex.default.pokemon["charizard"]
 		XCTAssertNotNil(charizardSpecies)
 	}
