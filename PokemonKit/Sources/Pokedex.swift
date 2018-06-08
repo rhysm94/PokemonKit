@@ -330,7 +330,24 @@ public class Pokedex {
 					}
 				}
 				
-				let moveset = Pokedex.getAttacksForPokemon(Int(pokedexNumber), database: db, attacks: attacks)
+				let moveset = Pokedex.getAttacksForPokemon(Int(pokedexNumber), database: db, attacks: attacks).sorted { first, second in
+					switch (first.moveLearnMethod, second.moveLearnMethod) {
+					case let (.levelUp(left), .levelUp(right)):
+						return left < right
+					case (.levelUp(_), .machine):
+						return true
+					case (.machine, .egg):
+						return true
+					case (.egg, .lightBallEgg):
+						return true
+					case (.lightBallEgg, .moveTutor):
+						return true
+					case (.moveTutor, .formChange):
+						return true
+					default:
+						return false
+					}
+				}
 				
 				let pokemonSpecies = PokemonSpecies(dexNum: Int(pokedexNumber), identifier: identifier, name: pokemonName, typeOne: typeOne, typeTwo: typeTwo, stats: Stats(hp: Int(hp), atk: Int(atk), def: Int(def), spAtk: Int(spAtk), spDef: Int(spDef), spd: Int(spd)), abilityOne: ability1, abilityTwo: ability2, hiddenAbility: hiddenAbility, eggGroupOne: eggGroupOne, eggGroupTwo: eggGroupTwo, moveset: moveset)
 				
