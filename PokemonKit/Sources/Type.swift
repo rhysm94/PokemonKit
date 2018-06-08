@@ -47,7 +47,7 @@ public enum Type: String, Codable {
 		case notEffective = 0
 	}
 	
-	public init(from number: Int) {
+	public init(using number: Int) {
 		switch number {
 		case 1: self = .normal
 		case 2: self = .fighting

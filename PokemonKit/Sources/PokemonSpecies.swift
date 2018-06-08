@@ -19,9 +19,11 @@ public struct PokemonSpecies: Codable, Equatable {
 	public let abilityOne: Ability
 	public let abilityTwo: Ability?
 	public let hiddenAbility: Ability?
+	public let eggGroupOne: EggGroup
+	public let eggGroupTwo: EggGroup?
 	public let moveset: [MovesetItem]
 	
-	public init(dexNum: Int, identifier: String, name: String, typeOne: Type, typeTwo: Type? = nil, stats: Stats, abilityOne: Ability, abilityTwo: Ability? = nil, hiddenAbility: Ability? = nil, moveset: [MovesetItem] = []) {
+	public init(dexNum: Int, identifier: String, name: String, typeOne: Type, typeTwo: Type? = nil, stats: Stats, abilityOne: Ability, abilityTwo: Ability? = nil, hiddenAbility: Ability? = nil, eggGroupOne: EggGroup, eggGroupTwo: EggGroup? = nil, moveset: [MovesetItem] = []) {
 		self.dexNum = dexNum
 		self.identifier = identifier
 		self.name = name
@@ -31,12 +33,14 @@ public struct PokemonSpecies: Codable, Equatable {
 		self.abilityOne = abilityOne
 		self.abilityTwo = abilityTwo
 		self.hiddenAbility = hiddenAbility
+		self.eggGroupOne = eggGroupOne
+		self.eggGroupTwo = eggGroupTwo
 		self.generation = Generation(with: dexNum)
 		self.moveset = moveset
 	}
 	
-	public init(dexNum: Int, identifier: String, name: String, type: Type, stats: Stats, abilityOne: Ability, abilityTwo: Ability? = nil, hiddenAbility: Ability? = nil, moveset: [MovesetItem] = []) {
-		self.init(dexNum: dexNum, identifier: identifier, name: name, typeOne: type, typeTwo: nil, stats: stats, abilityOne: abilityOne, abilityTwo: abilityTwo, hiddenAbility: hiddenAbility, moveset: moveset)
+	public init(dexNum: Int, identifier: String, name: String, type: Type, stats: Stats, abilityOne: Ability, abilityTwo: Ability? = nil, hiddenAbility: Ability? = nil, eggGroupOne: EggGroup, eggGroupTwo: EggGroup? = nil, moveset: [MovesetItem] = []) {
+		self.init(dexNum: dexNum, identifier: identifier, name: name, typeOne: type, typeTwo: nil, stats: stats, abilityOne: abilityOne, abilityTwo: abilityTwo, hiddenAbility: hiddenAbility, eggGroupOne: eggGroupOne, eggGroupTwo: eggGroupTwo, moveset: moveset)
 	}
 }
 

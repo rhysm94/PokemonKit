@@ -133,6 +133,16 @@ class PokemonKitTests: XCTestCase {
 		XCTAssertEqual(pikachu.currentHP, 110)
 	}
 	
+	func testEeveeEggGroup() {
+		XCTAssertEqual(Pokedex.default.pokemon[132].eggGroupOne, .field)
+		XCTAssertNil(Pokedex.default.pokemon[132].eggGroupTwo)
+	}
+	
+	func testPikachuEggGroup() {
+		XCTAssertEqual(pikachu.species.eggGroupOne, .field)
+		XCTAssertEqual(pikachu.species.eggGroupTwo, .fairy)
+	}
+	
 	func testBattleEngineAppliesDamage() {
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: rhys.activePokemon.attacks[0])))
 		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
@@ -145,7 +155,7 @@ class PokemonKitTests: XCTestCase {
 	}
 	
 	func testProteanMessage() {
-		let greninjaSpecies = PokemonSpecies(dexNum: 658, identifier: "greninja", name: "Greninja", typeOne: .water, typeTwo: .dark, stats: Stats(hp: 72, atk: 95, def: 67, spAtk: 103, spDef: 71, spd: 122), abilityOne: Ability(name: "Some", description: "Ability"), hiddenAbility: Ability(name: "Protean", description: "Changes Pokémon type to move type", activationMessage: Pokedex.activationMessage["Protean"]))
+		let greninjaSpecies = PokemonSpecies(dexNum: 658, identifier: "greninja", name: "Greninja", typeOne: .water, typeTwo: .dark, stats: Stats(hp: 72, atk: 95, def: 67, spAtk: 103, spDef: 71, spd: 122), abilityOne: Ability(name: "Some", description: "Ability"), hiddenAbility: Ability(name: "Protean", description: "Changes Pokémon type to move type", activationMessage: Pokedex.activationMessage["Protean"]), eggGroupOne: .water1)
 		let greninja = Pokemon(species: greninjaSpecies, level: 100, ability: greninjaSpecies.hiddenAbility!, nature: .timid, effortValues: .empty, individualValues: .fullIVs, attacks: [])
 		
 		greninja.species.typeOne = .grass
@@ -160,7 +170,7 @@ class PokemonKitTests: XCTestCase {
 	}
 	
 	func testAllFainted() {
-		let greninjaSpecies = PokemonSpecies(dexNum: 658, identifier: "greninja", name: "Greninja", typeOne: .water, typeTwo: .dark, stats: Stats(hp: 72, atk: 95, def: 67, spAtk: 103, spDef: 71, spd: 122), abilityOne: Ability(name: "Some", description: "Ability"), hiddenAbility: Ability(name: "Protean", description: "Changes Pokémon type to move type", activationMessage: Pokedex.activationMessage["Protean"]))
+		let greninjaSpecies = PokemonSpecies(dexNum: 658, identifier: "greninja", name: "Greninja", typeOne: .water, typeTwo: .dark, stats: Stats(hp: 72, atk: 95, def: 67, spAtk: 103, spDef: 71, spd: 122), abilityOne: Ability(name: "Some", description: "Ability"), hiddenAbility: Ability(name: "Protean", description: "Changes Pokémon type to move type", activationMessage: Pokedex.activationMessage["Protean"]), eggGroupOne: .water1)
 		let greninja = Pokemon(species: greninjaSpecies, level: 100, ability: greninjaSpecies.hiddenAbility!, nature: .timid, effortValues: .empty, individualValues: .fullIVs, attacks: [])
 		
 		rhys.add(pokemon: greninja)

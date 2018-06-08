@@ -140,6 +140,12 @@
 		91AA192120A3CC93004BF788 /* Generation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91AA191820A29996004BF788 /* Generation.swift */; };
 		91AA192220A3CC93004BF788 /* Generation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91AA191820A29996004BF788 /* Generation.swift */; };
 		91AA192320A3CC94004BF788 /* Generation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91AA191820A29996004BF788 /* Generation.swift */; };
+		91B06ABC20C9E158005488E9 /* EggGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B06ABB20C9E158005488E9 /* EggGroup.swift */; };
+		91B06ABD20C9E158005488E9 /* EggGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B06ABB20C9E158005488E9 /* EggGroup.swift */; };
+		91B06ABE20C9E158005488E9 /* EggGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B06ABB20C9E158005488E9 /* EggGroup.swift */; };
+		91B06ABF20C9E158005488E9 /* EggGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B06ABB20C9E158005488E9 /* EggGroup.swift */; };
+		91B06AC020C9E158005488E9 /* EggGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B06ABB20C9E158005488E9 /* EggGroup.swift */; };
+		91B06AC120C9E158005488E9 /* EggGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B06ABB20C9E158005488E9 /* EggGroup.swift */; };
 		91BEEFD3204C73E800AF5792 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BEEFD2204C73E800AF5792 /* SQLite.framework */; };
 		91BEEFD6204C743F00AF5792 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BEEFD5204C743F00AF5792 /* SQLite.framework */; };
 		91BEEFD9204C747C00AF5792 /* SQLite.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = 91BEEFD8204C747C00AF5792 /* SQLite.framework.dSYM */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -235,6 +241,7 @@
 		91A0DB94204710D900D7B67A /* PokemonKit_tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PokemonKit_tvOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		91A0DB98204710D900D7B67A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		91AA191820A29996004BF788 /* Generation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Generation.swift; sourceTree = "<group>"; };
+		91B06ABB20C9E158005488E9 /* EggGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EggGroup.swift; sourceTree = "<group>"; };
 		91BEEFD2204C73E800AF5792 /* SQLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SQLite.framework; path = Carthage/Build/iOS/SQLite.framework; sourceTree = "<group>"; };
 		91BEEFD5204C743F00AF5792 /* SQLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SQLite.framework; path = Carthage/Build/Mac/SQLite.framework; sourceTree = "<group>"; };
 		91BEEFD8204C747C00AF5792 /* SQLite.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; path = SQLite.framework.dSYM; sourceTree = "<group>"; };
@@ -345,6 +352,7 @@
 				91A0DB45204708D500D7B67A /* BattleEngineViewer.swift */,
 				91A0DB2A2047072900D7B67A /* MovesetItem.swift */,
 				91A0DB232047072800D7B67A /* Nature.swift */,
+				91B06ABB20C9E158005488E9 /* EggGroup.swift */,
 				91A0DB2C2047072900D7B67A /* Player.swift */,
 				91A0DB2F2047072A00D7B67A /* Pokedex.swift */,
 				91A0DB2D2047072900D7B67A /* Pokemon.swift */,
@@ -795,6 +803,7 @@
 				91A0DBB52047150E00D7B67A /* Pokedex.swift in Sources */,
 				91A0DBAD2047150E00D7B67A /* Action.swift in Sources */,
 				91A0DBAE2047150E00D7B67A /* Attack.swift in Sources */,
+				91B06ABC20C9E158005488E9 /* EggGroup.swift in Sources */,
 				91A0DBB12047150E00D7B67A /* BattleEngineViewer.swift in Sources */,
 				91A0DBB62047150E00D7B67A /* Pokemon.swift in Sources */,
 				91A0DBAF2047150E00D7B67A /* BattleAction.swift in Sources */,
@@ -823,6 +832,7 @@
 				91A0DBDB2047150F00D7B67A /* Pokedex.swift in Sources */,
 				91A0DBD32047150F00D7B67A /* Action.swift in Sources */,
 				91A0DBD42047150F00D7B67A /* Attack.swift in Sources */,
+				91B06ABE20C9E158005488E9 /* EggGroup.swift in Sources */,
 				91A0DBD72047150F00D7B67A /* BattleEngineViewer.swift in Sources */,
 				91A0DBDC2047150F00D7B67A /* Pokemon.swift in Sources */,
 				91A0DBD52047150F00D7B67A /* BattleAction.swift in Sources */,
@@ -851,6 +861,7 @@
 				91A0DC012047151100D7B67A /* Pokedex.swift in Sources */,
 				91A0DBF92047151100D7B67A /* Action.swift in Sources */,
 				91A0DBFA2047151100D7B67A /* Attack.swift in Sources */,
+				91B06AC020C9E158005488E9 /* EggGroup.swift in Sources */,
 				91A0DBFD2047151100D7B67A /* BattleEngineViewer.swift in Sources */,
 				91A0DC022047151100D7B67A /* Pokemon.swift in Sources */,
 				91A0DBFB2047151100D7B67A /* BattleAction.swift in Sources */,
@@ -883,6 +894,7 @@
 				91A0DBCB2047150F00D7B67A /* Random.swift in Sources */,
 				91A0DBC22047150F00D7B67A /* BattleAction.swift in Sources */,
 				91A0DBC12047150F00D7B67A /* Attack.swift in Sources */,
+				91B06ABD20C9E158005488E9 /* EggGroup.swift in Sources */,
 				91EA5317207BE150005A62CC /* StatusTests.swift in Sources */,
 				91A0DBD02047150F00D7B67A /* Type.swift in Sources */,
 				91A0DBCA2047150F00D7B67A /* PokemonSpecies.swift in Sources */,
@@ -913,6 +925,7 @@
 				91A0DBEF2047151000D7B67A /* Pokemon.swift in Sources */,
 				91A0DBE82047151000D7B67A /* BattleAction.swift in Sources */,
 				91A0DBF32047151000D7B67A /* Status.swift in Sources */,
+				91B06ABF20C9E158005488E9 /* EggGroup.swift in Sources */,
 				91EA5318207BE150005A62CC /* StatusTests.swift in Sources */,
 				91A0DBEC2047151000D7B67A /* Nature.swift in Sources */,
 				91A0DBF42047151000D7B67A /* Terrain.swift in Sources */,
@@ -943,6 +956,7 @@
 				91A0DC152047151100D7B67A /* Pokemon.swift in Sources */,
 				91A0DC0E2047151100D7B67A /* BattleAction.swift in Sources */,
 				91A0DC192047151100D7B67A /* Status.swift in Sources */,
+				91B06AC120C9E158005488E9 /* EggGroup.swift in Sources */,
 				91EA5319207BE150005A62CC /* StatusTests.swift in Sources */,
 				91A0DC122047151100D7B67A /* Nature.swift in Sources */,
 				91A0DC1A2047151100D7B67A /* Terrain.swift in Sources */,

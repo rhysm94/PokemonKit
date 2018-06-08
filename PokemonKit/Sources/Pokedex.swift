@@ -315,9 +315,24 @@ public class Pokedex {
 					return Type(rawValue: value)
 				}
 				
+				let eggGroupTable = Table("pokemon_egg_groups")
+				let speciesID = Expression<Int>("species_id")
+				let eggGroupID = Expression<Int>("egg_group_id")
+				let eggGroupQuery = eggGroupTable.select(speciesID, eggGroupID).filter(speciesID == Int(pokedexNumber))
+				let eggGroups = Array(try db.prepare(eggGroupQuery))
+				
+				let eggGroupOne = EggGroup(using: eggGroups[0][eggGroupID])
+				var eggGroupTwo: EggGroup? {
+					if eggGroups.indices.contains(1) {
+						return EggGroup(using: eggGroups[1][eggGroupID])
+					} else {
+						return nil
+					}
+				}
+				
 				let moveset = Pokedex.getAttacksForPokemon(Int(pokedexNumber), database: db, attacks: attacks)
 				
-				let pokemonSpecies = PokemonSpecies(dexNum: Int(pokedexNumber), identifier: identifier, name: pokemonName, typeOne: typeOne, typeTwo: typeTwo, stats: Stats(hp: Int(hp), atk: Int(atk), def: Int(def), spAtk: Int(spAtk), spDef: Int(spDef), spd: Int(spd)), abilityOne: ability1, abilityTwo: ability2, hiddenAbility: hiddenAbility, moveset: moveset)
+				let pokemonSpecies = PokemonSpecies(dexNum: Int(pokedexNumber), identifier: identifier, name: pokemonName, typeOne: typeOne, typeTwo: typeTwo, stats: Stats(hp: Int(hp), atk: Int(atk), def: Int(def), spAtk: Int(spAtk), spDef: Int(spDef), spd: Int(spd)), abilityOne: ability1, abilityTwo: ability2, hiddenAbility: hiddenAbility, eggGroupOne: eggGroupOne, eggGroupTwo: eggGroupTwo, moveset: moveset)
 				
 				pokemon.append(pokemonSpecies)
 			}
@@ -365,7 +380,7 @@ public class Pokedex {
 			for row in try db.prepare(query) {
 				let moveName = row[moveName]
 				
-				let type = Type(from: row[type])
+				let type = Type(using: row[type])
 				let category = Attack.DamageCategory(with: row[category])
 				
 				let breaksProtect = Pokedex.protectBreakingMoves.contains(moveName)
