@@ -342,6 +342,8 @@ public class Pokedex {
 						return true
 					case (.lightBallEgg, .moveTutor):
 						return true
+					case (.egg, .moveTutor):
+						return true
 					case (.moveTutor, .formChange):
 						return true
 					case (.machine, .moveTutor):
