@@ -344,6 +344,8 @@ public class Pokedex {
 						return true
 					case (.moveTutor, .formChange):
 						return true
+					case (.machine, .moveTutor):
+						return true
 					default:
 						return false
 					}
