@@ -5,4 +5,4 @@ It contains all manner of types for Pokémon, such as Pokemon Species, Pokemon i
 
 PokemonKit is the main part of my dissertation project, containing all of the model code for a Pokémon battle simulator. Create a user interface that sends turns to the battle engine, and it will resolve said turns as the Sun and Moon battle engine would, too.
 
-Many thanks to @Eevee for creating the [Veekun Pokémon database](https://github.com/veekun/pokedex) this project uses!
+Many thanks to [Eevee](https://github.com/eevee) for creating the [Veekun Pokémon database](https://github.com/veekun/pokedex) this project uses!
