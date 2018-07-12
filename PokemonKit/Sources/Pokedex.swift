@@ -16,7 +16,7 @@ public class Pokedex {
 
 	static let dbPath = Bundle(for: Pokedex.self).path(forResource: "pokedex", ofType: "sqlite")
 	
-	public let pokemon: [PokemonSpecies]
+	public var pokemon: [PokemonSpecies] = []
 	
 	public var kantoPokemon: [PokemonSpecies] {
 		return pokemon.filter { $0.generation == .kanto }
@@ -40,13 +40,28 @@ public class Pokedex {
 		return pokemon.filter { $0.generation == .alola }
 	}
 	
-	public let abilities: [String: Ability]
-	public let attacks: [String: Attack]
+	public var abilities: [String: Ability] = [:]
+	public var attacks: [String: Attack] = [:]
 	
-	init() {
-		self.attacks = Pokedex.getAttacks()
-		self.abilities = Pokedex.getAbilities()
-		self.pokemon = Pokedex.getPokemon(abilities: abilities, attacks: attacks)
+	init() {		
+		let queue = OperationQueue()
+
+		let attackGetter = BlockOperation {
+			self.attacks = Pokedex.getAttacks()
+		}
+		
+		let abilityGetter = BlockOperation {
+			self.abilities = Pokedex.getAbilities()
+		}
+		
+		let pokemonGetter = BlockOperation {
+			self.pokemon = Pokedex.getPokemon(abilities: self.abilities, attacks: self.attacks)
+		}
+		
+		pokemonGetter.addDependency(attackGetter)
+		pokemonGetter.addDependency(abilityGetter)
+		
+		queue.addOperations([pokemonGetter, abilityGetter, attackGetter], waitUntilFinished: true)
 	}
 	
 	private static let protectBreakingMoves = ["Feint", "Hyperspace Fury", "Hyperspace Hole", "Phantom Force", "Shadow Force"]
@@ -353,9 +368,11 @@ public class Pokedex {
 					}
 				}
 				
+				
 				let pokemonSpecies = PokemonSpecies(dexNum: Int(pokedexNumber), identifier: identifier, name: pokemonName, typeOne: typeOne, typeTwo: typeTwo, stats: Stats(hp: Int(hp), atk: Int(atk), def: Int(def), spAtk: Int(spAtk), spDef: Int(spDef), spd: Int(spd)), abilityOne: ability1, abilityTwo: ability2, hiddenAbility: hiddenAbility, eggGroupOne: eggGroupOne, eggGroupTwo: eggGroupTwo, moveset: moveset)
 				
 				pokemon.append(pokemonSpecies)
+				
 			}
 		} catch let error {
 			print("getPokemon() error: \(error)")
@@ -399,15 +416,14 @@ public class Pokedex {
 		
 		do {
 			for row in try db.prepare(query) {
-				let moveName = row[moveName]
-				
-				let type = Type(using: row[type])
-				let category = Attack.DamageCategory(with: row[category])
-				
-				let breaksProtect = Pokedex.protectBreakingMoves.contains(moveName)
-				let effectTarget = Pokedex.targets[moveName]
-				let attack = Attack(name: moveName, power: row[power] ?? 0, basePP: row[pp], maxPP: row[pp], accuracy: row[accuracy], priority: row[priority], type: type, breaksProtect: breaksProtect, category: category, effectTarget: effectTarget, bonusEffect: Pokedex.attackBonuses[moveName])
-				attacks[moveName] = attack
+					let moveName = row[moveName]
+					let type = Type(using: row[type])
+					let category = Attack.DamageCategory(with: row[category])
+					
+					let breaksProtect = Pokedex.protectBreakingMoves.contains(moveName)
+					let effectTarget = Pokedex.targets[moveName]
+					let attack = Attack(name: moveName, power: row[power] ?? 0, basePP: row[pp], maxPP: row[pp], accuracy: row[accuracy], priority: row[priority], type: type, breaksProtect: breaksProtect, category: category, effectTarget: effectTarget, bonusEffect: Pokedex.attackBonuses[moveName])
+					attacks[moveName] = attack
 			}
 		} catch let error {
 			print("getAbilities() error: \(error)")
@@ -439,6 +455,7 @@ public class Pokedex {
 		
 		do {
 			for row in try database.prepare(query) {
+				
 				let attackName = row[moveNames[name]]
 				let learnMethod = row[learnMethod]
 				let level = row[learnLevel]

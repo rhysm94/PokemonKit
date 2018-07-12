@@ -671,4 +671,26 @@ class PokemonKitTests: XCTestCase {
 		print(copyNumbers)
 		XCTAssertEqual(sharedNumbers, copyNumbers)
 	}
+	
+	func testPikachuAbilityOne() {
+		XCTAssertEqual(pikachu.species.abilityOne.name, "Static")
+	}
+	
+	func testZeraoraHasThunderbolt() {
+		let zeraora = Pokedex.default.pokemon["zeraora"]!
+		let moveset = zeraora.moveset
+		
+		let thunderbolt = moveset.filter { $0.move.name == "Thunderbolt" }
+		XCTAssertNotEqual(thunderbolt.count, 0)
+		XCTAssertEqual(zeraora.abilityOne.name, "Volt Absorb")
+	}
+	
+	func testCheckAllAttacks() {
+		for pokemon in Pokedex.default.pokemon {
+//			print("\(pokemon.name)'s attack count: \(pokemon.moveset.count)")
+			for move in pokemon.moveset where move.move.name == "Dummy" {
+				print("Dummy attack!")
+			}
+		}
+	}
 }
