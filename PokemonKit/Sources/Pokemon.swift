@@ -8,6 +8,9 @@
 
 import Foundation
 
+
+/// A Pokemon object refers to a specific instance of a Pokémon
+///
 public class Pokemon: Codable {
 	private var _nickname: String?
 	public var nickname: String {

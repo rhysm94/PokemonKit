@@ -14,33 +14,63 @@ public class Pokedex {
 		return Pokedex()
 	}()
 
-	static let dbPath = Bundle(for: Pokedex.self).path(forResource: "pokedex", ofType: "sqlite")
+	private static let dbPath = Bundle(for: Pokedex.self).path(forResource: "pokedex", ofType: "sqlite")
 	
 	public var pokemon: [PokemonSpecies] = []
 	
+	/// Array containing all Pokémon from the Kanto Pokédex, with National Dex numbers 1 - 151
+	///
+	/// i.e. Bulbasaur - Mew
 	public var kantoPokemon: [PokemonSpecies] {
 		return pokemon.filter { $0.generation == .kanto }
 	}
+	
+	/// Array containing all Pokémon from the Johto region, with National Dex numbers 152 - 251
+	///
+	/// i.e. Chikorita - Celebi
 	public var johtoPokemon: [PokemonSpecies] {
 		return pokemon.filter { $0.generation == .johto }
 	}
+	
+	/// Array containing all Pokémon from the Hoenn region, with National Dex numbers 252 - 386
+	///
+	/// i.e. Treecko - Deoxys
 	public var hoennPokemon: [PokemonSpecies] {
 		return pokemon.filter { $0.generation == .hoenn }
 	}
+	
+	/// Array containing all Pokémon from the Sinnoh region, with National Dex numbers 387 - 493
+	///
+	/// i.e. Turtwig - Arceus
 	public var sinnohPokemon: [PokemonSpecies] {
 		return pokemon.filter { $0.generation == .sinnoh }
 	}
+	
+	/// Array containing all Pokémon from the Unova region, with National Dex numbers 494 - 649
+	///
+	/// i.e. Victini - Genesect
 	public var unovaPokemon: [PokemonSpecies] {
 		return pokemon.filter { $0.generation == .unova }
 	}
+	
+	/// Array containing all Pokémon from the Kalos region, with National Dex numbers 650 - 721
+	///
+	/// i.e. Chespin - Volcanion
 	public var kalosPokemon: [PokemonSpecies] {
 		return pokemon.filter { $0.generation == .kalos }
 	}
+	
+	/// Array containing all Pokémon from the Alola region, with National Dex numbers 722 - 807
+	///
+	/// i.e. Rowlet - Zeraora
 	public var alolaPokemon: [PokemonSpecies] {
 		return pokemon.filter { $0.generation == .alola }
 	}
 	
+	/// Dictionary containing all Pokémon abilities, indexed by Ability name
 	public var abilities: [String: Ability] = [:]
+	
+	/// Dictionary containing all Pokémon attacks, indexed by Attack name
 	public var attacks: [String: Attack] = [:]
 	
 	init() {		
@@ -205,11 +235,18 @@ public class Pokedex {
 		let languageID = Expression<Int>("language_id")
 		let localLanguageID = Expression<Int>("local_language_id")
 		let flavorText = Expression<String>("flavor_text")
+		let mainSeries = Expression<Int>("is_main_series")
+		let versionGroupID = Expression<Int>("version_group_id")
 		
 		let query = abilityTable.select(abilityNames[abilityName], abilityFlavorText[flavorText])
 			.join(abilityNames, on: abilityTable[id] == abilityNames[abilityID])
 			.join(abilityFlavorText, on: abilityTable[id] == abilityFlavorText[abilityID])
-			.filter(abilityNames[localLanguageID] == 9 && abilityFlavorText[languageID] == 9)
+			.filter(
+				abilityNames[localLanguageID] == 9 &&
+				abilityFlavorText[languageID] == 9 &&
+				abilityTable[mainSeries] == 1 &&
+				abilityFlavorText[versionGroupID] == 17
+		)
 		
 		do {
 			for row in try db.prepare(query) {
