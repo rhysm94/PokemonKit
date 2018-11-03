@@ -21,7 +21,7 @@ public class BattleEngine: NSObject, GKGameModel {
 	///
 	/// When set to anything other than `BattleState.running`,
 	/// `BattleEngineViewer.disableButtons()` will be called on `view`
-	private(set) public var state: BattleState = .running {
+	internal(set) public var state: BattleState = .running {
 		didSet {
 			if state != .running { view?.disableButtons() }
 		}
