@@ -10,6 +10,10 @@ import GameplayKit
 import SQLite
 
 public class Pokedex {
+	
+	/// Shared resource for accessing the Pokedex
+	///
+	/// Contains all Pokémon, Abilities, and Attacks
 	public static let `default`: Pokedex = {
 		return Pokedex()
 	}()
@@ -68,9 +72,19 @@ public class Pokedex {
 	}
 	
 	/// Dictionary containing all Pokémon abilities, indexed by Ability name
+	///
+	/// Access an Ability like so:
+	/// ```
+	/// let protean = Pokedex.default.abilities["Protean"]
+	/// ```
 	public var abilities: [String: Ability] = [:]
 	
 	/// Dictionary containing all Pokémon attacks, indexed by Attack name
+	///
+	/// Access an Attack like so:
+	/// ```
+	/// let hyperBeam = Pokedex.default.attacks["Hyper Beam"]
+	/// ```
 	public var attacks: [String: Attack] = [:]
 	
 	init() {		
@@ -128,6 +142,7 @@ public class Pokedex {
 			
 			print("\(pokemon.nickname) will restore by \(restoreHP) capped at their max. HP")
 		}),
+		"Giga Impact": .singleTarget({ $0.volatileStatus.insert(.mustRecharge) }),
 		"Growl": .singleTarget({ $0.statStages.atk -= 1 }),
 		"Hyper Beam": .singleTarget({ $0.volatileStatus.insert(.mustRecharge) }),
 		"Hypnosis": .singleTarget({ pokemon in

@@ -8,9 +8,20 @@
 
 import GameplayKit
 
+
+/// BattleEngine is the internal representation of a Pokémon battle.
+///
+/// One BattleEngine runs one single battle between two players.
+///
+/// A BattleEngine object can only be instantiated via `BattleEngine.init(playerOne:playerTwo:)`
 public class BattleEngine: NSObject, GKGameModel {
 	private let maxTurnCount: Int
-	internal(set) public var state: BattleState = .running {
+	
+	/// Current state of the battle.
+	///
+	/// When set to anything other than `BattleState.running`,
+	/// `BattleEngineViewer.disableButtons()` will be called on `view`
+	private(set) public var state: BattleState = .running {
 		didSet {
 			if state != .running { view?.disableButtons() }
 		}
@@ -29,13 +40,19 @@ public class BattleEngine: NSObject, GKGameModel {
 	
 	public weak var view: BattleEngineViewer?
 	
+	/// Object representing the first player
 	private(set) public var playerOne: Player
+	
+	/// Object representing the second player
 	private(set) public var playerTwo: Player
 	
 	private(set) var turnHistory = [Turn]()
 	private var turnCounter = 1
 	private var lastDamage = 0
 	
+	/// The battle's current `Weather` effect. Default is `Weather.none`.
+	///
+	/// When set, a `BattleAction.weatherUpdate(_:)` or `BattleAction.displayText(_:)` will be queued on the `view`
 	internal(set) public var weather: Weather = .none {
 		didSet {
 			switch weather {
@@ -57,6 +74,7 @@ public class BattleEngine: NSObject, GKGameModel {
 		}
 	}
 	
+	/// The battle's current `Terrain` effect. Default is `Weather.none`.
 	internal(set) public var terrain: Terrain = .none {
 		didSet {
 			view?.queue(action: .terrainUpdate(terrain))
@@ -102,25 +120,114 @@ public class BattleEngine: NSObject, GKGameModel {
 		}
 	}
 	
+	
+	/// Sorts turns into the correct order to resolve turns
+	private func sortTurns() {
+		turns.sort {
+			if $0.priority == $1.priority {
+				return $0.playerSpeed > $1.playerSpeed
+			} else {
+				return $0.priority > $1.priority
+			}
+		}
+	}
+	
+	private func applyDamage(attacker: Pokemon, defender: Pokemon, attack: Attack) {
+		lastDamage = 0
+		
+		// Skips doing damage if this is the first half of a multi-turn move, but still queues the relevant .useAttack
+		if case .multiTurnMove? = attack.bonusEffect {
+			view?.queue(action: .useAttack(attacker: attacker, defender: defender, attack: attack))
+			return
+		}
+		
+		// Skips doing damage if this is the first instance of a multi-hit move
+		if case .multiHitMove? = attack.bonusEffect {
+			return
+		}
+		
+		switch attack.category {
+		case .physical, .special:
+			let (baseDamage, effectiveness) = calculateDamage(attacker: attacker, defender: defender, attack: attack)
+			let weatherBlocked = weather.blocks(type: attack.type)
+			
+			if effectiveness != .notEffective && !weatherBlocked {
+				print("\(attack.name) is going to do \(baseDamage) HP of damage against \(defender)")
+				defender.damage(max(1, baseDamage))
+				view?.queue(action: .useAttack(attacker: attacker, defender: defender, attack: attack))
+			} else if weatherBlocked {
+				lastDamage = 0
+				guard let message = weather.blockMessage else { break }
+				view?.queue(action: .displayText(message))
+			}
+			
+			if effectiveness != .normallyEffective {
+				view?.queue(action: .displayText(effectiveness.description))
+			}
+			
+			lastDamage = baseDamage
+		case .status:
+			print("\(attacker) is going to use \(attack.name) against \(defender)")
+			view?.queue(action: .useAttack(attacker: attacker, defender: defender, attack: attack))
+		}
+	}
+	
+	private func successfulDamage(attacker: Pokemon, defender: Pokemon, attack: Attack) {
+		var attack = attack
+		
+		// If the condition for a multi-turn move is matched, use it immediately
+		// (e.g. in the case of Solar Beam, if the weather is sunny)
+		if case .multiTurnMove(let condition, _)? = attack.bonusEffect, condition(self) {
+			attack = attack.withoutBonusEffect()
+		}
+		
+		applyDamage(attacker: attacker, defender: defender, attack: attack)
+	}
+	
+	private func runBonusEffect(attack: Attack, target: Pokemon? = nil, player: Player) {
+		switch attack.bonusEffect {
+		case .singleTarget(let bonusEffect)?:
+			guard let moveTarget = target else { return }
+			bonusEffect(moveTarget)
+			
+		case .setWeather(let weather)?:
+			setWeather(weather)
+			
+		case .setTerrain(let terrain)?:
+			setTerrain(terrain)
+			
+		case let .multiHitMove(minHits, maxHits)?:
+			let numberOfHits = Random.shared.between(minimum: minHits, maximum: maxHits)
+			view?.queue(action: .displayText("\(attack.name) will hit \(numberOfHits) times!"))
+			let replacementAttack = attack.withoutBonusEffect()
+			for _ in 1...numberOfHits {
+				turns.insert(Turn(player: player, action: .attack(attack: replacementAttack)), at: turns.startIndex)
+			}
+			
+		case let .singleTargetUsingDamage(bonusEffect)?:
+			guard let moveTarget = target else { return }
+			bonusEffect(moveTarget, lastDamage)
+			
+		case .multiTurnMove(let condition, let addAttack)?:
+			guard let moveTarget = target else { return }
+			if !condition(self) {
+				let textToAdd = addAttack(attack, moveTarget)
+				view?.queue(action: .displayText(textToAdd))
+			}
+			
+		case .none, .instanceOfMultiHit?:
+			break
+		}
+	}
+	
 	private func run() {
 		print("---")
 		print("Turn \(turnCounter)")
 		print("---")
 		
 		while resolveTurns {
-			print("Turns currently sorted as \(turns)")
-
-			turns.sort {
-				if $0.priority == $1.priority {
-					return $0.playerSpeed > $1.playerSpeed
-				} else {
-					return $0.priority > $1.priority
-				}
-			}
 			
-			print("Turns now sorted as \(turns)")
-			
-			// Resolving turns
+			sortTurns()
 			
 			while !turns.isEmpty {
 				view?.disableButtons()
@@ -167,45 +274,10 @@ public class BattleEngine: NSObject, GKGameModel {
 					print("\(playerOne.name)'s \(playerOne.activePokemon) - Lv. \(playerOne.activePokemon.level) has \(playerOne.activePokemon.currentHP)/\(playerOne.activePokemon.baseStats.hp) HP")
 					print("\(playerTwo.name)'s \(playerTwo.activePokemon) - Lv. \(playerTwo.activePokemon.level) has \(playerTwo.activePokemon.currentHP)/\(playerTwo.activePokemon.baseStats.hp) HP")
 					
-					func doDamage() {
-						lastDamage = 0
-						
-						// Skips doing damage if this is the first half of a multi-turn move, but still queues the relevant .useAttack
-						if case .multiTurnMove? = attack.bonusEffect {
-							view?.queue(action: .useAttack(attacker: attacker, defender: defender, attack: attack))
-							return
-						}
-						
-						// Skips doing damage if this is the first instance of a multi-hit move
-						if case .multiHitMove? = attack.bonusEffect {
-							return
-						}
-						
-						switch attack.category {
-						case .physical, .special:
-							let (baseDamage, effectiveness) = calculateDamage(attacker: attacker, defender: defender, attack: attack)
-							let weatherBlocked = weather.blocks(type: attack.type)
-							
-							if effectiveness != .notEffective && !weatherBlocked {
-								print("\(attack.name) is going to do \(baseDamage) HP of damage against \(defender)")
-								defender.damage(max(1, baseDamage))
-								view?.queue(action: .useAttack(attacker: attacker, defender: defender, attack: attack))
-							} else if weatherBlocked {
-								lastDamage = 0
-								guard let message = weather.blockMessage else { break }
-								view?.queue(action: .displayText(message))
-							}
-							
-							if effectiveness != .normallyEffective {
-								view?.queue(action: .displayText(effectiveness.description))
-							}
-							
-							lastDamage = baseDamage
-						case .status:
-							print("\(attacker) is going to use \(attack.name) against \(defender)")
-							view?.queue(action: .useAttack(attacker: attacker, defender: defender, attack: attack))
-						}
-					}
+					
+					
+					/// Attack
+					/// Attacker, Defender: Pokemon
 					
 					func confusionCheck() -> Bool {
 						for case let .confused(number) in attacker.volatileStatus {
@@ -279,7 +351,6 @@ public class BattleEngine: NSObject, GKGameModel {
 								view?.queue(action: .displayText("\(attacker.nickname) used \(attack.name)"))
 								view?.queue(action: .displayText("But it missed!"))
 							}
-							
 							return hit
 						} else {
 							return true
@@ -294,67 +365,20 @@ public class BattleEngine: NSObject, GKGameModel {
 						hitCheck()
 					].reduce(true) { $0 && $1 }
 					
-					func successfulDamage() {
-						// If the condition for a multi-turn move is matched, use it immediately
-						// (e.g. in the case of Solar Beam, if the weather is sunny)
-						if case .multiTurnMove(let condition, _)? = attack.bonusEffect, condition(self) {
-							attack = attack.withoutBonusEffect()
-						}
-						
-						doDamage()
-						
-					}
-					
 					if shouldAttack {
-						successfulDamage()
+						successfulDamage(attacker: attacker, defender: defender, attack: attack)
 					} else {
 						break
 					}
 					
-					func runBonusEffect(attack: Attack, target: Pokemon?) {
-						switch attack.bonusEffect {
-						case .singleTarget(let bonusEffect)?:
-							guard let moveTarget = target else { return }
-							bonusEffect(moveTarget)
-							
-						case .setWeather(let weather)?:
-							setWeather(weather)
-							
-						case .setTerrain(let terrain)?:
-							setTerrain(terrain)
-							
-						case let .multiHitMove(minHits, maxHits)?:
-							let numberOfHits = Random.shared.between(minimum: minHits, maximum: maxHits)
-							view?.queue(action: .displayText("\(attack.name) will hit \(numberOfHits) times!"))
-							let replacementAttack = attack.withoutBonusEffect()
-							for _ in 1...numberOfHits {
-								turns.insert(Turn(player: turn.player, action: .attack(attack: replacementAttack)), at: turns.startIndex)
-							}
-							
-						case let .singleTargetUsingDamage(bonusEffect)?:
-							guard let moveTarget = target else { return }
-							bonusEffect(moveTarget, lastDamage)
-							
-						case .multiTurnMove(let condition, let addAttack)?:
-							guard let moveTarget = target else { return }
-							if !condition(self) {
-								let textToAdd = addAttack(attack, moveTarget)
-								view?.queue(action: .displayText(textToAdd))
-							}
-							
-						case .none, .instanceOfMultiHit?:
-							break
-						}
-					}
-					
 					switch attack.effectTarget {
 					case .attacker?:
-						runBonusEffect(attack: attack, target: attacker)
+						runBonusEffect(attack: attack, target: attacker, player: turn.player)
 						print("\(attacker)'s stats are now: \(attacker.baseStats)")
 					case .defender?:
-						runBonusEffect(attack: attack, target: defender)
+						runBonusEffect(attack: attack, target: defender, player: turn.player)
 					default:
-						runBonusEffect(attack: attack, target: nil)
+						runBonusEffect(attack: attack, player: turn.player)
 					}
 
 				case .switchTo(let pokemon), .forceSwitch(let pokemon):
@@ -615,8 +639,16 @@ public class BattleEngine: NSObject, GKGameModel {
 		terrainCounter = 5
 	}
 	
+	/// Enum representing possible battle states
 	public enum BattleState: String, Codable {
-		case running, completed, awaitingSwitch
+		/// State for when a Pokémon battle is running normally
+		case running
+		
+		/// State for when a Pokémon battle has been completed
+		case completed
+		
+		/// State for when the Battle Engine is waiting for a switch-in Pokémon from a player
+		case awaitingSwitch
 	}
 	
 	// MARK: - GameplayKit Methods
