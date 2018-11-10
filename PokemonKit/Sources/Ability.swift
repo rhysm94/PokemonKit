@@ -37,8 +37,13 @@ public struct Ability: Codable {
 	}
 }
 
-extension Ability: Equatable {
+extension Ability: Hashable {
 	public static func == (lhs: Ability, rhs: Ability) -> Bool {
-		return lhs.name == rhs.name
+		return lhs.name == rhs.name && lhs.description == rhs.description
+	}
+	
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(name)
+		hasher.combine(description)
 	}
 }

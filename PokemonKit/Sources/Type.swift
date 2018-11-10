@@ -6,7 +6,7 @@
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
 //
 
-public enum Type: String, Codable {
+public enum Type: String, Codable, Hashable {
 	case normal = "Normal"
 	case fire = "Fire"
 	case water = "Water"

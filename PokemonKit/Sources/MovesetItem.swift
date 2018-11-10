@@ -6,8 +6,8 @@
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
 //
 
-public struct MovesetItem: Codable, Equatable {
-	public enum MoveLearnMethod: Codable, Equatable {
+public struct MovesetItem: Codable, Hashable {
+	public enum MoveLearnMethod: Codable, Hashable {
 		case levelUp(Int)
 		case machine
 		case egg

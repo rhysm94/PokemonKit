@@ -6,7 +6,7 @@
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
 //
 
-public enum Generation: String, Codable {
+public enum Generation: String, Codable, Hashable {
 	case kanto, johto, hoenn, sinnoh, unova, kalos, alola, unknown
 	
 	public static let allGens: [Generation] = [.kanto, .johto, .hoenn, .sinnoh, .unova, .kalos, .alola]

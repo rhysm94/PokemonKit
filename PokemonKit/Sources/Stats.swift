@@ -6,7 +6,7 @@
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
 //
 
-public struct Stats: Codable, Equatable {
+public struct Stats: Codable, Hashable {
 	public let hp, atk, def, spAtk, spDef, spd: Int
 	static let statModifiers = [
 		-6: 0.25,

@@ -7,6 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		911CDEAE219759400038E08F /* PokemonEvolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911CDEAD2197593F0038E08F /* PokemonEvolution.swift */; };
+		911CDEAF219759400038E08F /* PokemonEvolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911CDEAD2197593F0038E08F /* PokemonEvolution.swift */; };
+		911CDEB0219759400038E08F /* PokemonEvolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911CDEAD2197593F0038E08F /* PokemonEvolution.swift */; };
+		911CDEB1219759400038E08F /* PokemonEvolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911CDEAD2197593F0038E08F /* PokemonEvolution.swift */; };
+		911CDEB2219759400038E08F /* PokemonEvolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911CDEAD2197593F0038E08F /* PokemonEvolution.swift */; };
+		911CDEB3219759400038E08F /* PokemonEvolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911CDEAD2197593F0038E08F /* PokemonEvolution.swift */; };
+		911CDEB5219759A90038E08F /* Gender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911CDEB4219759A90038E08F /* Gender.swift */; };
+		911CDEB6219759A90038E08F /* Gender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911CDEB4219759A90038E08F /* Gender.swift */; };
+		911CDEB7219759A90038E08F /* Gender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911CDEB4219759A90038E08F /* Gender.swift */; };
+		911CDEB8219759A90038E08F /* Gender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911CDEB4219759A90038E08F /* Gender.swift */; };
+		911CDEB9219759A90038E08F /* Gender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911CDEB4219759A90038E08F /* Gender.swift */; };
+		911CDEBA219759A90038E08F /* Gender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911CDEB4219759A90038E08F /* Gender.swift */; };
+		911CDEBC21975C7F0038E08F /* Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911CDEBB21975C7F0038E08F /* Time.swift */; };
+		911CDEBD21975C7F0038E08F /* Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911CDEBB21975C7F0038E08F /* Time.swift */; };
+		911CDEBE21975C7F0038E08F /* Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911CDEBB21975C7F0038E08F /* Time.swift */; };
+		911CDEBF21975C7F0038E08F /* Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911CDEBB21975C7F0038E08F /* Time.swift */; };
+		911CDEC021975C7F0038E08F /* Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911CDEBB21975C7F0038E08F /* Time.swift */; };
+		911CDEC121975C7F0038E08F /* Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911CDEBB21975C7F0038E08F /* Time.swift */; };
 		9121ED0320C6216B008C625B /* pokedex.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 9121ED0220C6216B008C625B /* pokedex.sqlite */; };
 		9121ED0420C6216B008C625B /* pokedex.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 9121ED0220C6216B008C625B /* pokedex.sqlite */; };
 		9121ED0520C6216B008C625B /* pokedex.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 9121ED0220C6216B008C625B /* pokedex.sqlite */; };
@@ -206,6 +224,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		911CDEAD2197593F0038E08F /* PokemonEvolution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonEvolution.swift; sourceTree = "<group>"; };
+		911CDEB4219759A90038E08F /* Gender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gender.swift; sourceTree = "<group>"; };
+		911CDEBB21975C7F0038E08F /* Time.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Time.swift; sourceTree = "<group>"; };
 		9121ED0220C6216B008C625B /* pokedex.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = pokedex.sqlite; sourceTree = "<group>"; };
 		91A0DB19204706FA00D7B67A /* PokemonKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PokemonKit.h; sourceTree = "<group>"; };
 		91A0DB212047072800D7B67A /* BattleAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BattleAction.swift; sourceTree = "<group>"; };
@@ -350,6 +371,9 @@
 				91A0DB212047072800D7B67A /* BattleAction.swift */,
 				91A0DB2E2047072A00D7B67A /* BattleEngine.swift */,
 				91A0DB45204708D500D7B67A /* BattleEngineViewer.swift */,
+				911CDEB4219759A90038E08F /* Gender.swift */,
+				911CDEBB21975C7F0038E08F /* Time.swift */,
+				911CDEAD2197593F0038E08F /* PokemonEvolution.swift */,
 				91A0DB2A2047072900D7B67A /* MovesetItem.swift */,
 				91A0DB232047072800D7B67A /* Nature.swift */,
 				91B06ABB20C9E158005488E9 /* EggGroup.swift */,
@@ -805,10 +829,13 @@
 				91A0DBB92047150E00D7B67A /* Stats.swift in Sources */,
 				91A0DBB22047150E00D7B67A /* MovesetItem.swift in Sources */,
 				91A0DBB52047150E00D7B67A /* Pokedex.swift in Sources */,
+				911CDEBC21975C7F0038E08F /* Time.swift in Sources */,
 				91A0DBAD2047150E00D7B67A /* Action.swift in Sources */,
 				91A0DBAE2047150E00D7B67A /* Attack.swift in Sources */,
 				91B06ABC20C9E158005488E9 /* EggGroup.swift in Sources */,
 				91A0DBB12047150E00D7B67A /* BattleEngineViewer.swift in Sources */,
+				911CDEAE219759400038E08F /* PokemonEvolution.swift in Sources */,
+				911CDEB5219759A90038E08F /* Gender.swift in Sources */,
 				91A0DBB62047150E00D7B67A /* Pokemon.swift in Sources */,
 				91A0DBAF2047150E00D7B67A /* BattleAction.swift in Sources */,
 				91A0DBBA2047150E00D7B67A /* Status.swift in Sources */,
@@ -834,10 +861,13 @@
 				91A0DBDF2047150F00D7B67A /* Stats.swift in Sources */,
 				91A0DBD82047150F00D7B67A /* MovesetItem.swift in Sources */,
 				91A0DBDB2047150F00D7B67A /* Pokedex.swift in Sources */,
+				911CDEBE21975C7F0038E08F /* Time.swift in Sources */,
 				91A0DBD32047150F00D7B67A /* Action.swift in Sources */,
 				91A0DBD42047150F00D7B67A /* Attack.swift in Sources */,
 				91B06ABE20C9E158005488E9 /* EggGroup.swift in Sources */,
 				91A0DBD72047150F00D7B67A /* BattleEngineViewer.swift in Sources */,
+				911CDEB0219759400038E08F /* PokemonEvolution.swift in Sources */,
+				911CDEB7219759A90038E08F /* Gender.swift in Sources */,
 				91A0DBDC2047150F00D7B67A /* Pokemon.swift in Sources */,
 				91A0DBD52047150F00D7B67A /* BattleAction.swift in Sources */,
 				91A0DBE02047150F00D7B67A /* Status.swift in Sources */,
@@ -863,10 +893,13 @@
 				91A0DC052047151100D7B67A /* Stats.swift in Sources */,
 				91A0DBFE2047151100D7B67A /* MovesetItem.swift in Sources */,
 				91A0DC012047151100D7B67A /* Pokedex.swift in Sources */,
+				911CDEC021975C7F0038E08F /* Time.swift in Sources */,
 				91A0DBF92047151100D7B67A /* Action.swift in Sources */,
 				91A0DBFA2047151100D7B67A /* Attack.swift in Sources */,
 				91B06AC020C9E158005488E9 /* EggGroup.swift in Sources */,
 				91A0DBFD2047151100D7B67A /* BattleEngineViewer.swift in Sources */,
+				911CDEB2219759400038E08F /* PokemonEvolution.swift in Sources */,
+				911CDEB9219759A90038E08F /* Gender.swift in Sources */,
 				91A0DC022047151100D7B67A /* Pokemon.swift in Sources */,
 				91A0DBFB2047151100D7B67A /* BattleAction.swift in Sources */,
 				91A0DC062047151100D7B67A /* Status.swift in Sources */,
@@ -893,11 +926,14 @@
 				91A0DBCF2047150F00D7B67A /* Turn.swift in Sources */,
 				91A0DBCE2047150F00D7B67A /* Terrain.swift in Sources */,
 				91A0DBC42047150F00D7B67A /* BattleEngineViewer.swift in Sources */,
+				911CDEB6219759A90038E08F /* Gender.swift in Sources */,
 				91A0DB79204710C600D7B67A /* PokemonKitTests.swift in Sources */,
 				91A0DBC92047150F00D7B67A /* Pokemon.swift in Sources */,
 				91A0DBCB2047150F00D7B67A /* Random.swift in Sources */,
+				911CDEAF219759400038E08F /* PokemonEvolution.swift in Sources */,
 				91A0DBC22047150F00D7B67A /* BattleAction.swift in Sources */,
 				91A0DBC12047150F00D7B67A /* Attack.swift in Sources */,
+				911CDEBD21975C7F0038E08F /* Time.swift in Sources */,
 				91B06ABD20C9E158005488E9 /* EggGroup.swift in Sources */,
 				91EA5317207BE150005A62CC /* StatusTests.swift in Sources */,
 				91A0DBD02047150F00D7B67A /* Type.swift in Sources */,
@@ -924,11 +960,14 @@
 				91A0DBEB2047151000D7B67A /* MovesetItem.swift in Sources */,
 				91A0DBEE2047151000D7B67A /* Pokedex.swift in Sources */,
 				91A0DBE62047151000D7B67A /* Action.swift in Sources */,
+				911CDEB8219759A90038E08F /* Gender.swift in Sources */,
 				91A0DBE72047151000D7B67A /* Attack.swift in Sources */,
 				91A0DBEA2047151000D7B67A /* BattleEngineViewer.swift in Sources */,
 				91A0DBEF2047151000D7B67A /* Pokemon.swift in Sources */,
+				911CDEB1219759400038E08F /* PokemonEvolution.swift in Sources */,
 				91A0DBE82047151000D7B67A /* BattleAction.swift in Sources */,
 				91A0DBF32047151000D7B67A /* Status.swift in Sources */,
+				911CDEBF21975C7F0038E08F /* Time.swift in Sources */,
 				91B06ABF20C9E158005488E9 /* EggGroup.swift in Sources */,
 				91EA5318207BE150005A62CC /* StatusTests.swift in Sources */,
 				91A0DBEC2047151000D7B67A /* Nature.swift in Sources */,
@@ -955,11 +994,14 @@
 				91A0DC112047151100D7B67A /* MovesetItem.swift in Sources */,
 				91A0DC142047151100D7B67A /* Pokedex.swift in Sources */,
 				91A0DC0C2047151100D7B67A /* Action.swift in Sources */,
+				911CDEBA219759A90038E08F /* Gender.swift in Sources */,
 				91A0DC0D2047151100D7B67A /* Attack.swift in Sources */,
 				91A0DC102047151100D7B67A /* BattleEngineViewer.swift in Sources */,
 				91A0DC152047151100D7B67A /* Pokemon.swift in Sources */,
+				911CDEB3219759400038E08F /* PokemonEvolution.swift in Sources */,
 				91A0DC0E2047151100D7B67A /* BattleAction.swift in Sources */,
 				91A0DC192047151100D7B67A /* Status.swift in Sources */,
+				911CDEC121975C7F0038E08F /* Time.swift in Sources */,
 				91B06AC120C9E158005488E9 /* EggGroup.swift in Sources */,
 				91EA5319207BE150005A62CC /* StatusTests.swift in Sources */,
 				91A0DC122047151100D7B67A /* Nature.swift in Sources */,

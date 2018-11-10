@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum EggGroup: String, Codable {
+public enum EggGroup: String, Codable, Hashable {
 	case amorphous
 	case bug
 	case dragon

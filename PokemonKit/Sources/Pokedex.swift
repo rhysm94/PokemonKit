@@ -106,6 +106,8 @@ public class Pokedex {
 		pokemonGetter.addDependency(abilityGetter)
 		
 		queue.addOperations([pokemonGetter, abilityGetter, attackGetter], waitUntilFinished: true)
+		
+		getEvolutions()
 	}
 	
 	private static let protectBreakingMoves = ["Feint", "Hyperspace Fury", "Hyperspace Hole", "Phantom Force", "Shadow Force"]
@@ -420,7 +422,6 @@ public class Pokedex {
 					}
 				}
 				
-				
 				let pokemonSpecies = PokemonSpecies(dexNum: Int(pokedexNumber), identifier: identifier, name: pokemonName, typeOne: typeOne, typeTwo: typeTwo, stats: Stats(hp: Int(hp), atk: Int(atk), def: Int(def), spAtk: Int(spAtk), spDef: Int(spDef), spd: Int(spd)), abilityOne: ability1, abilityTwo: ability2, hiddenAbility: hiddenAbility, eggGroupOne: eggGroupOne, eggGroupTwo: eggGroupTwo, moveset: moveset)
 				
 				pokemon.append(pokemonSpecies)
@@ -532,6 +533,50 @@ public class Pokedex {
 		}
 		
 		return moveset
+	}
+	
+	private func getEvolutions() {
+		var database: Connection?
+		
+		guard let dbPath = Pokedex.dbPath else {
+			print("Failed at dbPath = dbPath in getAbilities")
+			return
+		}
+		
+		database = try? Connection(dbPath, readonly: true)
+		
+		guard let db = database else {
+			print("Failed at db = database in getAbilities")
+			return
+		}
+		
+		let id = Expression<Int>("id")
+		let identifier = Expression<String>("identifier")
+		let evolvesFrom = Expression<Int>("evolves_from_species_id")
+		let speciesTable = Table("pokemon_species")
+		
+		self.pokemon = pokemon.map { pokemon in
+			var evolutions: [PokemonSpecies] = []
+			
+			let query = speciesTable.select(id, identifier).filter(evolvesFrom == pokemon.dexNum)
+			
+			do {
+				for row in try db.prepare(query) {
+					evolutions.append(self.pokemon[row[id] - 1])
+				}
+			} catch {
+				print("Error!")
+			}
+			
+			var pokemonToReturn = PokemonSpecies(dexNum: pokemon.dexNum, identifier: pokemon.identifier, name: pokemon.name, typeOne: pokemon.typeOne, typeTwo: pokemon.typeTwo, stats: pokemon.baseStats, abilityOne: pokemon.abilityOne, abilityTwo: pokemon.abilityTwo, hiddenAbility: pokemon.hiddenAbility, eggGroupOne: pokemon.eggGroupOne, eggGroupTwo: pokemon.eggGroupTwo, moveset: pokemon.moveset)
+			
+			if !evolutions.isEmpty {
+				pokemonToReturn.evolutions = evolutions
+			}
+
+			return pokemonToReturn
+		}
+
 	}
 }
 
