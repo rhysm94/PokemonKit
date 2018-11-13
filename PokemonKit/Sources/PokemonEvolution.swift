@@ -8,12 +8,19 @@
 
 import Foundation
 
-public struct PokemonEvolution {
+public struct PokemonEvolution: Hashable, Codable {
 	let evolvedPokemon: PokemonSpecies
 	let condition: Set<EvolutionConditions>
 	
-	
-	public enum EvolutionConditions: Hashable {
+	public enum EvolutionConditions: Hashable, Codable {
+		public init(from decoder: Decoder) throws {
+			fatalError("Not implemented yet")
+		}
+		
+		public func encode(to encoder: Encoder) throws {
+			fatalError("Not implemented yet")
+		}
+		
 		/// Minimum level to evolve
 		case levelUp(Int)
 		
@@ -46,6 +53,16 @@ public struct PokemonEvolution {
 		///
 		/// e.g. Shelmet must be traded for a Karrablast to evolve into Accelgor
 		case tradeForPokemon(PokemonSpecies)
+		
+		/// Evolves when levelled up with a specific Pokémon in the party
+		///
+		/// e.g. To evolve Mantyke to Mantine, there must be a Remoraid in the party
+		case levelUpWithPokemonInParty(PokemonSpecies)
+		
+		/// Evolves when levelled up with Pokémon with the associated type in the party
+		///
+		/// e.g. To evolve Pancham to Pangoro, there must be a `Type.Dark` Pokémon in the party
+		case levelUpWithPokemonOfTypeInParty(Type)
 		
 		/// Must be levelled up in a specific area
 		///
@@ -103,7 +120,7 @@ public struct PokemonEvolution {
 		case weather(Weather)
 		
 		/// Differences in Tyrogue's stats, to determine which of its evolutions it evolves into
-		public enum TyrogueStats {
+		public enum TyrogueStats: Hashable {
 			/// Attack is higher than Defense
 			case attackHigher
 			
@@ -115,7 +132,7 @@ public struct PokemonEvolution {
 		}
 		
 		/// Different versions of Pokémon
-		public enum Game {
+		public enum Game: Hashable {
 			/// Pokémon Sun/Ultra Sun
 			case sun
 			
@@ -124,7 +141,7 @@ public struct PokemonEvolution {
 		}
 		
 		/// Special locations, used for evolving certain Pokémon
-		public enum Area {
+		public enum Area: Hashable {
 			/// Icy Rock
 			///
 			/// Used to evolve Eevee to Glaceon

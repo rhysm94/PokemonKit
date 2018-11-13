@@ -108,6 +108,12 @@ public class Pokedex {
 		queue.addOperations([pokemonGetter, abilityGetter, attackGetter], waitUntilFinished: true)
 		
 		getEvolutions()
+		
+		if let eevee = self.pokemon["eevee"] {
+			for evolution in eevee.evolutions ?? [] {
+				print("\(evolution.evolvedPokemon): \(evolution.condition)")
+			}
+		}
 	}
 	
 	private static let protectBreakingMoves = ["Feint", "Hyperspace Fury", "Hyperspace Hole", "Phantom Force", "Shadow Force"]
@@ -556,13 +562,75 @@ public class Pokedex {
 		let speciesTable = Table("pokemon_species")
 		
 		self.pokemon = pokemon.map { pokemon in
-			var evolutions: [PokemonSpecies] = []
+			var evolutions: Set<PokemonEvolution> = []
 			
-			let query = speciesTable.select(id, identifier).filter(evolvesFrom == pokemon.dexNum)
+			let evolution = Table("pokemon_evolution")
+			let species = Table("pokemon_species")
+			let id = Expression<Int>("id")
+			let identifier = Expression<String>("identifier")
+			let evolvedID = Expression<Int>("evolved_species_id")
+			let evolutionTriggerID = Expression<Int>("evolution_trigger_id")
+			let minimumLevel = Expression<Int?>("minimum_level")
+			let genderID = Expression<Int?>("gender_id")
+			let locationID = Expression<Int?>("location_id")
+			let heldItemID = Expression<Int?>("held_item_id")
+			let timeOfDay = Expression<String?>("time_of_day")
+			let knownMoveID = Expression<Int?>("known_move_id")
+			let knownMoveTypeID = Expression<Int?>("known_move_type_id")
+			let minimumHappiness = Expression<Int?>("minimum_happiness")
+			let minimumBeauty = Expression<Int?>("minimum_beauty")
+			let minimumAffection = Expression<Int?>("minimum_affection")
+			let physicalStats = Expression<Int?>("relative_physical_stats")
+			let partySpeciesID = Expression<Int?>("party_species_id")
+			let partyTypeID = Expression<Int?>("party_type_id")
+			let tradeSpeciesID = Expression<Int?>("trade_species_id")
+			let needsOverworldRain = Expression<Bool>("needs_overworld_rain")
+			let upsideDown = Expression<Bool>("turn_upside_down")
+			
+			let evolvesFrom = Expression<Int>("evolves_from_species_id")
+			
+			let query = evolution.select(
+				identifier, evolvedID, evolutionTriggerID, minimumLevel, genderID, locationID, heldItemID,
+				timeOfDay, knownMoveID, knownMoveTypeID, minimumHappiness, minimumBeauty,
+				minimumAffection, physicalStats, partySpeciesID, partyTypeID, tradeSpeciesID,
+				needsOverworldRain, upsideDown
+				)
+				.join(species, on: species[id] == evolution[evolvedID])
+				.filter(species[evolvesFrom] == pokemon.dexNum)
 			
 			do {
 				for row in try db.prepare(query) {
-					evolutions.append(self.pokemon[row[id] - 1])
+					var evolutionConditions = Set<PokemonEvolution.EvolutionConditions>()
+
+					guard let evolution = self.pokemon[row[identifier]] else { break }
+					
+					if let level = row[minimumLevel] {
+						evolutionConditions.insert(.levelUp(level))
+					}
+					
+					if let locationID = row[locationID] {
+						switch locationID {
+						case 8, 375, 650:
+							// Moss Rock for Leafeon
+							evolutionConditions.insert(.levelUpInArea(.mossRock))
+						case 10, 379, 629:
+							// Mt Coronet for Magnetic Field Pokémon
+							evolutionConditions.insert(.levelUpInArea(.magneticField))
+						case 48, 380, 649:
+							// Icy Rock for Glaceon
+							evolutionConditions.insert(.levelUpInArea(.icyRock))
+						default:
+							break
+						}
+					}
+					
+					let knownMoveName = Pokedex.getMoveName(db: db, moveID: row[knownMoveID])
+					if let moveName = knownMoveName,
+						let attack = attacks[moveName] {
+						evolutionConditions.insert(.knowsAttack(attack))
+					}
+					
+					evolutions.insert(PokemonEvolution(evolvedPokemon: evolution, condition: evolutionConditions))
 				}
 			} catch {
 				print("Error!")
@@ -577,6 +645,27 @@ public class Pokedex {
 			return pokemonToReturn
 		}
 
+	}
+	
+	private static func getMoveName(db: Connection, moveID: Int?) -> String? {
+		let moveNames = Table("move_names")
+		let name = Expression<String>("name")
+		let moveRowID = Expression<Int>("move_id")
+		let languageID = Expression<Int>("local_language_id")
+		
+		guard let id = moveID else { return nil }
+		let moveQuery = moveNames.select(name).filter(languageID == 9 && moveRowID == id)
+
+		do {
+			guard let moveNameRow = try db.pluck(moveQuery) else { return nil }
+			
+			let moveName = moveNameRow[name]
+		
+			return moveName
+			
+		} catch {
+			return nil
+		}
 	}
 }
 

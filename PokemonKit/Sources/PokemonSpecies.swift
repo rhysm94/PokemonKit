@@ -22,7 +22,7 @@ public struct PokemonSpecies: Codable, Hashable {
 	public let eggGroupOne: EggGroup
 	public let eggGroupTwo: EggGroup?
 	public let moveset: [MovesetItem]
-	internal(set) public var evolutions: [PokemonSpecies]?
+	internal(set) public var evolutions: Set<PokemonEvolution>?
 	
 	public init(dexNum: Int, identifier: String, name: String, typeOne: Type, typeTwo: Type? = nil, stats: Stats, abilityOne: Ability, abilityTwo: Ability? = nil, hiddenAbility: Ability? = nil, eggGroupOne: EggGroup, eggGroupTwo: EggGroup? = nil, moveset: [MovesetItem] = []) {
 		self.dexNum = dexNum
