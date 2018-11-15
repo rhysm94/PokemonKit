@@ -22,9 +22,17 @@ public struct PokemonSpecies: Codable, Hashable {
 	public let eggGroupOne: EggGroup
 	public let eggGroupTwo: EggGroup?
 	public let moveset: [MovesetItem]
-	internal(set) public var evolutions: Set<PokemonEvolution>?
+    
+    // These could probably be refactored as computed properties which get all evolutions during runtime, not at load
+//    public var evolvesFrom: PokemonSpecies {
+//        return self
+//    }
+//    
+    public var evolutions: Set<PokemonEvolution>? {
+        return Pokedex.default.getEvolutionForPokemon(self)
+    }
 	
-	public init(dexNum: Int, identifier: String, name: String, typeOne: Type, typeTwo: Type? = nil, stats: Stats, abilityOne: Ability, abilityTwo: Ability? = nil, hiddenAbility: Ability? = nil, eggGroupOne: EggGroup, eggGroupTwo: EggGroup? = nil, moveset: [MovesetItem] = []) {
+    public init(dexNum: Int, identifier: String, name: String, typeOne: Type, typeTwo: Type? = nil, stats: Stats, abilityOne: Ability, abilityTwo: Ability? = nil, hiddenAbility: Ability? = nil, eggGroupOne: EggGroup, eggGroupTwo: EggGroup? = nil, moveset: [MovesetItem] = []) {
 		self.dexNum = dexNum
 		self.identifier = identifier
 		self.name = name
@@ -40,8 +48,8 @@ public struct PokemonSpecies: Codable, Hashable {
 		self.moveset = moveset
 	}
 	
-	public init(dexNum: Int, identifier: String, name: String, type: Type, stats: Stats, abilityOne: Ability, abilityTwo: Ability? = nil, hiddenAbility: Ability? = nil, eggGroupOne: EggGroup, eggGroupTwo: EggGroup? = nil, moveset: [MovesetItem] = []) {
-		self.init(dexNum: dexNum, identifier: identifier, name: name, typeOne: type, typeTwo: nil, stats: stats, abilityOne: abilityOne, abilityTwo: abilityTwo, hiddenAbility: hiddenAbility, eggGroupOne: eggGroupOne, eggGroupTwo: eggGroupTwo, moveset: moveset)
+    public init(dexNum: Int, identifier: String, name: String, type: Type, stats: Stats, abilityOne: Ability, abilityTwo: Ability? = nil, hiddenAbility: Ability? = nil, eggGroupOne: EggGroup, eggGroupTwo: EggGroup? = nil, moveset: [MovesetItem] = []) {
+        self.init(dexNum: dexNum, identifier: identifier, name: name, typeOne: type, typeTwo: nil, stats: stats, abilityOne: abilityOne, abilityTwo: abilityTwo, hiddenAbility: hiddenAbility, eggGroupOne: eggGroupOne, eggGroupTwo: eggGroupTwo, moveset: moveset)
 	}
 }
 

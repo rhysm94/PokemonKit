@@ -106,14 +106,6 @@ public class Pokedex {
 		pokemonGetter.addDependency(abilityGetter)
 		
 		queue.addOperations([pokemonGetter, abilityGetter, attackGetter], waitUntilFinished: true)
-		
-		getEvolutions()
-		
-		if let eevee = self.pokemon["eevee"] {
-			for evolution in eevee.evolutions ?? [] {
-				print("\(evolution.evolvedPokemon): \(evolution.condition)")
-			}
-		}
 	}
 	
 	private static let protectBreakingMoves = ["Feint", "Hyperspace Fury", "Hyperspace Hole", "Phantom Force", "Shadow Force"]
@@ -541,72 +533,89 @@ public class Pokedex {
 		return moveset
 	}
 	
-	private func getEvolutions() {
-		var database: Connection?
-		
-		guard let dbPath = Pokedex.dbPath else {
-			print("Failed at dbPath = dbPath in getAbilities")
-			return
-		}
-		
-		database = try? Connection(dbPath, readonly: true)
-		
-		guard let db = database else {
-			print("Failed at db = database in getAbilities")
-			return
-		}
-		
+    public func getEvolutionForPokemon(_ pokemon: PokemonSpecies) -> Set<PokemonEvolution>? {
+        var database: Connection?
+        
+        guard let dbPath = Pokedex.dbPath else {
+            print("Failed at dbPath = dbPath in getAbilities")
+            return nil
+        }
+        
+        database = try? Connection(dbPath, readonly: true)
+        
+        guard let db = database else {
+            print("Failed at db = database in getAbilities")
+            return nil
+        }
+            
+        var evolutions: Set<PokemonEvolution> = []
+			
+		let evolution = Table("pokemon_evolution")
+		let species = Table("pokemon_species")
 		let id = Expression<Int>("id")
 		let identifier = Expression<String>("identifier")
-		let evolvesFrom = Expression<Int>("evolves_from_species_id")
-		let speciesTable = Table("pokemon_species")
-		
-		self.pokemon = pokemon.map { pokemon in
-			var evolutions: Set<PokemonEvolution> = []
-			
-			let evolution = Table("pokemon_evolution")
-			let species = Table("pokemon_species")
-			let id = Expression<Int>("id")
-			let identifier = Expression<String>("identifier")
-			let evolvedID = Expression<Int>("evolved_species_id")
-			let evolutionTriggerID = Expression<Int>("evolution_trigger_id")
-			let minimumLevel = Expression<Int?>("minimum_level")
-			let genderID = Expression<Int?>("gender_id")
-			let locationID = Expression<Int?>("location_id")
-			let heldItemID = Expression<Int?>("held_item_id")
-			let timeOfDay = Expression<String?>("time_of_day")
-			let knownMoveID = Expression<Int?>("known_move_id")
-			let knownMoveTypeID = Expression<Int?>("known_move_type_id")
-			let minimumHappiness = Expression<Int?>("minimum_happiness")
-			let minimumBeauty = Expression<Int?>("minimum_beauty")
-			let minimumAffection = Expression<Int?>("minimum_affection")
-			let physicalStats = Expression<Int?>("relative_physical_stats")
-			let partySpeciesID = Expression<Int?>("party_species_id")
-			let partyTypeID = Expression<Int?>("party_type_id")
-			let tradeSpeciesID = Expression<Int?>("trade_species_id")
-			let needsOverworldRain = Expression<Bool>("needs_overworld_rain")
-			let upsideDown = Expression<Bool>("turn_upside_down")
-			
-			let evolvesFrom = Expression<Int>("evolves_from_species_id")
-			
-			let query = evolution.select(
-				identifier, evolvedID, evolutionTriggerID, minimumLevel, genderID, locationID, heldItemID,
-				timeOfDay, knownMoveID, knownMoveTypeID, minimumHappiness, minimumBeauty,
-				minimumAffection, physicalStats, partySpeciesID, partyTypeID, tradeSpeciesID,
-				needsOverworldRain, upsideDown
+		let evolvedID = Expression<Int>("evolved_species_id")
+		let evolutionTriggerID = Expression<Int>("evolution_trigger_id")
+		let minimumLevel = Expression<Int?>("minimum_level")
+		let genderID = Expression<Int?>("gender_id")
+		let locationID = Expression<Int?>("location_id")
+        let triggerItemID = Expression<Int?>("trigger_item_id")
+		let heldItemID = Expression<Int?>("held_item_id")
+		let timeOfDay = Expression<String?>("time_of_day")
+		let knownMoveID = Expression<Int?>("known_move_id")
+		let knownMoveTypeID = Expression<Int?>("known_move_type_id")
+		let minimumHappiness = Expression<Int?>("minimum_happiness")
+		let minimumBeauty = Expression<Int?>("minimum_beauty")
+		let minimumAffection = Expression<Int?>("minimum_affection")
+		let physicalStats = Expression<Int?>("relative_physical_stats")
+		let partySpeciesID = Expression<Int?>("party_species_id")
+		let partyTypeID = Expression<Int?>("party_type_id")
+		let tradeSpeciesID = Expression<Int?>("trade_species_id")
+		let needsOverworldRain = Expression<Bool>("needs_overworld_rain")
+		let upsideDown = Expression<Bool>("turn_upside_down")
+        
+        let evolvesFrom = Expression<Int>("evolves_from_species_id")
+        
+		let query = evolution.select(
+                identifier, evolvedID, evolutionTriggerID, minimumLevel, triggerItemID, genderID,
+                locationID, heldItemID, timeOfDay, knownMoveID, knownMoveTypeID, minimumHappiness,
+                minimumBeauty, minimumAffection, physicalStats, partySpeciesID, partyTypeID,
+                tradeSpeciesID, needsOverworldRain, upsideDown
 				)
 				.join(species, on: species[id] == evolution[evolvedID])
 				.filter(species[evolvesFrom] == pokemon.dexNum)
 			
 			do {
 				for row in try db.prepare(query) {
-					var evolutionConditions = Set<PokemonEvolution.EvolutionConditions>()
+                    var evolutionConditions = Set<PokemonEvolution.EvolutionConditions>()
 
 					guard let evolution = self.pokemon[row[identifier]] else { break }
 					
 					if let level = row[minimumLevel] {
 						evolutionConditions.insert(.levelUp(level))
 					}
+                    
+                    if row[evolutionTriggerID] == 2 {
+                        evolutionConditions.insert(.trade)
+                    }
+                    
+                    if row[heldItemID] != nil || row[triggerItemID] != nil {
+                        evolutionConditions.insert(.item)
+                    }
+                    
+                    if let gender = row[genderID] {
+                        let genderToInsert: Gender
+                        
+                        if gender == 1 {
+                            genderToInsert = .hasGender(.female)
+                        } else if gender == 2 {
+                            genderToInsert = .hasGender(.male)
+                        } else {
+                            genderToInsert = .genderless
+                        }
+                        
+                        evolutionConditions.insert(.gender(genderToInsert))
+                    }
 					
 					if let locationID = row[locationID] {
 						switch locationID {
@@ -623,6 +632,49 @@ public class Pokedex {
 							break
 						}
 					}
+                    
+                    if let timeOfDay = row[timeOfDay] {
+                        if timeOfDay == "day" {
+                            evolutionConditions.insert(.timeOfDay(.day))
+                        } else if timeOfDay == "night" {
+                            evolutionConditions.insert(.timeOfDay(.night))
+                        }
+                    }
+                    
+                    if let moveTypeID = row[knownMoveTypeID] {
+                        let type = Type(using: moveTypeID)
+                        evolutionConditions.insert(.knowsAttackType(type))
+                    }
+                    
+                    if row[minimumHappiness] != nil {
+                        evolutionConditions.insert(.happiness)
+                    }
+                    
+                    if row[minimumBeauty] != nil {
+                        evolutionConditions.insert(.beauty)
+                    }
+                    
+                    if row[minimumAffection] != nil {
+                        evolutionConditions.insert(.affection)
+                    }
+                    
+                    if row[needsOverworldRain] {
+                        evolutionConditions.insert(.weather(.rain))
+                    }
+                    
+                    if row[upsideDown] {
+                        evolutionConditions.insert(.upsideDown)
+                    }
+                    
+                    if let stats = row[physicalStats] {
+                        if stats == -1 {
+                            evolutionConditions.insert(.physicalStats(.defenseHigher))
+                        } else if stats == 0 {
+                            evolutionConditions.insert(.physicalStats(.equal))
+                        } else if stats == 1 {
+                            evolutionConditions.insert(.physicalStats(.attackHigher))
+                        }
+                    }
 					
 					let knownMoveName = Pokedex.getMoveName(db: db, moveID: row[knownMoveID])
 					if let moveName = knownMoveName,
@@ -630,21 +682,17 @@ public class Pokedex {
 						evolutionConditions.insert(.knowsAttack(attack))
 					}
 					
-					evolutions.insert(PokemonEvolution(evolvedPokemon: evolution, condition: evolutionConditions))
+					evolutions.insert(PokemonEvolution(evolvedPokemon: evolution, conditions: evolutionConditions))
 				}
 			} catch {
 				print("Error!")
 			}
 			
-			var pokemonToReturn = PokemonSpecies(dexNum: pokemon.dexNum, identifier: pokemon.identifier, name: pokemon.name, typeOne: pokemon.typeOne, typeTwo: pokemon.typeTwo, stats: pokemon.baseStats, abilityOne: pokemon.abilityOne, abilityTwo: pokemon.abilityTwo, hiddenAbility: pokemon.hiddenAbility, eggGroupOne: pokemon.eggGroupOne, eggGroupTwo: pokemon.eggGroupTwo, moveset: pokemon.moveset)
-			
-			if !evolutions.isEmpty {
-				pokemonToReturn.evolutions = evolutions
-			}
-
-			return pokemonToReturn
-		}
-
+        if !evolutions.isEmpty {
+            return evolutions
+        } else {
+            return nil
+        }
 	}
 	
 	private static func getMoveName(db: Connection, moveID: Int?) -> String? {

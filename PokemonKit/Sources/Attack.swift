@@ -117,10 +117,19 @@ extension Attack: CustomStringConvertible {
 }
 
 extension Attack: Equatable, Hashable {
-	public var hashValue: Int {
-		return self.name.hashValue
-	}
-	
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.name)
+        hasher.combine(self.power)
+        hasher.combine(self.basePP)
+        hasher.combine(self.maxPP)
+        hasher.combine(self.accuracy)
+        hasher.combine(self.priority)
+        hasher.combine(self.type)
+        hasher.combine(self.breaksProtect)
+        hasher.combine(self.category)
+        hasher.combine(self.effectTarget)
+    }
+    
 	public static func == (lhs: Attack, rhs: Attack) -> Bool {
         return lhs.name == rhs.name &&
             lhs.power == rhs.power &&

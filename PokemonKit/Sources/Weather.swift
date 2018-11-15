@@ -6,7 +6,7 @@
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
 //
 
-public enum Weather: CustomStringConvertible {
+public enum Weather: String, CustomStringConvertible, Codable {
 	case none
 	case harshSunlight
 	case extremelyHarshSunlight

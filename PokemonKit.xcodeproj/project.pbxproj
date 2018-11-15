@@ -171,6 +171,9 @@
 		91BEEFE5204C7F8800AF5792 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BEEFD5204C743F00AF5792 /* SQLite.framework */; };
 		91BEEFE6204C7F8B00AF5792 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BEEFD2204C73E800AF5792 /* SQLite.framework */; };
 		91BEEFE7204C7F9300AF5792 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91BEEFDA204C748B00AF5792 /* SQLite.framework */; };
+		91C5F97E219CF79D008374F1 /* AccessTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C5F97D219CF79D008374F1 /* AccessTest.swift */; };
+		91C5F97F219CF79D008374F1 /* AccessTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C5F97D219CF79D008374F1 /* AccessTest.swift */; };
+		91C5F980219CF79D008374F1 /* AccessTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C5F97D219CF79D008374F1 /* AccessTest.swift */; };
 		91DF932120499BD100F6C67B /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DF932020499BD100F6C67B /* GameKit.framework */; };
 		91DF932320499BD700F6C67B /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91DF932220499BD700F6C67B /* GameKit.framework */; };
 		91EA215E206F859800C4B26D /* VolatileStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EA215D206F859800C4B26D /* VolatileStatus.swift */; };
@@ -267,6 +270,7 @@
 		91BEEFD5204C743F00AF5792 /* SQLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SQLite.framework; path = Carthage/Build/Mac/SQLite.framework; sourceTree = "<group>"; };
 		91BEEFD8204C747C00AF5792 /* SQLite.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; path = SQLite.framework.dSYM; sourceTree = "<group>"; };
 		91BEEFDA204C748B00AF5792 /* SQLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SQLite.framework; path = Carthage/Build/tvOS/SQLite.framework; sourceTree = "<group>"; };
+		91C5F97D219CF79D008374F1 /* AccessTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessTest.swift; sourceTree = "<group>"; };
 		91DF932020499BD100F6C67B /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		91DF932220499BD700F6C67B /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/GameKit.framework; sourceTree = DEVELOPER_DIR; };
 		91EA215D206F859800C4B26D /* VolatileStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolatileStatus.swift; sourceTree = "<group>"; };
@@ -373,7 +377,6 @@
 				91A0DB45204708D500D7B67A /* BattleEngineViewer.swift */,
 				911CDEB4219759A90038E08F /* Gender.swift */,
 				911CDEBB21975C7F0038E08F /* Time.swift */,
-				911CDEAD2197593F0038E08F /* PokemonEvolution.swift */,
 				91A0DB2A2047072900D7B67A /* MovesetItem.swift */,
 				91A0DB232047072800D7B67A /* Nature.swift */,
 				91B06ABB20C9E158005488E9 /* EggGroup.swift */,
@@ -382,6 +385,7 @@
 				91A0DB2D2047072900D7B67A /* Pokemon.swift */,
 				91AA191820A29996004BF788 /* Generation.swift */,
 				91A0DB222047072800D7B67A /* PokemonSpecies.swift */,
+				911CDEAD2197593F0038E08F /* PokemonEvolution.swift */,
 				91A0DB242047072800D7B67A /* Random.swift */,
 				91A0DB302047072A00D7B67A /* Stats.swift */,
 				91A0DB322047072A00D7B67A /* Status.swift */,
@@ -471,6 +475,7 @@
 			children = (
 				91A0DB78204710C600D7B67A /* PokemonKitTests.swift */,
 				91EA5316207BE150005A62CC /* StatusTests.swift */,
+				91C5F97D219CF79D008374F1 /* AccessTest.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -931,6 +936,7 @@
 				91A0DBC92047150F00D7B67A /* Pokemon.swift in Sources */,
 				91A0DBCB2047150F00D7B67A /* Random.swift in Sources */,
 				911CDEAF219759400038E08F /* PokemonEvolution.swift in Sources */,
+				91C5F97E219CF79D008374F1 /* AccessTest.swift in Sources */,
 				91A0DBC22047150F00D7B67A /* BattleAction.swift in Sources */,
 				91A0DBC12047150F00D7B67A /* Attack.swift in Sources */,
 				911CDEBD21975C7F0038E08F /* Time.swift in Sources */,
@@ -965,6 +971,7 @@
 				91A0DBEA2047151000D7B67A /* BattleEngineViewer.swift in Sources */,
 				91A0DBEF2047151000D7B67A /* Pokemon.swift in Sources */,
 				911CDEB1219759400038E08F /* PokemonEvolution.swift in Sources */,
+				91C5F97F219CF79D008374F1 /* AccessTest.swift in Sources */,
 				91A0DBE82047151000D7B67A /* BattleAction.swift in Sources */,
 				91A0DBF32047151000D7B67A /* Status.swift in Sources */,
 				911CDEBF21975C7F0038E08F /* Time.swift in Sources */,
@@ -999,6 +1006,7 @@
 				91A0DC102047151100D7B67A /* BattleEngineViewer.swift in Sources */,
 				91A0DC152047151100D7B67A /* Pokemon.swift in Sources */,
 				911CDEB3219759400038E08F /* PokemonEvolution.swift in Sources */,
+				91C5F980219CF79D008374F1 /* AccessTest.swift in Sources */,
 				91A0DC0E2047151100D7B67A /* BattleAction.swift in Sources */,
 				91A0DC192047151100D7B67A /* Status.swift in Sources */,
 				911CDEC121975C7F0038E08F /* Time.swift in Sources */,

@@ -7,7 +7,7 @@
 //
 
 /// Times of the day in-game
-public enum Time {
+public enum Time: String, Codable, Hashable {
 	
 	/// 06:00 - 16:59
 	case day
