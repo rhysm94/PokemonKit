@@ -19,20 +19,22 @@ public struct PokemonSpecies: Codable, Hashable {
 	public let abilityOne: Ability
 	public let abilityTwo: Ability?
 	public let hiddenAbility: Ability?
+    private let _evolvesFrom: String?
 	public let eggGroupOne: EggGroup
 	public let eggGroupTwo: EggGroup?
 	public let moveset: [MovesetItem]
     
     // These could probably be refactored as computed properties which get all evolutions during runtime, not at load
-//    public var evolvesFrom: PokemonSpecies {
-//        return self
-//    }
-//    
+    public var evolvesFrom: PokemonSpecies? {
+        guard let preEvo = _evolvesFrom else { return nil }
+        return Pokedex.default.pokemon[preEvo]
+    }
+    
     public var evolutions: Set<PokemonEvolution>? {
         return Pokedex.default.getEvolutionForPokemon(self)
     }
 	
-    public init(dexNum: Int, identifier: String, name: String, typeOne: Type, typeTwo: Type? = nil, stats: Stats, abilityOne: Ability, abilityTwo: Ability? = nil, hiddenAbility: Ability? = nil, eggGroupOne: EggGroup, eggGroupTwo: EggGroup? = nil, moveset: [MovesetItem] = []) {
+    public init(dexNum: Int, identifier: String, name: String, typeOne: Type, typeTwo: Type? = nil, stats: Stats, abilityOne: Ability, abilityTwo: Ability? = nil, hiddenAbility: Ability? = nil, eggGroupOne: EggGroup, eggGroupTwo: EggGroup? = nil, evolvesFrom: String? = nil, moveset: [MovesetItem] = []) {
 		self.dexNum = dexNum
 		self.identifier = identifier
 		self.name = name
@@ -44,12 +46,13 @@ public struct PokemonSpecies: Codable, Hashable {
 		self.hiddenAbility = hiddenAbility
 		self.eggGroupOne = eggGroupOne
 		self.eggGroupTwo = eggGroupTwo
+        self._evolvesFrom = evolvesFrom
 		self.generation = Generation(with: dexNum)
 		self.moveset = moveset
 	}
 	
-    public init(dexNum: Int, identifier: String, name: String, type: Type, stats: Stats, abilityOne: Ability, abilityTwo: Ability? = nil, hiddenAbility: Ability? = nil, eggGroupOne: EggGroup, eggGroupTwo: EggGroup? = nil, moveset: [MovesetItem] = []) {
-        self.init(dexNum: dexNum, identifier: identifier, name: name, typeOne: type, typeTwo: nil, stats: stats, abilityOne: abilityOne, abilityTwo: abilityTwo, hiddenAbility: hiddenAbility, eggGroupOne: eggGroupOne, eggGroupTwo: eggGroupTwo, moveset: moveset)
+    public init(dexNum: Int, identifier: String, name: String, type: Type, stats: Stats, abilityOne: Ability, abilityTwo: Ability? = nil, hiddenAbility: Ability? = nil, eggGroupOne: EggGroup, eggGroupTwo: EggGroup? = nil, evolvesFrom: String? = nil, moveset: [MovesetItem] = []) {
+        self.init(dexNum: dexNum, identifier: identifier, name: name, typeOne: type, typeTwo: nil, stats: stats, abilityOne: abilityOne, abilityTwo: abilityTwo, hiddenAbility: hiddenAbility, eggGroupOne: eggGroupOne, eggGroupTwo: eggGroupTwo, evolvesFrom: evolvesFrom, moveset: moveset)
 	}
 }
 

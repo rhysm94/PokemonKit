@@ -18,10 +18,10 @@ class AccessTest: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testExample() {
+    func testEvolutions() {
         let eevee = Pokedex.default.pokemon["tyrogue"]!
-        let eeveeEvolutions = eevee.evolutions!.sorted { $1.evolvedPokemon.dexNum > $0.evolvedPokemon.dexNum }
-        for evolution in eeveeEvolutions {
+        let eeveeEvolutions = eevee.evolutions?.sorted { $1.evolvedPokemon.dexNum > $0.evolvedPokemon.dexNum }
+        for evolution in eeveeEvolutions ?? [] {
             print("To evolve into: \(evolution.evolvedPokemon):")
             for condition in evolution.conditions {
                 print(condition)
@@ -29,4 +29,13 @@ class AccessTest: XCTestCase {
         }
     }
 
+    func testPreEvolutions() {
+        let sylveon = Pokedex.default.pokemon["sylveon"]!
+        guard let eevee = sylveon.evolvesFrom else {
+            XCTFail("Couldn't unwrap sylveon.evolvesFrom")
+            return
+        }
+        XCTAssert(eevee.name == "Eevee")
+    }
+    
 }

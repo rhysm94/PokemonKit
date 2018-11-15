@@ -328,7 +328,8 @@ public class Pokedex {
 			where pokestat.pokemon_id = p.id and pokestat.stat_id = 6) as stat_spd,
 			(select an.name from ability_names as an join pokemon_abilities as pa on an.ability_id = pa.ability_id where pa.pokemon_id = p.id and an.local_language_id = 9 and pa.slot=1) as ability_one,
 			(select an.name from ability_names as an join pokemon_abilities as pa on an.ability_id = pa.ability_id where pa.pokemon_id = p.id and an.local_language_id = 9 and pa.slot=2) as ability_two,
-			(select an.name from ability_names as an join pokemon_abilities as pa on an.ability_id = pa.ability_id where pa.pokemon_id = p.id and an.local_language_id = 9 and pa.slot=3) as ability_hidden
+			(select an.name from ability_names as an join pokemon_abilities as pa on an.ability_id = pa.ability_id where pa.pokemon_id = p.id and an.local_language_id = 9 and pa.slot=3) as ability_hidden,
+			(select pAlias.identifier from pokemon_species as pAlias join pokemon_species as p2 on p2.evolves_from_species_id = pAlias.id where p2.id = p.id) as evolves_from
 			from pokemon as p
 			join pokemon_species_names as ps on p.id=ps.pokemon_species_id
 			where ps.local_language_id = 9;
@@ -363,6 +364,7 @@ public class Pokedex {
 				guard let ability1Name = row[11] as? String else { break }
 				let ability2Name = row[12] as? String
 				let hiddenAbilityName = row[13] as? String
+                let evolvesFrom = row[14] as? String
 				
 				let ability1 = abilities[ability1Name] ?? Ability(name: "Dummy", description: "Dummy")
 				var ability2: Ability? {
@@ -420,7 +422,7 @@ public class Pokedex {
 					}
 				}
 				
-				let pokemonSpecies = PokemonSpecies(dexNum: Int(pokedexNumber), identifier: identifier, name: pokemonName, typeOne: typeOne, typeTwo: typeTwo, stats: Stats(hp: Int(hp), atk: Int(atk), def: Int(def), spAtk: Int(spAtk), spDef: Int(spDef), spd: Int(spd)), abilityOne: ability1, abilityTwo: ability2, hiddenAbility: hiddenAbility, eggGroupOne: eggGroupOne, eggGroupTwo: eggGroupTwo, moveset: moveset)
+                let pokemonSpecies = PokemonSpecies(dexNum: Int(pokedexNumber), identifier: identifier, name: pokemonName, typeOne: typeOne, typeTwo: typeTwo, stats: Stats(hp: Int(hp), atk: Int(atk), def: Int(def), spAtk: Int(spAtk), spDef: Int(spDef), spd: Int(spd)), abilityOne: ability1, abilityTwo: ability2, hiddenAbility: hiddenAbility, eggGroupOne: eggGroupOne, eggGroupTwo: eggGroupTwo, evolvesFrom: evolvesFrom, moveset: moveset)
 				
 				pokemon.append(pokemonSpecies)
 				
