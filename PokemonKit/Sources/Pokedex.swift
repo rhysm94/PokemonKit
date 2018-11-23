@@ -594,7 +594,7 @@ public class Pokedex {
 					guard let evolution = self.pokemon[row[identifier]] else { break }
 					
 					if let level = row[minimumLevel] {
-						evolutionConditions.insert(.levelUp(level))
+						evolutionConditions.insert(.levelUp(.minimumLevel(level)))
 					}
                     
                     if row[evolutionTriggerID] == 2 {
@@ -623,13 +623,13 @@ public class Pokedex {
 						switch locationID {
 						case 8, 375, 650:
 							// Moss Rock for Leafeon
-							evolutionConditions.insert(.levelUpInArea(.mossRock))
+							evolutionConditions.insert(.levelUp(.inArea(.mossRock)))
 						case 10, 379, 629:
 							// Mt Coronet for Magnetic Field Pokémon
-							evolutionConditions.insert(.levelUpInArea(.magneticField))
+							evolutionConditions.insert(.levelUp(.inArea(.magneticField)))
 						case 48, 380, 649:
 							// Icy Rock for Glaceon
-							evolutionConditions.insert(.levelUpInArea(.icyRock))
+							evolutionConditions.insert(.levelUp(.inArea(.icyRock)))
 						default:
 							break
 						}
@@ -645,15 +645,15 @@ public class Pokedex {
                     
                     if let moveTypeID = row[knownMoveTypeID] {
                         let type = Type(using: moveTypeID)
-                        evolutionConditions.insert(.knowsAttackType(type))
+                        evolutionConditions.insert(.levelUp(.knowsAttackType(type)))
                     }
                     
                     if row[minimumHappiness] != nil {
-                        evolutionConditions.insert(.happiness)
+                        evolutionConditions.insert(.levelUp(.happiness))
                     }
                     
                     if row[minimumBeauty] != nil {
-                        evolutionConditions.insert(.beauty)
+                        evolutionConditions.insert(.levelUp(.beauty))
                     }
                     
                     if row[minimumAffection] != nil {
@@ -681,7 +681,7 @@ public class Pokedex {
 					let knownMoveName = Pokedex.getMoveName(db: db, moveID: row[knownMoveID])
 					if let moveName = knownMoveName,
 						let attack = attacks[moveName] {
-						evolutionConditions.insert(.knowsAttack(attack))
+						evolutionConditions.insert(.levelUp(.knowsAttack(attack)))
 					}
 					
 					evolutions.insert(PokemonEvolution(evolvedPokemon: evolution, conditions: evolutionConditions))

@@ -6,15 +6,13 @@
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
 //
 
-import Foundation
-
 public struct PokemonEvolution: Hashable, Codable {
 	let evolvedPokemon: PokemonSpecies
 	let conditions: Set<EvolutionConditions>
 	
     public enum EvolutionConditions: Hashable, Codable {
-		/// Minimum level to evolve
-		case levelUp(Int)
+
+		case levelUp(LevelUpConditions)
 		
 		/// An item that can be used to evolve a Pokémon
 		///
@@ -23,16 +21,6 @@ public struct PokemonEvolution: Hashable, Codable {
         /// When items are implemented, this will need to be changed
         #warning("Change me, when items are implemented")
 		case item
-		
-		/// Must know the associated Attack
-		///
-		/// e.g. Piloswine must know Ancient Power to evolve into Mamoswine
-		case knowsAttack(Attack)
-		
-		/// Must have learned an Attack of the associated Type
-		///
-		/// e.g. Eevee must know a Fairy type move to evolve into Sylveon
-		case knowsAttackType(Type)
 		
 		/// Evolves when traded
 		///
@@ -44,21 +32,6 @@ public struct PokemonEvolution: Hashable, Codable {
 		/// e.g. Shelmet must be traded for a Karrablast to evolve into Accelgor
 		case tradeForPokemon(PokemonSpecies)
 		
-		/// Evolves when levelled up with a specific Pokémon in the party
-		///
-		/// e.g. To evolve Mantyke to Mantine, there must be a Remoraid in the party
-		case levelUpWithPokemonInParty(PokemonSpecies)
-		
-		/// Evolves when levelled up with Pokémon with the associated type in the party
-		///
-		/// e.g. To evolve Pancham to Pangoro, there must be a `Type.Dark` Pokémon in the party
-		case levelUpWithPokemonOfTypeInParty(Type)
-		
-		/// Must be levelled up in a specific area
-		///
-		/// e.g. Magneton must be levelled up in magnetic field (`Area.magneticField`) to evolve into Magnezone
-		case levelUpInArea(Area)
-		
 		/// Must be the specific gender
 		///
 		/// e.g. Salandit must be `Gender.female` to evolve into Salazzle
@@ -69,19 +42,9 @@ public struct PokemonEvolution: Hashable, Codable {
 		/// e.g. Must be `Time.night` to evolve Eevee to Umbreon
 		case timeOfDay(Time)
 		
-		/// Must have high happiness (220 or above) to evolve
-		///
-		/// Applies to all baby Pokémon, such as Togepi evolving into Togetic
-		case happiness
-		
-		/// Must have a high beauty (170 or above) to evolve
-		///
-		/// Applies to Milotic in games with Pokémon Contest stats
-		case beauty
-		
         /// Must have a high affection from Pokémon Amie to evolve
         ///
-        /// Applies to Eevee
+        /// Applies to Eevee when evolving to Sylveon
         case affection
         
 		/// Device must be held upside down
@@ -156,17 +119,10 @@ public struct PokemonEvolution: Hashable, Codable {
         private enum Base: String, Codable {
             case levelUp
             case item
-            case knowsAttack
-            case knowsAttackType
             case trade
             case tradeForPokemon
-            case levelUpWithPokemonInParty
-            case levelUpWithPokemonOfTypeInParty
-            case levelUpInArea
             case gender
             case timeOfDay
-            case happiness
-            case beauty
             case affection
             case upsideDown
             case emptySlot
@@ -188,6 +144,120 @@ public struct PokemonEvolution: Hashable, Codable {
             case game
             case weather
         }
+		
+		public enum LevelUpConditions: Codable, Hashable {
+			/// Minimum level to evolve
+			case minimumLevel(Int)
+			/// Evolves when levelled up with a specific Pokémon in the party
+			///
+			/// e.g. To evolve Mantyke to Mantine, there must be a Remoraid in the party
+			case pokemonInParty(PokemonSpecies)
+			/// Evolves when levelled up with Pokémon with the associated type in the party
+			///
+			/// e.g. To evolve Pancham to Pangoro, there must be a `Type.Dark` Pokémon in the party
+			case pokemonTypeInParty(Type)
+			/// Must be levelled up in a specific area
+			///
+			/// e.g. Magneton must be levelled up in magnetic field (`Area.magneticField`) to evolve into Magnezone
+			case inArea(Area)
+			/// Must know the associated Attack
+			///
+			/// e.g. Piloswine must know Ancient Power to evolve into Mamoswine
+			case knowsAttack(Attack)
+			/// Must have learned an Attack of the associated Type
+			///
+			/// e.g. Eevee must know a Fairy type move to evolve into Sylveon
+			case knowsAttackType(Type)
+			
+			/// Must have a high beauty (170 or above) to evolve
+			///
+			/// Applies to Milotic in games with Pokémon Contest stats
+			case beauty
+			
+			/// Must have high happiness (220 or above) to evolve
+			///
+			/// Applies to all baby Pokémon, such as Togepi evolving into Togetic
+			case happiness
+			
+			enum Base: String, Codable {
+				case minimumLevel
+				case pokemonInParty
+				case pokemonTypeInParty
+				case inArea
+				case knowsAttack
+				case knowsAttackType
+				case beauty
+				case happiness
+			}
+			
+			enum CodingKeys: CodingKey {
+				case base
+				case level
+				case pokemon
+				case type
+				case area
+				case attack
+			}
+			
+			public func encode(to encoder: Encoder) throws {
+				var container = encoder.container(keyedBy: CodingKeys.self)
+				
+				switch self {
+				case .minimumLevel(let level):
+					try container.encode(Base.minimumLevel, forKey: .base)
+					try container.encode(level, forKey: .level)
+				case .pokemonInParty(let species):
+					try container.encode(Base.pokemonInParty, forKey: .base)
+					try container.encode(species, forKey: .pokemon)
+				case .pokemonTypeInParty(let type):
+					try container.encode(Base.pokemonTypeInParty, forKey: .base)
+					try container.encode(type, forKey: .type)
+				case .inArea(let area):
+					try container.encode(Base.inArea, forKey: .base)
+					try container.encode(area, forKey: .area)
+				case .knowsAttack(let attack):
+					try container.encode(Base.knowsAttack, forKey: .base)
+					try container.encode(attack, forKey: .attack)
+				case .knowsAttackType(let type):
+					try container.encode(Base.knowsAttackType, forKey: .base)
+					try container.encode(type, forKey: .type)
+				case .beauty:
+					try container.encode(Base.beauty, forKey: .base)
+				case .happiness:
+					try container.encode(Base.happiness, forKey: .base)
+				}
+			}
+			
+			public init(from decoder: Decoder) throws {
+				let container = try decoder.container(keyedBy: CodingKeys.self)
+				let base = try container.decode(Base.self, forKey: .base)
+				
+				switch base {
+				case .minimumLevel:
+					let level = try container.decode(Int.self, forKey: .level)
+					self = .minimumLevel(level)
+				case .pokemonInParty:
+					let pokemon = try container.decode(PokemonSpecies.self, forKey: .pokemon)
+					self = .pokemonInParty(pokemon)
+				case .pokemonTypeInParty:
+					let type = try container.decode(Type.self, forKey: .type)
+					self = .pokemonTypeInParty(type)
+				case .inArea:
+					let area = try container.decode(Area.self, forKey: .area)
+					self = .inArea(area)
+				case .knowsAttack:
+					let attack = try container.decode(Attack.self, forKey: .attack)
+					self = .knowsAttack(attack)
+				case .knowsAttackType:
+					let type = try container.decode(Type.self, forKey: .type)
+					self = .knowsAttackType(type)
+				case .beauty:
+					self = .beauty
+				case .happiness:
+					self = .happiness
+				}
+			}
+		}
         
         public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -195,40 +265,21 @@ public struct PokemonEvolution: Hashable, Codable {
             
             switch base {
             case .levelUp:
-                let level = try container.decode(Int.self, forKey: .level)
+                let level = try container.decode(LevelUpConditions.self, forKey: .level)
                 self = .levelUp(level)
             case .item:
                 self = .item
-            case .knowsAttack:
-                let attack = try container.decode(Attack.self, forKey: .attack)
-                self = .knowsAttack(attack)
-            case .knowsAttackType:
-                let type = try container.decode(Type.self, forKey: .type)
-                self = .knowsAttackType(type)
             case .trade:
                 self = .trade
             case .tradeForPokemon:
                 let pokemon = try container.decode(PokemonSpecies.self, forKey: .pokemon)
                 self = .tradeForPokemon(pokemon)
-            case .levelUpWithPokemonInParty:
-                let pokemon = try container.decode(PokemonSpecies.self, forKey: .pokemon)
-                self = .levelUpWithPokemonInParty(pokemon)
-            case .levelUpWithPokemonOfTypeInParty:
-                let type = try container.decode(Type.self, forKey: .type)
-                self = .levelUpWithPokemonOfTypeInParty(type)
-            case .levelUpInArea:
-                let area = try container.decode(Area.self, forKey: .area)
-                self = .levelUpInArea(area)
             case .gender:
                 let gender = try container.decode(Gender.self, forKey: .gender)
                 self = .gender(gender)
             case .timeOfDay:
                 let time = try container.decode(Time.self, forKey: .time)
                 self = .timeOfDay(time)
-            case .happiness:
-                self = .happiness
-            case .beauty:
-                self = .beauty
             case .affection:
                 self = .affection
             case .upsideDown:
@@ -256,36 +307,17 @@ public struct PokemonEvolution: Hashable, Codable {
                 try container.encode(level, forKey: .level)
             case .item:
                 try container.encode(Base.item, forKey: .base)
-            case .knowsAttack(let attack):
-                try container.encode(Base.knowsAttack, forKey: .base)
-                try container.encode(attack, forKey: .attack)
-            case .knowsAttackType(let type):
-                try container.encode(Base.knowsAttackType, forKey: .base)
-                try container.encode(type, forKey: .type)
             case .trade:
                 try container.encode(Base.trade, forKey: .base)
             case .tradeForPokemon(let pokemon):
                 try container.encode(Base.tradeForPokemon, forKey: .base)
                 try container.encode(pokemon, forKey: .pokemon)
-            case .levelUpWithPokemonInParty(let pokemon):
-                try container.encode(Base.levelUpWithPokemonInParty, forKey: .base)
-                try container.encode(pokemon, forKey: .pokemon)
-            case .levelUpWithPokemonOfTypeInParty(let type):
-                try container.encode(Base.levelUpWithPokemonOfTypeInParty, forKey: .base)
-                try container.encode(type, forKey: .type)
-            case .levelUpInArea(let area):
-                try container.encode(Base.levelUpInArea, forKey: .base)
-                try container.encode(area, forKey: .area)
             case .gender(let gender):
                 try container.encode(Base.gender, forKey: .base)
                 try container.encode(gender, forKey: .gender)
             case .timeOfDay(let time):
                 try container.encode(Base.timeOfDay, forKey: .base)
                 try container.encode(time, forKey: .time)
-            case .happiness:
-                try container.encode(Base.happiness, forKey: .base)
-            case .beauty:
-                try container.encode(Base.beauty, forKey: .base)
             case .affection:
                 try container.encode(Base.affection, forKey: .base)
             case .upsideDown:
