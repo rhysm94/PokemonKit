@@ -17,7 +17,7 @@ public class Random {
 	
 	public init(seed: String) {
 		print("init(seed:) for Random run with seed: \(seed)")
-		let dataSeed = seed.data(using: .utf8)!
+		let dataSeed = Data(seed.utf8)
 		self.randomSource = GKARC4RandomSource(seed: dataSeed)
 		self.random = GKRandomDistribution(randomSource: randomSource, lowestValue: 0, highestValue: 15)
 	}

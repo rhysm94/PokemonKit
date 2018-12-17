@@ -53,7 +53,7 @@ class PokemonKitTests: XCTestCase {
 		var decodedTeamData = [Pokemon]()
 		do {
 			let encodedTeamData = try JSONEncoder().encode(team)
-			print(String(data: encodedTeamData, encoding: .utf8)!)
+			print(String(decoding: encodedTeamData, as: UTF8.self))
 			decodedTeamData = try JSONDecoder().decode([Pokemon].self, from: encodedTeamData)
 		} catch let error {
 			XCTFail(error.localizedDescription)
