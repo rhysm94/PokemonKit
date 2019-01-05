@@ -19,7 +19,6 @@ public struct PokemonEvolution: Hashable, Codable {
 		/// e.g. Moon Stone to evolve Clefairy to Clefable
         /// - Note:
         /// When items are implemented, this will need to be changed
-        #warning("Change me, when items are implemented")
 		case item
 		
 		/// Evolves when traded

@@ -63,17 +63,6 @@ public class Random {
 		guard chance < 100 else { return true }
 
 		return random.nextUniform() <= (Float(chance) / 100.0)
-
-//		var chances = [Bool]()
-//		for _ in 1...chance {
-//			chances.append(true)
-//		}
-//		for _ in 1...(100-chance) {
-//			chances.append(false)
-//		}
-//
-//		chances = randomSource.arrayByShufflingObjects(in: chances) as! [Bool]
-//		return chances[0]
 	}
 	
 	func copy() -> Random {
