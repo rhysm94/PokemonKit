@@ -61,6 +61,12 @@ class PokemonKitTests: XCTestCase {
 		XCTAssertEqual(team, decodedTeamData)
 	}
 	
+	func testFamily() {
+		let pikachu = Pokedex.default.kantoPokemon[25]
+		
+		print(pikachu.family)
+	}
+	
 	func testActivePokemon() {
 		XCTAssertTrue(rhys.activePokemon === rhys.team[0])
 	}

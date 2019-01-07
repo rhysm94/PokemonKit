@@ -24,13 +24,12 @@ public struct PokemonSpecies: Codable, Hashable {
 	public let eggGroupTwo: EggGroup?
 	public let moveset: [MovesetItem]
     
-    // These could probably be refactored as computed properties which get all evolutions during runtime, not at load
     public var evolvesFrom: PokemonSpecies? {
         guard let preEvo = _evolvesFrom else { return nil }
         return Pokedex.default.pokemon[preEvo]
     }
     
-    public var evolutions: Set<PokemonEvolution>? {
+    public var evolutions: [PokemonEvolution]? {
         return Pokedex.default.getEvolutionForPokemon(self)
     }
 	

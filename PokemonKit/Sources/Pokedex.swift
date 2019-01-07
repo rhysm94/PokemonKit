@@ -535,7 +535,7 @@ public class Pokedex {
 		return moveset
 	}
 	
-    public func getEvolutionForPokemon(_ pokemon: PokemonSpecies) -> Set<PokemonEvolution>? {
+    public func getEvolutionForPokemon(_ pokemon: PokemonSpecies) -> [PokemonEvolution]? {
         var database: Connection?
         
         guard let dbPath = Pokedex.dbPath else {
@@ -691,7 +691,7 @@ public class Pokedex {
 			}
 			
         if !evolutions.isEmpty {
-            return evolutions
+			return Array(evolutions).sorted(by: { $0.evolvedPokemon.dexNum < $1.evolvedPokemon.dexNum })
         } else {
             return nil
         }

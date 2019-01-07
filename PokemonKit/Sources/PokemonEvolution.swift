@@ -7,8 +7,8 @@
 //
 
 public struct PokemonEvolution: Hashable, Codable {
-	let evolvedPokemon: PokemonSpecies
-	let conditions: Set<EvolutionConditions>
+	public let evolvedPokemon: PokemonSpecies
+	public let conditions: Set<EvolutionConditions>
 	
     public enum EvolutionConditions: Hashable, Codable {
 
