@@ -33,6 +33,28 @@ public struct PokemonSpecies: Codable, Hashable {
         return Pokedex.default.getEvolutionForPokemon(self)
     }
 	
+	public var family: [PokemonSpecies] {
+		var preEvo = evolvesFrom
+		
+		while preEvo?.evolvesFrom != nil {
+			preEvo = preEvo?.evolvesFrom
+		}
+		
+		func createFamily(for pokemon: PokemonSpecies, family: [PokemonSpecies] = []) -> [PokemonSpecies] {
+			var family = family
+			
+			family.append(pokemon)
+			for evolution in (pokemon.evolutions?.compactMap { $0.evolvedPokemon } ?? [])
+				where !family.contains(evolution) {
+				family = createFamily(for: evolution, family: family)
+			}
+			
+			return family
+		}
+		
+		return Array(createFamily(for: preEvo ?? self))
+	}
+	
     public init(dexNum: Int, identifier: String, name: String, typeOne: Type, typeTwo: Type? = nil, stats: Stats, abilityOne: Ability, abilityTwo: Ability? = nil, hiddenAbility: Ability? = nil, eggGroupOne: EggGroup, eggGroupTwo: EggGroup? = nil, evolvesFrom: String? = nil, moveset: [MovesetItem] = []) {
 		self.dexNum = dexNum
 		self.identifier = identifier

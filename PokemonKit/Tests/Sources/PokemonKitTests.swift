@@ -62,9 +62,9 @@ class PokemonKitTests: XCTestCase {
 	}
 	
 	func testFamily() {
-		let pikachu = Pokedex.default.kantoPokemon[25]
-		
-		print(pikachu.family)
+		let pikachu = Pokedex.default.pokemon["pikachu"]!
+		let mockedFamily = [Pokedex.default.pokemon["pichu"]!, pikachu, Pokedex.default.pokemon["raichu"]!]
+		XCTAssertTrue(pikachu.family == mockedFamily)
 	}
 	
 	func testActivePokemon() {
