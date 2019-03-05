@@ -161,7 +161,7 @@ class PokemonKitTests: XCTestCase {
 	}
 	
 	func testProteanMessage() {
-		let greninjaSpecies = PokemonSpecies(dexNum: 658, identifier: "greninja", name: "Greninja", typeOne: .water, typeTwo: .dark, stats: Stats(hp: 72, atk: 95, def: 67, spAtk: 103, spDef: 71, spd: 122), abilityOne: Ability(name: "Some", description: "Ability"), hiddenAbility: Ability(name: "Protean", description: "Changes Pokémon type to move type", activationMessage: Pokedex.activationMessage["Protean"]), eggGroupOne: .water1)
+		let greninjaSpecies = Pokedex.default.pokemon["greninja"]!
 		let greninja = Pokemon(species: greninjaSpecies, level: 100, ability: greninjaSpecies.hiddenAbility!, nature: .timid, effortValues: .empty, individualValues: .fullIVs, attacks: [])
 		
 		greninja.species.typeOne = .grass
@@ -176,7 +176,7 @@ class PokemonKitTests: XCTestCase {
 	}
 	
 	func testAllFainted() {
-		let greninjaSpecies = PokemonSpecies(dexNum: 658, identifier: "greninja", name: "Greninja", typeOne: .water, typeTwo: .dark, stats: Stats(hp: 72, atk: 95, def: 67, spAtk: 103, spDef: 71, spd: 122), abilityOne: Ability(name: "Some", description: "Ability"), hiddenAbility: Ability(name: "Protean", description: "Changes Pokémon type to move type", activationMessage: Pokedex.activationMessage["Protean"]), eggGroupOne: .water1)
+		let greninjaSpecies = Pokedex.default.pokemon["greninja"]!
 		let greninja = Pokemon(species: greninjaSpecies, level: 100, ability: greninjaSpecies.hiddenAbility!, nature: .timid, effortValues: .empty, individualValues: .fullIVs, attacks: [])
 		
 		rhys.add(pokemon: greninja)

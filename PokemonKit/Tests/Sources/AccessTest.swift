@@ -35,7 +35,13 @@ class AccessTest: XCTestCase {
             XCTFail("Couldn't unwrap sylveon.evolvesFrom")
             return
         }
-        XCTAssert(eevee.name == "Eevee")
+        XCTAssertEqual(eevee.name, "Eevee")
     }
+	
+	func testFormAttributes() {
+		let bulbasaur = Pokedex.default.pokemon["bulbasaur"]!
+		XCTAssertFalse(bulbasaur.formAttributes.isMega)
+		
+	}
     
 }

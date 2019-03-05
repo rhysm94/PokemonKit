@@ -49,7 +49,6 @@ public class Pokemon: Codable {
 			
 			if _currentHP == 0 {
 				status = .fainted
-				print("\(nickname) has fainted!")
 			}
 		}
 	}
