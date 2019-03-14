@@ -43,5 +43,27 @@ class AccessTest: XCTestCase {
 		XCTAssertFalse(bulbasaur.formAttributes.isMega)
 		
 	}
-    
+	
+	func testAlternateFormCount() {
+		let deoxys = Pokedex.default.pokemon[385]
+		XCTAssertEqual(deoxys.forms.count, 3)
+	}
+	
+	func testAlternateFormCountNone() {
+		let bulbasaur = Pokedex.default.pokemon["bulbasaur"]!
+		XCTAssertEqual(bulbasaur.forms.count, 0)
+	}
+	
+	func testAlternateFormCountMany() {
+		let pikachu = Pokedex.default.pokemon["pikachu"]!
+		print(pikachu.forms)
+		XCTAssertEqual(pikachu.forms.count, 13)
+	}
+	
+	func testIsMega() {
+		let sceptile = Pokedex.default.pokemon["sceptile"]!
+		let megaSceptile = sceptile.forms[0]
+		XCTAssertTrue(megaSceptile.formAttributes.isMega)
+	}
+	
 }

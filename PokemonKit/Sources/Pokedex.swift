@@ -275,23 +275,23 @@ public class Pokedex {
 		let db = databaseConnection
 		
 		do {
-			let pokemonTable = Table("pokemon_species")
-			let pokeID = Expression<Int>("id")
-			let identifier = Expression<String>("identifier")
-			let name = Expression<String>("name")
-			
-			let statTable = Table("pokemon_stats")
-			let pokemonID = Expression<Int>("pokemon_id")
-			let s1 = statTable.alias("s1")
-			
-			let stat = Expression<Int>("stat_id")
-			let baseStat = Expression<Int>("base_stat")
-			let statHP = Expression<Int>("stat_HP")
-			
-			let pokemonSpeciesNames = Table("pokemon_species_names")
-			let speciesID = Expression<Int>("pokemon_species_id")
-			
-			let languageID = Expression<Int>("local_language_id")
+//			let pokemonTable = Table("pokemon_species")
+//			let pokeID = Expression<Int>("id")
+//			let identifier = Expression<String>("identifier")
+//			let name = Expression<String>("name")
+//
+//			let statTable = Table("pokemon_stats")
+//			let pokemonID = Expression<Int>("pokemon_id")
+//			let s1 = statTable.alias("s1")
+//
+//			let stat = Expression<Int>("stat_id")
+//			let baseStat = Expression<Int>("base_stat")
+//			let statHP = Expression<Int>("stat_HP")
+//
+//			let pokemonSpeciesNames = Table("pokemon_species_names")
+//			let speciesID = Expression<Int>("pokemon_species_id")
+//
+//			let languageID = Expression<Int>("local_language_id")
 			
 			let query = """
 			select
@@ -584,8 +584,138 @@ public class Pokedex {
 	}
 	
 	public func getAlternateFormsFor(pokemon: PokemonSpecies) -> [PokemonSpecies] {
+		let db = Pokedex.databaseConnection
 		
-		return []
+		var alternateForms: [PokemonSpecies] = []
+		
+		let query = """
+		select
+		p.id,
+		p.species_id,
+		psn.name,
+		(select tn.name from type_names as tn join pokemon_types as pt on pt.type_id = tn.type_id where pt.pokemon_id = p.id and tn.local_language_id = 9 and pt.slot = 1) as typeOne,
+		(select tn.name from type_names as tn join pokemon_types as pt on pt.type_id = tn.type_id where pt.pokemon_id = p.id and tn.local_language_id = 9 and pt.slot = 2) as typeTwo,
+		(select base_stat from pokemon_stats as stats where stat_id = 1 and stats.pokemon_id = p.id) as hp,
+		(select base_stat from pokemon_stats as stats where stat_id = 2 and stats.pokemon_id = p.id) as atk,
+		(select base_stat from pokemon_stats as stats where stat_id = 3 and stats.pokemon_id = p.id) as def,
+		(select base_stat from pokemon_stats as stats where stat_id = 4 and stats.pokemon_id = p.id) as spAtk,
+		(select base_stat from pokemon_stats as stats where stat_id = 5 and stats.pokemon_id = p.id) as spDef,
+		(select base_stat from pokemon_stats as stats where stat_id = 6 and stats.pokemon_id = p.id) as spd,
+		(select an.name from ability_names as an join pokemon_abilities as pa on an.ability_id = pa.ability_id where pa.pokemon_id = p.id and an.local_language_id = 9 and pa.slot=1) as ability_one,
+		(select an.name from ability_names as an join pokemon_abilities as pa on an.ability_id = pa.ability_id where pa.pokemon_id = p.id and an.local_language_id = 9 and pa.slot=2) as ability_two,
+		(select an.name from ability_names as an join pokemon_abilities as pa on an.ability_id = pa.ability_id where pa.pokemon_id = p.id and an.local_language_id = 9 and pa.slot=3) as ability_hidden,
+		pfn.pokemon_name,
+		pfn.form_name,
+		pf.identifier,
+		pf.form_order,
+		pf.is_battle_only,
+		pf.is_mega
+		from pokemon p
+		join pokemon_forms pf on p.id = pf.pokemon_id
+		join pokemon_form_names pfn on pf.id = pfn.pokemon_form_id
+		join pokemon_species ps on ps.id = p.species_id
+		join pokemon_species_names psn on psn.pokemon_species_id = ps.id
+		where species_id = \(pokemon.dexNum)
+		and pfn.local_language_id = 9 and psn.local_language_id = 9; --and p.is_default = 0;
+		"""
+		
+		do {
+			for row in try db.prepare(query) {
+				guard let dbId = row[0] as? Int64 else { break }
+				guard let dexNum = row[1] as? Int64 else { break }
+				guard let name = row[2] as? String else { break }
+				guard let typeOneString = row[3] as? String else { break }
+				let typeTwoString = row[4] as? String
+				guard let hp = row[5] as? Int64 else { break }
+				guard let atk = row[6] as? Int64 else { break }
+				guard let def = row[7] as? Int64 else { break }
+				guard let spAtk = row[8] as? Int64 else { break }
+				guard let spDef = row[9] as? Int64 else { break }
+				guard let spd = row[10] as? Int64 else { break }
+				guard let ability1Name = row[11] as? String else { break }
+				let ability2Name = row[12] as? String
+				let hiddenAbilityName = row[13] as? String
+				let pokemonFormName = row[14] as? String
+				let formName = row[15] as? String
+				guard let identifier = row[16] as? String else { break }
+				guard let formOrder = row[17] as? Int64 else { break }
+				guard let isBattleOnly = row[18] as? Int64 else {
+					break
+				}
+				guard let isMega = row[19] as? Int64 else {
+					break
+				}
+				
+				guard let typeOne = Type(rawValue: typeOneString) else { break }
+				var typeTwo: Type? {
+					guard let value = typeTwoString else { return nil }
+					return Type(rawValue: value)
+				}
+				
+				let ability1 = abilities[ability1Name] ?? Ability(name: "Dummy", description: "Dummy")
+				var ability2: Ability? {
+					guard let value = ability2Name else { return nil }
+					return abilities[value]
+				}
+				
+				var hiddenAbility: Ability? {
+					guard let value = hiddenAbilityName else { return nil }
+					return abilities[value]
+				}
+				
+				let eggGroupTable = Table("pokemon_egg_groups")
+				let speciesID = Expression<Int>("species_id")
+				let eggGroupID = Expression<Int>("egg_group_id")
+				let eggGroupQuery = eggGroupTable.select(speciesID, eggGroupID).filter(speciesID == Int(dexNum))
+				let eggGroups = Array(try db.prepare(eggGroupQuery))
+				
+				let eggGroupOne = EggGroup(using: eggGroups[0][eggGroupID])
+				var eggGroupTwo: EggGroup? {
+					if eggGroups.indices.contains(1) {
+						return EggGroup(using: eggGroups[1][eggGroupID])
+					} else {
+						return nil
+					}
+				}
+				
+				let moveset = Pokedex.getAttacksForPokemon(Int(dbId), attacks: attacks).sorted { first, second in
+					switch (first.moveLearnMethod, second.moveLearnMethod) {
+					case let (.levelUp(left), .levelUp(right)):
+						return left < right
+					case (.levelUp(_), .machine):
+						return true
+					case (.machine, .egg):
+						return true
+					case (.egg, .lightBallEgg):
+						return true
+					case (.lightBallEgg, .moveTutor):
+						return true
+					case (.egg, .moveTutor):
+						return true
+					case (.moveTutor, .formChange):
+						return true
+					case (.machine, .moveTutor):
+						return true
+					default:
+						return false
+					}
+				}
+				
+				let stats = Stats(hp: Int(hp), atk: Int(atk), def: Int(def), spAtk: Int(spAtk), spDef: Int(spDef), spd: Int(spd))
+				let formAttributes = PokemonSpecies.FormAttributes(formName: formName, formOrder: Int(formOrder), isMega: isMega == 1, isBattleOnly: isBattleOnly == 1, isDefault: false)
+				
+				let form = PokemonSpecies(dexNum: Int(dexNum), identifier: identifier, name: name, typeOne: typeOne, typeTwo: typeTwo, stats: stats, abilityOne: ability1, abilityTwo: ability2, hiddenAbility: hiddenAbility, eggGroupOne: eggGroupOne, eggGroupTwo: eggGroupTwo, formAttributes: formAttributes, moveset: moveset)
+				
+				if formName != pokemon.formAttributes.formName {
+					alternateForms.append(form)
+				}
+				
+			}
+		} catch let error {
+			print(error.localizedDescription)
+		}
+		
+		return alternateForms
 	}
 	
 	static func getAttacks() -> [String: Attack] {
