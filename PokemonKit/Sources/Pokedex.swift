@@ -6,7 +6,6 @@
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
 //
 
-import GameplayKit
 import SQLite
 
 public class Pokedex {
@@ -616,7 +615,7 @@ public class Pokedex {
 		join pokemon_species ps on ps.id = p.species_id
 		join pokemon_species_names psn on psn.pokemon_species_id = ps.id
 		where species_id = \(pokemon.dexNum)
-		and pfn.local_language_id = 9 and psn.local_language_id = 9; --and p.is_default = 0;
+		and pfn.local_language_id = 9 and psn.local_language_id = 9;
 		"""
 		
 		do {
@@ -639,12 +638,8 @@ public class Pokedex {
 				let formName = row[15] as? String
 				guard let identifier = row[16] as? String else { break }
 				guard let formOrder = row[17] as? Int64 else { break }
-				guard let isBattleOnly = row[18] as? Int64 else {
-					break
-				}
-				guard let isMega = row[19] as? Int64 else {
-					break
-				}
+				guard let isBattleOnly = row[18] as? Int64 else { break }
+				guard let isMega = row[19] as? Int64 else { break }
 				
 				guard let typeOne = Type(rawValue: typeOneString) else { break }
 				var typeTwo: Type? {
