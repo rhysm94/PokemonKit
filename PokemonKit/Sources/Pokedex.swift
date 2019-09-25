@@ -245,15 +245,23 @@ public class Pokedex {
 		let mainSeries = Expression<Int>("is_main_series")
 		let versionGroupID = Expression<Int>("version_group_id")
 		
+		
+		// Filter is split into two discrete expressions to satisfy type-checker
+		// Seemingly, Swift 5.1 introduced a regression which meant this couldn't be evaluated in time
+		let filterPartOne = Expression<Bool>(
+			abilityNames[localLanguageID] == 9 &&
+			abilityFlavorText[languageID] == 9 &&
+			abilityTable[mainSeries] == 1
+		)
+		
+		let filterPartTwo = Expression<Bool>(
+			abilityFlavorText[versionGroupID] == 17
+		)
+		
 		let query = abilityTable.select(abilityNames[abilityName], abilityFlavorText[flavorText])
 			.join(abilityNames, on: abilityTable[id] == abilityNames[abilityID])
 			.join(abilityFlavorText, on: abilityTable[id] == abilityFlavorText[abilityID])
-			.filter(
-				abilityNames[localLanguageID] == 9 &&
-				abilityFlavorText[languageID] == 9 &&
-				abilityTable[mainSeries] == 1 &&
-				abilityFlavorText[versionGroupID] == 17
-		)
+			.filter(filterPartOne && filterPartTwo)
 		
 		do {
 			for row in try db.prepare(query) {
