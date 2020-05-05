@@ -656,18 +656,18 @@ public class Pokedex {
 				
 				let eggGroupOne = EggGroup(using: eggGroups[0][eggGroupID])
 				var eggGroupTwo: EggGroup? {
-					if eggGroups.indices.contains(1) {
-						return EggGroup(using: eggGroups[1][eggGroupID])
-					} else {
+					guard eggGroups.indices.contains(1) else {
 						return nil
 					}
+
+					return EggGroup(using: eggGroups[1][eggGroupID])
 				}
 				
 				let moveset = Pokedex.getAttacksForPokemon(Int(dbId), attacks: attacks).sorted { first, second in
 					switch (first.moveLearnMethod, second.moveLearnMethod) {
 					case let (.levelUp(left), .levelUp(right)):
 						return left < right
-					case (.levelUp(_), .machine):
+					case (.levelUp, .machine):
 						return true
 					case (.machine, .egg):
 						return true
