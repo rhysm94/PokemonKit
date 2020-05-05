@@ -21,9 +21,9 @@ public struct Stats: Codable, Hashable {
 		3: 2.5,
 		4: 3,
 		5: 3.5,
-		6: 4
+		6: 4,
 	]
-	
+
 	public init(hp: Int, atk: Int, def: Int, spAtk: Int, spDef: Int, spd: Int) {
 		self.hp = hp
 		self.atk = atk
@@ -32,7 +32,7 @@ public struct Stats: Codable, Hashable {
 		self.spDef = spDef
 		self.spd = spd
 	}
-	
+
 	public static let fullIVs = Stats(hp: 31, atk: 31, def: 31, spAtk: 31, spDef: 31, spd: 31)
 	public static let empty = Stats(hp: 0, atk: 0, def: 0, spAtk: 0, spDef: 0, spd: 0)
 }

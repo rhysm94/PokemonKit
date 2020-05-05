@@ -9,32 +9,30 @@
 import XCTest
 
 class PerformanceTests: XCTestCase {
-	
 	func testSpeedCreatePokedex() {
-		self.measure {
+		measure {
 			_ = Pokedex()
 		}
 	}
-	
+
 	func testSpeedGetAttacks() {
-		self.measure {
+		measure {
 			_ = Pokedex.getAttacks()
 		}
 	}
-	
+
 	func testSpeedGetAbilities() {
-		self.measure {
+		measure {
 			_ = Pokedex.getAbilities()
 		}
 	}
-	
+
 	func testSpeedGetPokemon() {
 		let attacks = Pokedex.getAttacks()
 		let abilities = Pokedex.getAbilities()
-		
-		self.measure {
+
+		measure {
 			_ = Pokedex.getPokemon(abilities: abilities, attacks: attacks)
 		}
 	}
-    
 }

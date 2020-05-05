@@ -17,11 +17,11 @@ public enum Status: Equatable, Codable {
 	case asleep(Int)
 	case fainted
 	case healthy
-	
+
 	enum CodingKeys: CodingKey {
 		case base, counter
 	}
-	
+
 	private enum Base: String, Codable {
 		case paralysed
 		case poisoned
@@ -32,11 +32,11 @@ public enum Status: Equatable, Codable {
 		case fainted
 		case healthy
 	}
-	
+
 	public init(from decoder: Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
 		let returnValue = try container.decode(Base.self, forKey: .base)
-		
+
 		switch returnValue {
 		case .paralysed:
 			self = .paralysed
@@ -57,10 +57,10 @@ public enum Status: Equatable, Codable {
 			self = .healthy
 		}
 	}
-	
+
 	public func encode(to encoder: Encoder) throws {
 		var container = encoder.container(keyedBy: CodingKeys.self)
-		
+
 		switch self {
 		case .paralysed:
 			try container.encode(Base.paralysed, forKey: .base)
@@ -72,7 +72,7 @@ public enum Status: Equatable, Codable {
 			try container.encode(Base.burned, forKey: .base)
 		case .frozen:
 			try container.encode(Base.frozen, forKey: .base)
-		case .asleep(let counter):
+		case let .asleep(counter):
 			try container.encode(Base.asleep, forKey: .base)
 			try container.encode(counter, forKey: .counter)
 		case .fainted:

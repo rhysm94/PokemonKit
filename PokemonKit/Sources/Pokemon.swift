@@ -8,35 +8,35 @@
 
 import Foundation
 
-
 /// A Pokemon object refers to a specific instance of a Pokémon
 ///
 public class Pokemon: Codable {
 	private var _nickname: String?
 	public var nickname: String {
 		get {
-			return _nickname ?? species.name
+			_nickname ?? species.name
 		}
 		set {
 			_nickname = newValue
 		}
 	}
-	internal(set) public var species: PokemonSpecies
+
+	public internal(set) var species: PokemonSpecies
 	public let level: Int
 	public let effortValues: Stats
 	public let individualValues: Stats
-	internal(set) public var attacks: [Attack]
-	internal(set) public var status: Status
-	internal(set) public var volatileStatus: Set<VolatileStatus> = Set()
+	public internal(set) var attacks: [Attack]
+	public internal(set) var status: Status
+	public internal(set) var volatileStatus: Set<VolatileStatus> = Set()
 	public let ability: Ability
-	
+
 	private lazy var _currentHP: Int = {
-		return baseStats.hp
+		baseStats.hp
 	}()
-	
-	internal(set) public var currentHP: Int {
+
+	public internal(set) var currentHP: Int {
 		get {
-			return _currentHP
+			_currentHP
 		}
 		set {
 			if newValue < 0 {
@@ -46,13 +46,13 @@ public class Pokemon: Codable {
 			} else {
 				_currentHP = newValue
 			}
-			
+
 			if _currentHP == 0 {
 				status = .fainted
 			}
 		}
 	}
-	
+
 	public var baseStats: Stats {
 		let baseStats = species.baseStats
 		let hp = Pokemon.calculateHPStat(base: baseStats.hp, EV: effortValues.hp, IV: individualValues.hp, level: level)
@@ -63,14 +63,14 @@ public class Pokemon: Codable {
 		let spd = Int(floor(Pokemon.calculateOtherStats(base: baseStats.spd, EV: effortValues.spd, IV: individualValues.spd, level: level, natureModifier: nature.spdModifier)))
 		return Stats(hp: hp, atk: atk, def: def, spAtk: spAtk, spDef: spDef, spd: spd)
 	}
-	
+
 	public var modifiedStats: Stats {
 		let atkMod = Stats.statModifiers[statStages.atk] ?? 1
 		let defMod = Stats.statModifiers[statStages.def] ?? 1
 		let spAtkMod = Stats.statModifiers[statStages.spAtk] ?? 1
 		let spDefMod = Stats.statModifiers[statStages.spDef] ?? 1
 		let spdMod = Stats.statModifiers[statStages.spd] ?? 1
-		
+
 		let baseStats = species.baseStats
 		let hp = Pokemon.calculateHPStat(base: baseStats.hp, EV: effortValues.hp, IV: individualValues.hp, level: level)
 		let atk = Int(floor(Pokemon.calculateOtherStats(base: baseStats.atk, EV: effortValues.atk, IV: individualValues.atk, level: level, natureModifier: nature.atkModifier) * atkMod))
@@ -80,11 +80,11 @@ public class Pokemon: Codable {
 		let spd = Int(floor(Pokemon.calculateOtherStats(base: baseStats.spd, EV: effortValues.spd, IV: individualValues.spd, level: level, natureModifier: nature.spdModifier) * spdMod))
 		return Stats(hp: hp, atk: atk, def: def, spAtk: spAtk, spDef: spDef, spd: spd)
 	}
-	
+
 	private var _statStages = (atk: 0, def: 0, spAtk: 0, spDef: 0, spd: 0)
-	internal(set) public var statStages: (atk: Int, def: Int, spAtk: Int, spDef: Int, spd: Int) {
+	public internal(set) var statStages: (atk: Int, def: Int, spAtk: Int, spDef: Int, spd: Int) {
 		get {
-			return _statStages
+			_statStages
 		}
 		set {
 			_statStages.atk = newValue.atk
@@ -92,32 +92,32 @@ public class Pokemon: Codable {
 			_statStages.spAtk = newValue.spAtk
 			_statStages.spDef = newValue.spDef
 			_statStages.spd = newValue.spd
-			
+
 			if _statStages.atk > 6 {
 				print("\(nickname)'s Attack can't go any higher!")
 				_statStages.atk = 6
 			} else if _statStages.atk < -6 {
 				_statStages.atk = -6
 			}
-			
+
 			if _statStages.def > 6 {
 				_statStages.def = 6
 			} else if _statStages.def < -6 {
 				_statStages.def = -6
 			}
-			
+
 			if _statStages.spAtk > 6 {
 				_statStages.spAtk = 6
 			} else if _statStages.spAtk < -6 {
 				_statStages.spAtk = -6
 			}
-			
+
 			if _statStages.spDef > 6 {
 				_statStages.spDef = 6
 			} else if _statStages.spDef < -6 {
 				_statStages.spDef = -6
 			}
-			
+
 			if _statStages.spd > 6 {
 				_statStages.spd = 6
 			} else if _statStages.spd < -6 {
@@ -125,9 +125,9 @@ public class Pokemon: Codable {
 			}
 		}
 	}
-	
-	internal(set) public var nature: Nature
-	
+
+	public internal(set) var nature: Nature
+
 	public init(species: PokemonSpecies, level: Int = 50, ability: Ability = Ability(name: "Some ability", description: "Some Description"), nature: Nature, effortValues: Stats, individualValues: Stats, attacks: [Attack]) {
 		self.species = species
 		self.level = level
@@ -138,23 +138,23 @@ public class Pokemon: Codable {
 		self.attacks = attacks
 		self.status = .healthy
 	}
-	
+
 	static func calculateHPStat(base: Int, EV: Int, IV: Int, level: Int) -> Int {
 		let top = (2 * base + IV + Int(floor(Double(EV) / 4))) * level
 		let result = Int(floor(Double(top) / 100)) + level + 10
 		return result
 	}
-	
+
 	static func calculateOtherStats(base: Int, EV: Int, IV: Int, level: Int, natureModifier: Double) -> Double {
 		let top = (2 * base + IV + Int(floor(Double(EV) / 4))) * level
 		let brackets = floor(Double(top) / 100) + 5
 		return floor(brackets * natureModifier)
 	}
-	
+
 	func damage(_ damage: Int) {
 		currentHP -= damage
 	}
-	
+
 	enum CodingKeys: CodingKey {
 		case nickname
 		case species
@@ -167,11 +167,11 @@ public class Pokemon: Codable {
 		case ability
 		case status
 	}
-	
+
 	enum StatStagesCodingKeys: CodingKey {
 		case atk, def, spAtk, spDef, spd
 	}
-	
+
 	public func encode(to encoder: Encoder) throws {
 		var container = encoder.container(keyedBy: CodingKeys.self)
 		try container.encode(_nickname, forKey: .nickname)
@@ -183,7 +183,7 @@ public class Pokemon: Codable {
 		try container.encode(nature, forKey: .nature)
 		try container.encode(ability, forKey: .ability)
 		try container.encode(status, forKey: .status)
-		
+
 		var statStagesContainer = encoder.container(keyedBy: StatStagesCodingKeys.self)
 		let statStagesStruct = StatStages(atk: _statStages.atk, def: _statStages.def, spAtk: _statStages.spAtk, spDef: _statStages.spDef, spd: _statStages.spd)
 		try statStagesContainer.encode(statStagesStruct.atk, forKey: .atk)
@@ -192,7 +192,7 @@ public class Pokemon: Codable {
 		try statStagesContainer.encode(statStagesStruct.spDef, forKey: .spDef)
 		try statStagesContainer.encode(statStagesStruct.spd, forKey: .spd)
 	}
-	
+
 	private struct StatStages: Codable {
 		var atk: Int
 		var def: Int
@@ -200,7 +200,7 @@ public class Pokemon: Codable {
 		var spDef: Int
 		var spd: Int
 	}
-	
+
 	public required init(from decoder: Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
 		self._nickname = try container.decode(String?.self, forKey: .nickname)
@@ -212,7 +212,7 @@ public class Pokemon: Codable {
 		self.nature = try container.decode(Nature.self, forKey: .nature)
 		self.ability = try container.decode(Ability.self, forKey: .ability)
 		self.status = try container.decode(Status.self, forKey: .status)
-		
+
 		let statStageContainer = try decoder.container(keyedBy: StatStagesCodingKeys.self)
 		let atkStage = try statStageContainer.decode(Int.self, forKey: .atk)
 		let defStage = try statStageContainer.decode(Int.self, forKey: .def)
@@ -221,7 +221,7 @@ public class Pokemon: Codable {
 		let spdStage = try statStageContainer.decode(Int.self, forKey: .spd)
 		self._statStages = (atk: atkStage, def: defStage, spAtk: spAtkStage, spDef: spDefStage, spd: spdStage)
 	}
-	
+
 	/// Copy constructor for a Pokemon
 	///
 	/// - parameter pokemon: The Pokemon object you want a copy of
@@ -243,14 +243,13 @@ public class Pokemon: Codable {
 
 extension Pokemon: CustomStringConvertible {
 	public var description: String {
-		return nickname
+		nickname
 	}
 }
 
 extension Pokemon: Equatable {
 	public static func == (lhs: Pokemon, rhs: Pokemon) -> Bool {
-		return
-			lhs.species == rhs.species &&
+		lhs.species == rhs.species &&
 			lhs._nickname == rhs._nickname &&
 			lhs._statStages == rhs._statStages &&
 			lhs.ability == rhs.ability &&

@@ -14,7 +14,7 @@ public enum Weather: String, CustomStringConvertible, Codable {
 	case heavyRain
 	case sandstorm
 	case hail
-	
+
 	public var description: String {
 		switch self {
 		case .harshSunlight:
@@ -33,7 +33,7 @@ public enum Weather: String, CustomStringConvertible, Codable {
 			return "no active weather"
 		}
 	}
-	
+
 	public var disappearMessage: String {
 		switch self {
 		case .none:
@@ -52,7 +52,7 @@ public enum Weather: String, CustomStringConvertible, Codable {
 			return "The hail stopped."
 		}
 	}
-	
+
 	var fireModifier: Double {
 		switch self {
 		case .harshSunlight, .extremelyHarshSunlight: return 1.5
@@ -70,9 +70,9 @@ public enum Weather: String, CustomStringConvertible, Codable {
 		default: return 1
 		}
 	}
-	
+
 	func blocks(type: Type) -> Bool {
-		switch(self, type) {
+		switch (self, type) {
 		case (.heavyRain, .fire):
 			return true
 		case (.extremelyHarshSunlight, .water):
@@ -81,7 +81,7 @@ public enum Weather: String, CustomStringConvertible, Codable {
 			return false
 		}
 	}
-	
+
 	var blockMessage: String? {
 		switch self {
 		case .extremelyHarshSunlight:

@@ -9,22 +9,22 @@
 import Foundation
 import GameplayKit
 
-public class Player: NSObject, Codable, GKGameModelPlayer {	
+public class Player: NSObject, Codable, GKGameModelPlayer {
 	public let name: String
-	internal(set) public var team = [Pokemon]()
-	
+	public internal(set) var team = [Pokemon]()
+
 	public lazy var playerId: Int = {
-		return GKRandomSource.sharedRandom().nextInt()
+		GKRandomSource.sharedRandom().nextInt()
 	}()
-	
+
 	public var activePokemon: Pokemon {
-		return self.team[0]
+		team[0]
 	}
-	
+
 	public var teamMembers: Int {
-		return team.count
+		team.count
 	}
-	
+
 	public func add(pokemon: Pokemon) {
 		if team.count < 6 {
 			team.append(pokemon)
@@ -32,24 +32,24 @@ public class Player: NSObject, Codable, GKGameModelPlayer {
 			print("Team full!")
 		}
 	}
-	
+
 	public init(name: String) {
 		self.name = name
 	}
-	
+
 	public init(copying: Player) {
 		self.name = copying.name
 		self.team = copying.team.map { Pokemon(pokemon: $0) }
-		
+
 		super.init()
 
 		self.playerId = copying.playerId
 	}
-	
+
 	public var allFainted: Bool {
-		return team.allSatisfy { $0.status == .fainted }
+		team.allSatisfy { $0.status == .fainted }
 	}
-	
+
 	public func switchPokemon(pokemon: Pokemon) {
 		if let switchInIndex = team.firstIndex(of: pokemon) {
 			(team[0], team[switchInIndex]) = (team[switchInIndex], team[0])
@@ -59,16 +59,16 @@ public class Player: NSObject, Codable, GKGameModelPlayer {
 
 extension Player {
 	public static func == (lhs: Player, rhs: Player) -> Bool {
-		return lhs.name == rhs.name &&
+		lhs.name == rhs.name &&
 			lhs.playerId == rhs.playerId &&
 			lhs.team == rhs.team &&
 			lhs.activePokemon == rhs.activePokemon
 	}
-	
+
 	public static func != (lhs: Player, rhs: Player) -> Bool {
-		return !(lhs == rhs)
+		!(lhs == rhs)
 	}
-	
+
 	public static func == (lhs: Player, rhs: GKGameModelPlayer) -> Bool {
 		if let right = rhs as? Player {
 			return lhs == right
@@ -76,7 +76,7 @@ extension Player {
 			return false
 		}
 	}
-	
+
 	public static func == (lhs: GKGameModelPlayer, rhs: Player) -> Bool {
 		if let left = lhs as? Player {
 			return left == rhs
@@ -84,7 +84,7 @@ extension Player {
 			return false
 		}
 	}
-	
+
 	public static func != (lhs: Player, rhs: GKGameModelPlayer) -> Bool {
 		if let right = rhs as? Player {
 			return lhs != right

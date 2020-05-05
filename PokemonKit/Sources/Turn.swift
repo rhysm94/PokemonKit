@@ -11,13 +11,13 @@ import GameplayKit
 public class Turn: NSObject, Codable, GKGameModelUpdate {
 	public let player: Player
 	let action: Action
-	
+
 	public var value: Int = 0 {
 		didSet {
 			print("Value for \(self) = \(value)")
 		}
 	}
-	
+
 	var playerSpeed: Int {
 		switch action {
 		case .attack:
@@ -30,7 +30,7 @@ public class Turn: NSObject, Codable, GKGameModelUpdate {
 			return 0
 		}
 	}
-	
+
 	var priority: Int {
 		switch action {
 		case let .attack(attack):
@@ -45,12 +45,12 @@ public class Turn: NSObject, Codable, GKGameModelUpdate {
 			return 0
 		}
 	}
-	
+
 	public init(player: Player, action: Action) {
 		self.player = player
 		self.action = action
 	}
-	
+
 	init(turn: Turn) {
 		self.player = Player(copying: turn.player)
 		self.action = turn.action
@@ -59,14 +59,14 @@ public class Turn: NSObject, Codable, GKGameModelUpdate {
 
 extension Turn {
 	public static func == (lhs: Turn, rhs: Turn) -> Bool {
-		return lhs.playerSpeed == rhs.playerSpeed &&
+		lhs.playerSpeed == rhs.playerSpeed &&
 			lhs.priority == rhs.priority &&
 			lhs.action == rhs.action
 	}
 }
 
 extension Turn {
-	public override var description: String {
+	override public var description: String {
 		switch action {
 		case let .attack(attack):
 			return "\(player.name)'s \(player.activePokemon.nickname) is going to use attack \(attack.name)"

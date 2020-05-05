@@ -34,7 +34,7 @@ public enum Nature: String, Codable {
 	case sassy
 	case serious
 	case timid
-	
+
 	var atkModifier: Double {
 		switch self {
 		case .lonely, .adamant, .naughty, .brave:
@@ -45,7 +45,7 @@ public enum Nature: String, Codable {
 			return 1
 		}
 	}
-	
+
 	var defModifier: Double {
 		switch self {
 		case .bold, .impish, .lax, .relaxed:
@@ -56,7 +56,7 @@ public enum Nature: String, Codable {
 			return 1
 		}
 	}
-	
+
 	var spAtkModifier: Double {
 		switch self {
 		case .modest, .mild, .rash, .quiet:
@@ -67,7 +67,7 @@ public enum Nature: String, Codable {
 			return 1
 		}
 	}
-	
+
 	var spDefModifier: Double {
 		switch self {
 		case .calm, .gentle, .careful, .sassy:
@@ -78,7 +78,7 @@ public enum Nature: String, Codable {
 			return 1
 		}
 	}
-	
+
 	var spdModifier: Double {
 		switch self {
 		case .timid, .hasty, .jolly, .naive:
@@ -89,5 +89,4 @@ public enum Nature: String, Codable {
 			return 1
 		}
 	}
-	
 }

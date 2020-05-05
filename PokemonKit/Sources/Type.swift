@@ -26,7 +26,7 @@ public enum Type: String, Codable, Hashable {
 	case steel = "Steel"
 	case fairy = "Fairy"
 	case typeless = "Typeless"
-	
+
 	public enum Effectiveness: Double, CustomStringConvertible {
 		public var description: String {
 			switch self {
@@ -40,13 +40,13 @@ public enum Type: String, Codable, Hashable {
 				return "Not Very Effective"
 			}
 		}
-		
+
 		case normallyEffective = 1.0
 		case superEffective = 2.0
 		case notVeryEffective = 0.5
 		case notEffective = 0
 	}
-	
+
 	public init(using number: Int) {
 		switch number {
 		case 1: self = .normal
@@ -70,7 +70,7 @@ public enum Type: String, Codable, Hashable {
 		default: self = .typeless
 		}
 	}
-	
+
 	public func typeEffectiveness(recipient: Type) -> Effectiveness {
 		switch self {
 		case .normal:
