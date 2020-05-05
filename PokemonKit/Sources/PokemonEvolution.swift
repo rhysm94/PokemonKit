@@ -146,22 +146,27 @@ public struct PokemonEvolution: Hashable, Codable {
 		public enum LevelUpConditions: Codable, Hashable {
 			/// Minimum level to evolve
 			case minimumLevel(Int)
+
 			/// Evolves when levelled up with a specific Pokémon in the party
 			///
 			/// e.g. To evolve Mantyke to Mantine, there must be a Remoraid in the party
 			case pokemonInParty(PokemonSpecies)
+
 			/// Evolves when levelled up with Pokémon with the associated type in the party
 			///
 			/// e.g. To evolve Pancham to Pangoro, there must be a `Type.Dark` Pokémon in the party
 			case pokemonTypeInParty(Type)
+
 			/// Must be levelled up in a specific area
 			///
 			/// e.g. Magneton must be levelled up in magnetic field (`Area.magneticField`) to evolve into Magnezone
 			case inArea(Area)
+
 			/// Must know the associated Attack
 			///
 			/// e.g. Piloswine must know Ancient Power to evolve into Mamoswine
 			case knowsAttack(Attack)
+
 			/// Must have learned an Attack of the associated Type
 			///
 			/// e.g. Eevee must know a Fairy type move to evolve into Sylveon
