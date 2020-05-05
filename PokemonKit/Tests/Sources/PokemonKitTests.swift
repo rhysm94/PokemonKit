@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import GameplayKit
 @testable import PokemonKit
 
 class PokemonKitTests: XCTestCase {
