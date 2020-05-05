@@ -116,79 +116,79 @@ public class Pokedex {
     
 	static let attackBonuses: [String: Attack.BonusEffect] = [
 		"Bullet Seed": .multiHitMove(minHits: 2, maxHits: 5),
-		"Calm Mind": .singleTarget({
+		"Calm Mind": .singleTarget {
 			$0.statStages.spAtk += 1
 			$0.statStages.spDef += 1
-		}),
-		"Confuse Ray": .singleTarget({
-			for case .confused(_) in $0.volatileStatus { return	}
+		},
+		"Confuse Ray": .singleTarget {
+			for case .confused in $0.volatileStatus { return }
 			let diceRoll = Random.shared.confusion()
 			$0.volatileStatus.insert(.confused(diceRoll))
 			print("\($0.nickname) became confused for \(diceRoll) turns!")
-		}),
-		"Dark Pulse": .singleTarget({
+		},
+		"Dark Pulse": .singleTarget {
 			let diceRoll = Random.shared.d5Roll()
 			if diceRoll == 1 {
 				$0.volatileStatus.insert(.flinch)
 			}
-		}),
+		},
 		"Double Slap": .multiHitMove(minHits: 2, maxHits: 2),
-		"Extrasensory": .singleTarget({
+		"Extrasensory": .singleTarget {
 			let diceRoll = Random.shared.d10Roll()
 			if diceRoll == 1 {
 				$0.volatileStatus.insert(.flinch)
 				print("\($0.nickname) flinched!")
 			}
-		}),
-		"Giga Drain": .singleTargetUsingDamage({ pokemon, damage in
+		},
+		"Giga Drain": .singleTargetUsingDamage { pokemon, damage in
 			let restoreHP = Int(Double(damage) * 0.5)
 			pokemon.currentHP += restoreHP
 			
 			print("\(pokemon.nickname) will restore by \(restoreHP) capped at their max. HP")
-		}),
-		"Giga Impact": .singleTarget({ $0.volatileStatus.insert(.mustRecharge) }),
-		"Growl": .singleTarget({ $0.statStages.atk -= 1 }),
-		"Hyper Beam": .singleTarget({ $0.volatileStatus.insert(.mustRecharge) }),
-		"Hypnosis": .singleTarget({ pokemon in
+		},
+		"Giga Impact": .singleTarget { $0.volatileStatus.insert(.mustRecharge) },
+		"Growl": .singleTarget { $0.statStages.atk -= 1 },
+		"Hyper Beam": .singleTarget { $0.volatileStatus.insert(.mustRecharge) },
+		"Hypnosis": .singleTarget { pokemon in
 			guard pokemon.status == .healthy else { return }
 			
 			let sleepTurns = Random.shared.between(minimum: 1, maximum: 3)
 			
 			pokemon.status = .asleep(sleepTurns)
-		}),
-		"Rest": .singleTarget({ pokemon in
+		},
+		"Rest": .singleTarget { pokemon in
 			pokemon.currentHP = pokemon.baseStats.hp
 			pokemon.status = .asleep(2)
-		}),
-		"Ice Beam": .singleTarget({
+		},
+		"Ice Beam": .singleTarget {
 			let diceRoll = Random.shared.d10Roll()
 			if diceRoll == 1 && $0.status == .healthy {
 				$0.status = .frozen
 				print("\($0) was frozen!")
 			}
-		}),
-		"Protect": .singleTarget({ $0.volatileStatus.insert(.protected) }),
+		},
+		"Protect": .singleTarget { $0.volatileStatus.insert(.protected) },
 		"Rain Dance": .setWeather(.rain),
-		"Recover": .singleTarget({ pokemon in
+		"Recover": .singleTarget { pokemon in
 			pokemon.currentHP += Int((0.5 * Double(pokemon.baseStats.hp)))
-		}),
-		"Sparkling Aria": .singleTarget({ if $0.status == .burned { $0.status = .healthy } }),
+		},
+		"Sparkling Aria": .singleTarget { if $0.status == .burned { $0.status = .healthy } },
 		"Solar Beam": .multiTurnMove(
-			condition: { return $0.weather == .harshSunlight || $0.weather == .extremelyHarshSunlight },
+			condition: { $0.weather == .harshSunlight || $0.weather == .extremelyHarshSunlight },
 			addAttack: { attack, pokemon in
 				pokemon.volatileStatus.insert(.preparingTo(attack.withoutBonusEffect()))
 				return "\(pokemon.nickname) took in sunlight!"
 			}
 		),
 		"Sunny Day": .setWeather(.harshSunlight),
-		"Swords Dance": .singleTarget({ $0.statStages.atk += 2 }),
-		"Thunderbolt": .singleTarget({
+		"Swords Dance": .singleTarget { $0.statStages.atk += 2 },
+		"Thunderbolt": .singleTarget {
 			let diceRoll = Random.shared.d6Roll()
 			if diceRoll == 1 && $0.status == .healthy {
 				$0.status = .paralysed
 			}
-		}),
-		"Thunder Wave": .singleTarget({
+		},
+		"Thunder Wave": .singleTarget {
 			if
 				$0.species.typeOne != .electric &&
 				$0.species.typeTwo != .electric &&
@@ -196,8 +196,8 @@ public class Pokedex {
 			{
 				$0.status = .paralysed
 			}
-		}),
-		"Topsy-Turvy": .singleTarget({
+		},
+		"Topsy-Turvy": .singleTarget {
 			var pokemonStatStages = $0.statStages
 			let newAtk = -pokemonStatStages.atk
 			let newDef = -pokemonStatStages.def
@@ -205,7 +205,7 @@ public class Pokedex {
 			let newSpDef = -pokemonStatStages.spDef
 			let newSpd = -pokemonStatStages.spd
 			$0.statStages = (atk: newAtk, def: newDef, spAtk: newSpAtk, spDef: newSpDef, spd: newSpd)
-		})
+		}
 	]
 	
 	private static let targets: [String: Attack.EffectTarget] = [
@@ -224,7 +224,7 @@ public class Pokedex {
 	
 	static let activationMessage: [String: (Pokemon) -> String] = [
 		"Protean": {
-			return "\($0.nickname) became \(String(describing: $0.species.typeOne).capitalized) type"
+			"\($0.nickname) became \(String(describing: $0.species.typeOne).capitalized) type"
 		}
 	]
 	
@@ -282,24 +282,6 @@ public class Pokedex {
 		let db = databaseConnection
 		
 		do {
-//			let pokemonTable = Table("pokemon_species")
-//			let pokeID = Expression<Int>("id")
-//			let identifier = Expression<String>("identifier")
-//			let name = Expression<String>("name")
-//
-//			let statTable = Table("pokemon_stats")
-//			let pokemonID = Expression<Int>("pokemon_id")
-//			let s1 = statTable.alias("s1")
-//
-//			let stat = Expression<Int>("stat_id")
-//			let baseStat = Expression<Int>("base_stat")
-//			let statHP = Expression<Int>("stat_HP")
-//
-//			let pokemonSpeciesNames = Table("pokemon_species_names")
-//			let speciesID = Expression<Int>("pokemon_species_id")
-//
-//			let languageID = Expression<Int>("local_language_id")
-			
 			let query = """
 			select
 			p.id,

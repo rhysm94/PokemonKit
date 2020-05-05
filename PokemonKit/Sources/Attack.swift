@@ -23,7 +23,7 @@ public struct Attack: Codable {
 	
 	public enum DamageCategory: String, Codable {
         case physical, special, status
-		
+
 		init(with number: Int) {
 			switch number {
 			case 1: self = .status
@@ -116,7 +116,7 @@ extension Attack: CustomStringConvertible {
 	}
 }
 
-extension Attack: Equatable, Hashable {
+extension Attack: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.name)
         hasher.combine(self.power)
