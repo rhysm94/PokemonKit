@@ -383,7 +383,7 @@ public class Pokedex {
 					switch (first.moveLearnMethod, second.moveLearnMethod) {
 					case let (.levelUp(left), .levelUp(right)):
 						return left < right
-					case (.levelUp(_), .machine):
+					case (.levelUp, .machine):
 						return true
 					case (.machine, .egg):
 						return true
@@ -474,15 +474,16 @@ public class Pokedex {
 				}
 
 				if let gender = row[genderID] {
-					let genderToInsert: Gender
-
-					if gender == 1 {
-						genderToInsert = .hasGender(.female)
-					} else if gender == 2 {
-						genderToInsert = .hasGender(.male)
-					} else {
-						genderToInsert = .genderless
-					}
+					let genderToInsert: Gender = {
+						switch gender {
+						case 1:
+							return .female
+						case 2:
+							return .male
+						default:
+							return .genderless
+						}
+					}()
 
 					evolutionConditions.insert(.gender(genderToInsert))
 				}
