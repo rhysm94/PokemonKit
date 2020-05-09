@@ -12,9 +12,7 @@ public class Pokedex {
 	/// Shared resource for accessing the Pokedex
 	///
 	/// Contains all Pokémon, Abilities, and Attacks
-	public static let `default`: Pokedex = {
-		Pokedex()
-	}()
+	public static let `default` = Pokedex()
 
 	private static let dbPath = Bundle(for: Pokedex.self).path(forResource: "pokedex", ofType: "sqlite")!
 
