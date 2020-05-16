@@ -519,10 +519,11 @@
 			buildConfigurationList = 91A0DB5520470FFD00D7B67A /* Build configuration list for PBXNativeTarget "PokemonKit-iOS" */;
 			buildPhases = (
 				91A0DB4B20470FFD00D7B67A /* Sources */,
+				916FCD45247031DC00D2A41C /* SwiftLint */,
 				91A0DB4C20470FFD00D7B67A /* Frameworks */,
 				91A0DB4D20470FFD00D7B67A /* Headers */,
 				91A0DB4E20470FFD00D7B67A /* Resources */,
-				91BEEFD4204C73FF00AF5792 /* ShellScript */,
+				91BEEFD4204C73FF00AF5792 /* Carthage */,
 			);
 			buildRules = (
 			);
@@ -542,6 +543,7 @@
 				91A0DB5A2047101A00D7B67A /* Headers */,
 				91A0DB5B2047101A00D7B67A /* Resources */,
 				91BEEFD7204C746100AF5792 /* CopyFiles */,
+				916FCD462470335800D2A41C /* SwiftLint */,
 			);
 			buildRules = (
 			);
@@ -560,7 +562,8 @@
 				91A0DB662047102400D7B67A /* Frameworks */,
 				91A0DB672047102400D7B67A /* Headers */,
 				91A0DB682047102400D7B67A /* Resources */,
-				91BEEFDC204C749100AF5792 /* ShellScript */,
+				91BEEFDC204C749100AF5792 /* Carthage */,
+				916FCD472470337E00D2A41C /* SwiftLint */,
 			);
 			buildRules = (
 			);
@@ -744,7 +747,61 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		91BEEFD4204C73FF00AF5792 /* ShellScript */ = {
+		916FCD45247031DC00D2A41C /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftLint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+		916FCD462470335800D2A41C /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftLint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+		916FCD472470337E00D2A41C /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftLint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+		91BEEFD4204C73FF00AF5792 /* Carthage */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -752,13 +809,14 @@
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/SQLite.framework",
 			);
+			name = Carthage;
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
 		};
-		91BEEFDC204C749100AF5792 /* ShellScript */ = {
+		91BEEFDC204C749100AF5792 /* Carthage */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -766,11 +824,12 @@
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/tvOS/SQLite.framework",
 			);
+			name = Carthage;
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
 		};
 		91BEEFE8204C804A00AF5792 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;

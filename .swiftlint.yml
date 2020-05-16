@@ -1,0 +1,8 @@
+included:
+  ./PokemonKit/
+
+force_cast:
+  severity: warning
+
+disabled_rules:
+  cyclomatic_complexity
