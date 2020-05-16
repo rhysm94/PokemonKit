@@ -71,168 +71,98 @@ public enum Type: String, Codable, Hashable {
 		}
 	}
 
+	static let typeEffectiveness: [Type: [Effectiveness: [Type]]] = [
+		.normal: [
+			.notVeryEffective: [.rock, .steel],
+			.notEffective: [.ghost]
+		],
+		.fire: [
+			.superEffective: [.grass, .ice, .steel, .bug],
+			.notVeryEffective: [.fire, .water, .rock, .dragon]
+		],
+		.water: [
+			.superEffective: [.fire, .ground, .rock],
+			.notVeryEffective: [.water, .grass, .dragon]
+		],
+		.electric: [
+			.superEffective: [.water, .flying],
+			.notVeryEffective: [.electric, .grass, .dragon],
+			.notEffective: [.ground]
+		],
+		.grass: [
+			.superEffective: [.water, .ground, .rock],
+			.notVeryEffective: [.fire, .grass, .poison, .flying, .bug, .dragon, .steel]
+		],
+		.ice: [
+			.superEffective: [.grass, .ground, .flying],
+			.notVeryEffective: [.fire, .water, .ice, .steel]
+		],
+		.fighting: [
+			.superEffective: [.normal, .ice, .rock, .dark, .steel],
+			.notVeryEffective: [.poison, .flying, .psychic, .bug, .fairy],
+			.notEffective: [.ghost]
+		],
+		.poison: [
+			.superEffective: [.grass, .fairy],
+			.notVeryEffective: [.poison, .ground, .rock, .ghost],
+			.notEffective: [.steel]
+		],
+		.ground: [
+			.superEffective: [.fire, .electric, .poison, .rock, .steel],
+			.notVeryEffective: [.grass, .bug],
+			.notEffective: [.flying]
+		],
+		.flying: [
+			.superEffective: [.grass, .fighting],
+			.notVeryEffective: [.electric, .rock, .steel]
+		],
+		.psychic: [
+			.superEffective: [.fighting, .poison],
+			.notVeryEffective: [.psychic, .steel],
+			.notEffective: [.dark]
+		],
+		.bug: [
+			.superEffective: [.grass, .psychic, .dark],
+			.notVeryEffective: [.fire, .fighting, .flying, .poison, .ghost, .steel, .fairy]
+		],
+		.rock: [
+			.superEffective: [.fire, .ice, .flying, .bug],
+			.notVeryEffective: [.fighting, .ground, .steel]
+		],
+		.ghost: [
+			.superEffective: [.psychic, .ghost],
+			.notVeryEffective: [.dark],
+			.notEffective: [.normal]
+		],
+		.dragon: [
+			.superEffective: [.dragon],
+			.notVeryEffective: [.steel],
+			.notEffective: [.fairy]
+		],
+		.dark: [
+			.superEffective: [.psychic, .ghost],
+			.notVeryEffective: [.fighting, .dark, .fairy]
+		],
+		.steel: [
+			.superEffective: [.ice, .rock, .fairy],
+			.notVeryEffective: [.fire, .water, .electric, .steel]
+		],
+		.fairy: [
+			.superEffective: [.fighting, .dragon, .dark],
+			.notVeryEffective: [.fire, .poison, .steel]
+		]
+	]
+
 	public func typeEffectiveness(recipient: Type) -> Effectiveness {
-		switch self {
-		case .normal:
-			if [.ghost].contains(recipient) {
-				return .notEffective
-			} else if [.rock, .steel].contains(recipient) {
-				return .notVeryEffective
-			} else {
-				return .normallyEffective
-			}
-		case .fire:
-			if [.grass, .ice, .steel, .bug].contains(recipient) {
-				return .superEffective
-			} else if [.fire, .water, .rock, .dragon].contains(recipient) {
-				return .notVeryEffective
-			} else {
-				return .normallyEffective
-			}
-		case .water:
-			if [.fire, .ground, .rock].contains(recipient) {
-				return .superEffective
-			} else if [.water, .grass, .dragon].contains(recipient) {
-				return .notVeryEffective
-			} else {
-				return .normallyEffective
-			}
-		case .electric:
-			if [.ground].contains(recipient) {
-				return .notEffective
-			} else if [.water, .flying].contains(recipient) {
-				return .superEffective
-			} else if [.electric, .grass, .dragon].contains(recipient) {
-				return .notVeryEffective
-			} else {
-				return .normallyEffective
-			}
-		case .grass:
-			if [.water, .ground, .rock].contains(recipient) {
-				return .superEffective
-			} else if [.fire, .grass, .poison, .flying, .bug, .dragon, .steel].contains(recipient) {
-				return .notVeryEffective
-			} else {
-				return .normallyEffective
-			}
-		case .ice:
-			if [.grass, .ground, .flying].contains(recipient) {
-				return .superEffective
-			} else if [.fire, .water, .ice, .steel].contains(recipient) {
-				return .notVeryEffective
-			} else {
-				return .normallyEffective
-			}
-		case .fighting:
-			if [.ghost].contains(recipient) {
-				return .notEffective
-			} else if [.normal, .ice, .rock, .dark, .steel].contains(recipient) {
-				return .superEffective
-			} else if [.poison, .flying, .psychic, .bug, .fairy].contains(recipient) {
-				return .notVeryEffective
-			} else {
-				return .normallyEffective
-			}
-		case .poison:
-			if [.steel].contains(recipient) {
-				return .notEffective
-			} else if [.grass, .fairy].contains(recipient) {
-				return .superEffective
-			} else if [.poison, .ground, .rock, .ghost].contains(recipient) {
-				return .notVeryEffective
-			} else {
-				return .normallyEffective
-			}
-		case .ground:
-			if [.flying].contains(recipient) {
-				return .notEffective
-			} else if [.fire, .electric, .poison, .rock, .steel].contains(recipient) {
-				return .superEffective
-			} else if [.grass, .bug].contains(recipient) {
-				return .notVeryEffective
-			} else {
-				return .normallyEffective
-			}
-		case .flying:
-			if [.grass, .fighting].contains(recipient) {
-				return .superEffective
-			} else if [.electric, .rock, .steel].contains(recipient) {
-				return .notVeryEffective
-			} else {
-				return .normallyEffective
-			}
-		case .psychic:
-			if [.dark].contains(recipient) {
-				return .notEffective
-			} else if [.fighting, .poison].contains(recipient) {
-				return .superEffective
-			} else if [.psychic, .steel].contains(recipient) {
-				return .notVeryEffective
-			} else {
-				return .normallyEffective
-			}
-		case .bug:
-			if [.grass, .psychic, .dark].contains(recipient) {
-				return .superEffective
-			} else if [.fire, .fighting, .flying, .poison, .ghost, .steel, .fairy].contains(recipient) {
-				return .notVeryEffective
-			} else {
-				return .normallyEffective
-			}
-		case .rock:
-			if [.fire, .ice, .flying, .bug].contains(recipient) {
-				return .superEffective
-			} else if [.fighting, .ground, .steel].contains(recipient) {
-				return .notVeryEffective
-			} else {
-				return .normallyEffective
-			}
-		case .ghost:
-			if [.normal].contains(recipient) {
-				return .notEffective
-			} else if [.psychic, .ghost].contains(recipient) {
-				return .superEffective
-			} else if [.dark].contains(recipient) {
-				return .notVeryEffective
-			} else {
-				return .normallyEffective
-			}
-		case .dragon:
-			if [.fairy].contains(recipient) {
-				return .notEffective
-			} else if [.dragon].contains(recipient) {
-				return .superEffective
-			} else if [.steel].contains(recipient) {
-				return .notVeryEffective
-			} else {
-				return .normallyEffective
-			}
-		case .dark:
-			if [.psychic, .ghost].contains(recipient) {
-				return .superEffective
-			} else if [.fighting, .dark, .fairy].contains(recipient) {
-				return .notVeryEffective
-			} else {
-				return .normallyEffective
-			}
-		case .steel:
-			if [.ice, .rock, .fairy].contains(recipient) {
-				return .superEffective
-			} else if [.fire, .water, .electric, .steel].contains(recipient) {
-				return .notVeryEffective
-			} else {
-				return .normallyEffective
-			}
-		case .fairy:
-			if [.fighting, .dragon, .dark].contains(recipient) {
-				return .superEffective
-			} else if [.fire, .poison, .steel].contains(recipient) {
-				return .notVeryEffective
-			} else {
-				return .normallyEffective
-			}
-		case .typeless:
+		guard let effectivenessTable = Type.typeEffectiveness[self] else {
 			return .normallyEffective
 		}
+
+		let key = effectivenessTable
+			.filter { $1.contains(recipient) }
+			.first?
+			.key
+
+		return key ?? .normallyEffective
 	}
 }

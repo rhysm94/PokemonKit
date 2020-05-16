@@ -18,7 +18,7 @@ public enum Generation: String, Codable, Hashable {
 		.sinnoh: 107,
 		.unova: 156,
 		.kalos: 72,
-		.alola: 86,
+		.alola: 86
 	]
 
 	init(with pokedexNumber: Int) {

@@ -2,3 +2,7 @@
 --tabwidth 4
 --self init-only
 --stripunusedargs closure-only
+--commas inline
+--wraparguments before-first
+--wrapparameters before-first
+--maxwidth 180

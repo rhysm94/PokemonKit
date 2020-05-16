@@ -13,7 +13,7 @@ public enum VolatileStatus: Codable, Equatable, Hashable {
 	case mustRecharge
 	case preparingTo(Attack)
 
-	public func turn() -> VolatileStatus {
+	public var next: VolatileStatus {
 		switch self {
 		case let .confused(counter):
 			return .confused(counter - 1)

@@ -56,11 +56,41 @@ public class Pokemon: Codable {
 	public var baseStats: Stats {
 		let baseStats = species.baseStats
 		let hp = Pokemon.calculateHPStat(base: baseStats.hp, EV: effortValues.hp, IV: individualValues.hp, level: level)
-		let atk = Int(floor(Pokemon.calculateOtherStats(base: baseStats.atk, EV: effortValues.atk, IV: individualValues.atk, level: level, natureModifier: nature.atkModifier)))
-		let def = Int(floor(Pokemon.calculateOtherStats(base: baseStats.def, EV: effortValues.def, IV: individualValues.def, level: level, natureModifier: nature.defModifier)))
-		let spAtk = Int(floor(Pokemon.calculateOtherStats(base: baseStats.spAtk, EV: effortValues.spAtk, IV: individualValues.spAtk, level: level, natureModifier: nature.spAtkModifier)))
-		let spDef = Int(floor(Pokemon.calculateOtherStats(base: baseStats.spDef, EV: effortValues.spDef, IV: individualValues.spDef, level: level, natureModifier: nature.spDefModifier)))
-		let spd = Int(floor(Pokemon.calculateOtherStats(base: baseStats.spd, EV: effortValues.spd, IV: individualValues.spd, level: level, natureModifier: nature.spdModifier)))
+		let atk = Pokemon.calculateOtherStats(
+			base: baseStats.atk,
+			EV: effortValues.atk,
+			IV: individualValues.atk,
+			level: level,
+			natureModifier: nature.atkModifier
+		)
+		let def = Pokemon.calculateOtherStats(
+			base: baseStats.def,
+			EV: effortValues.def,
+			IV: individualValues.def,
+			level: level,
+			natureModifier: nature.defModifier
+		)
+		let spAtk = Pokemon.calculateOtherStats(
+			base: baseStats.spAtk,
+			EV: effortValues.spAtk,
+			IV: individualValues.spAtk,
+			level: level,
+			natureModifier: nature.spAtkModifier
+		)
+		let spDef = Pokemon.calculateOtherStats(
+			base: baseStats.spDef,
+			EV: effortValues.spDef,
+			IV: individualValues.spDef,
+			level: level,
+			natureModifier: nature.spDefModifier
+		)
+		let spd = Pokemon.calculateOtherStats(
+			base: baseStats.spd,
+			EV: effortValues.spd,
+			IV: individualValues.spd,
+			level: level,
+			natureModifier: nature.spdModifier
+		)
 		return Stats(hp: hp, atk: atk, def: def, spAtk: spAtk, spDef: spDef, spd: spd)
 	}
 
@@ -73,11 +103,46 @@ public class Pokemon: Codable {
 
 		let baseStats = species.baseStats
 		let hp = Pokemon.calculateHPStat(base: baseStats.hp, EV: effortValues.hp, IV: individualValues.hp, level: level)
-		let atk = Int(floor(Pokemon.calculateOtherStats(base: baseStats.atk, EV: effortValues.atk, IV: individualValues.atk, level: level, natureModifier: nature.atkModifier) * atkMod))
-		let def = Int(floor(Pokemon.calculateOtherStats(base: baseStats.def, EV: effortValues.def, IV: individualValues.def, level: level, natureModifier: nature.defModifier) * defMod))
-		let spAtk = Int(floor(Pokemon.calculateOtherStats(base: baseStats.spAtk, EV: effortValues.spAtk, IV: individualValues.spAtk, level: level, natureModifier: nature.spAtkModifier) * spAtkMod))
-		let spDef = Int(floor(Pokemon.calculateOtherStats(base: baseStats.spDef, EV: effortValues.spDef, IV: individualValues.spDef, level: level, natureModifier: nature.spDefModifier) * spDefMod))
-		let spd = Int(floor(Pokemon.calculateOtherStats(base: baseStats.spd, EV: effortValues.spd, IV: individualValues.spd, level: level, natureModifier: nature.spdModifier) * spdMod))
+		let atk = Pokemon.calculateOtherStats(
+			base: baseStats.atk,
+			EV: effortValues.atk,
+			IV: individualValues.atk,
+			level: level,
+			natureModifier: nature.atkModifier,
+			statModifier: atkMod
+		)
+		let def = Pokemon.calculateOtherStats(
+			base: baseStats.def,
+			EV: effortValues.def,
+			IV: individualValues.def,
+			level: level,
+			natureModifier: nature.defModifier,
+			statModifier: defMod
+		)
+		let spAtk = Pokemon.calculateOtherStats(
+			base: baseStats.spAtk,
+			EV: effortValues.spAtk,
+			IV: individualValues.spAtk,
+			level: level,
+			natureModifier: nature.spAtkModifier,
+			statModifier: spAtkMod
+		)
+		let spDef = Pokemon.calculateOtherStats(
+			base: baseStats.spDef,
+			EV: effortValues.spDef,
+			IV: individualValues.spDef,
+			level: level,
+			natureModifier: nature.spDefModifier,
+			statModifier: spDefMod
+		)
+		let spd = Pokemon.calculateOtherStats(
+			base: baseStats.spd,
+			EV: effortValues.spd,
+			IV: individualValues.spd,
+			level: level,
+			natureModifier: nature.spdModifier,
+			statModifier: spdMod
+		)
 		return Stats(hp: hp, atk: atk, def: def, spAtk: spAtk, spDef: spDef, spd: spd)
 	}
 
@@ -128,7 +193,15 @@ public class Pokemon: Codable {
 
 	public internal(set) var nature: Nature
 
-	public init(species: PokemonSpecies, level: Int = 50, ability: Ability = Ability(name: "Some ability", description: "Some Description"), nature: Nature, effortValues: Stats, individualValues: Stats, attacks: [Attack]) {
+	public init(
+		species: PokemonSpecies,
+		level: Int = 50,
+		ability: Ability = Ability(name: "Some ability", description: "Some Description"),
+		nature: Nature,
+		effortValues: Stats,
+		individualValues: Stats,
+		attacks: [Attack]
+	) {
 		self.species = species
 		self.level = level
 		self.effortValues = effortValues
@@ -145,10 +218,10 @@ public class Pokemon: Codable {
 		return result
 	}
 
-	static func calculateOtherStats(base: Int, EV: Int, IV: Int, level: Int, natureModifier: Double) -> Double {
+	static func calculateOtherStats(base: Int, EV: Int, IV: Int, level: Int, natureModifier: Double, statModifier: Double = 1) -> Int {
 		let top = (2 * base + IV + Int(floor(Double(EV) / 4))) * level
 		let brackets = floor(Double(top) / 100) + 5
-		return floor(brackets * natureModifier)
+		return Int(floor(brackets * natureModifier * statModifier))
 	}
 
 	func damage(_ damage: Int) {
@@ -185,7 +258,13 @@ public class Pokemon: Codable {
 		try container.encode(status, forKey: .status)
 
 		var statStagesContainer = encoder.container(keyedBy: StatStagesCodingKeys.self)
-		let statStagesStruct = StatStages(atk: _statStages.atk, def: _statStages.def, spAtk: _statStages.spAtk, spDef: _statStages.spDef, spd: _statStages.spd)
+		let statStagesStruct = StatStages(
+			atk: _statStages.atk,
+			def: _statStages.def,
+			spAtk: _statStages.spAtk,
+			spDef: _statStages.spDef,
+			spd: _statStages.spd
+		)
 		try statStagesContainer.encode(statStagesStruct.atk, forKey: .atk)
 		try statStagesContainer.encode(statStagesStruct.def, forKey: .def)
 		try statStagesContainer.encode(statStagesStruct.spAtk, forKey: .spAtk)

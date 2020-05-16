@@ -31,10 +31,24 @@ class PokemonKitTests: XCTestCase {
 		super.setUp()
 
 		let bulbasaurSpecies = Pokedex.default.pokemon["bulbasaur"]!
-		bulbasaur = Pokemon(species: bulbasaurSpecies, level: 50, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [sludgeBomb, gigaDrain])
+		bulbasaur = Pokemon(
+			species: bulbasaurSpecies,
+			level: 50,
+			nature: .modest,
+			effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252),
+			individualValues: .fullIVs,
+			attacks: [sludgeBomb, gigaDrain]
+		)
 
 		let pikachuSpecies = Pokedex.default.pokemon["pikachu"]!
-		pikachu = Pokemon(species: pikachuSpecies, level: 50, nature: .timid, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [thunderbolt, thunder])
+		pikachu = Pokemon(
+			species: pikachuSpecies,
+			level: 50,
+			nature: .timid,
+			effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252),
+			individualValues: .fullIVs,
+			attacks: [thunderbolt, thunder]
+		)
 
 		rhys.add(pokemon: bulbasaur)
 		joe.add(pokemon: pikachu)
@@ -81,27 +95,27 @@ class PokemonKitTests: XCTestCase {
 	}
 
 	func testAttackStatCalculation() {
-		let calculatedAttack = floor(Pokemon.calculateOtherStats(base: 49, EV: 0, IV: 31, level: 50, natureModifier: Nature.modest.atkModifier))
+		let calculatedAttack = Pokemon.calculateOtherStats(base: 49, EV: 0, IV: 31, level: 50, natureModifier: Nature.modest.atkModifier)
 		XCTAssertEqual(calculatedAttack, 62)
 	}
 
 	func testDefStatCalculation() {
-		let calculatedDef = floor(Pokemon.calculateOtherStats(base: 49, EV: 4, IV: 31, level: 50, natureModifier: Nature.modest.defModifier))
+		let calculatedDef = Pokemon.calculateOtherStats(base: 49, EV: 4, IV: 31, level: 50, natureModifier: Nature.modest.defModifier)
 		XCTAssertEqual(calculatedDef, 70)
 	}
 
 	func testSpAtkStatCalculation() {
-		let calculatedSpAtk = floor(Pokemon.calculateOtherStats(base: 65, EV: 252, IV: 31, level: 50, natureModifier: Nature.modest.spAtkModifier))
+		let calculatedSpAtk = Pokemon.calculateOtherStats(base: 65, EV: 252, IV: 31, level: 50, natureModifier: Nature.modest.spAtkModifier)
 		XCTAssertEqual(calculatedSpAtk, 128)
 	}
 
 	func testSpDefStatCalculation() {
-		let calculatedSpDef = floor(Pokemon.calculateOtherStats(base: 65, EV: 0, IV: 31, level: 50, natureModifier: Nature.modest.spDefModifier))
+		let calculatedSpDef = Pokemon.calculateOtherStats(base: 65, EV: 0, IV: 31, level: 50, natureModifier: Nature.modest.spDefModifier)
 		XCTAssertEqual(calculatedSpDef, 85)
 	}
 
 	func testSpeedStatCalculation() {
-		let calculatedSpeed = floor(Pokemon.calculateOtherStats(base: 45, EV: 252, IV: 31, level: 50, natureModifier: Nature.modest.spdModifier))
+		let calculatedSpeed = Pokemon.calculateOtherStats(base: 45, EV: 252, IV: 31, level: 50, natureModifier: Nature.modest.spdModifier)
 		XCTAssertEqual(calculatedSpeed, 97)
 	}
 
@@ -126,7 +140,6 @@ class PokemonKitTests: XCTestCase {
 		let (damage, _) = engine.calculateDamage(attacker: pikachu, defender: bulbasaur, attack: thunderbolt)
 		XCTAssertGreaterThanOrEqual(damage, 30)
 		XCTAssertLessThanOrEqual(damage, 36)
-		print("Thunderbolt damage: \(damage)")
 	}
 
 	func testBulletSeedDamage() {
@@ -162,13 +175,21 @@ class PokemonKitTests: XCTestCase {
 
 	func testProteanMessage() {
 		let greninjaSpecies = Pokedex.default.pokemon["greninja"]!
-		let greninja = Pokemon(species: greninjaSpecies, level: 100, ability: greninjaSpecies.hiddenAbility!, nature: .timid, effortValues: .empty, individualValues: .fullIVs, attacks: [])
+		let greninja = Pokemon(
+			species: greninjaSpecies,
+			level: 100,
+			ability: greninjaSpecies.hiddenAbility!,
+			nature: .timid,
+			effortValues: .empty,
+			individualValues: .fullIVs,
+			attacks: []
+		)
 
 		greninja.species.typeOne = .grass
 		greninja.species.typeTwo = nil
 
 		guard let activationMessage = greninja.ability.activationMessage?(greninja) else {
-			XCTFail()
+			XCTFail("Could not get activation method for Protean")
 			return
 		}
 
@@ -177,7 +198,15 @@ class PokemonKitTests: XCTestCase {
 
 	func testAllFainted() {
 		let greninjaSpecies = Pokedex.default.pokemon["greninja"]!
-		let greninja = Pokemon(species: greninjaSpecies, level: 100, ability: greninjaSpecies.hiddenAbility!, nature: .timid, effortValues: .empty, individualValues: .fullIVs, attacks: [])
+		let greninja = Pokemon(
+			species: greninjaSpecies,
+			level: 100,
+			ability: greninjaSpecies.hiddenAbility!,
+			nature: .timid,
+			effortValues: .empty,
+			individualValues: .fullIVs,
+			attacks: []
+		)
 
 		rhys.add(pokemon: greninja)
 
@@ -219,7 +248,15 @@ class PokemonKitTests: XCTestCase {
 
 	func testAddingForceSwitch() {
 		let gengarSpecies = Pokedex.default.pokemon[93]
-		let gengar = Pokemon(species: gengarSpecies, level: 50, ability: gengarSpecies.abilityOne, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 0, spAtk: 252, spDef: 6, spd: 252), individualValues: .fullIVs, attacks: [sludgeBomb])
+		let gengar = Pokemon(
+			species: gengarSpecies,
+			level: 50,
+			ability: gengarSpecies.abilityOne,
+			nature: .modest,
+			effortValues: Stats(hp: 0, atk: 0, def: 0, spAtk: 252, spDef: 6, spd: 252),
+			individualValues: .fullIVs,
+			attacks: [sludgeBomb]
+		)
 
 		joe.add(pokemon: gengar)
 
@@ -284,9 +321,6 @@ class PokemonKitTests: XCTestCase {
 		engine.addTurn(Turn(player: joe, action: .attack(attack: thunderbolt)))
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: gigaDrain)))
 
-		print("Before Turn: \(rhys.activePokemon.nickname)'s HP: \(beforeTurnHP)")
-		print("After Turn: \(rhys.activePokemon.nickname)'s HP: \(rhys.activePokemon.currentHP)")
-
 		XCTAssertEqual(rhys.activePokemon.currentHP, beforeTurnHP)
 	}
 
@@ -306,10 +340,26 @@ class PokemonKitTests: XCTestCase {
 
 	func testNotEffectiveDamage() {
 		let gengarSpecies = Pokedex.default.pokemon[93]
-		let gengar = Pokemon(species: gengarSpecies, level: 50, ability: gengarSpecies.abilityOne, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 0, spAtk: 252, spDef: 6, spd: 252), individualValues: .fullIVs, attacks: [])
+		let gengar = Pokemon(
+			species: gengarSpecies,
+			level: 50,
+			ability: gengarSpecies.abilityOne,
+			nature: .modest,
+			effortValues: Stats(hp: 0, atk: 0, def: 0, spAtk: 252, spDef: 6, spd: 252),
+			individualValues: .fullIVs,
+			attacks: []
+		)
 
 		let eeveeSpecies = Pokedex.default.pokemon[132]
-		let eevee = Pokemon(species: eeveeSpecies, level: 50, ability: eeveeSpecies.abilityOne, nature: .hardy, effortValues: .empty, individualValues: .fullIVs, attacks: [])
+		let eevee = Pokemon(
+			species: eeveeSpecies,
+			level: 50,
+			ability: eeveeSpecies.abilityOne,
+			nature: .hardy,
+			effortValues: .empty,
+			individualValues: .fullIVs,
+			attacks: []
+		)
 		let tackle = Pokedex.default.attacks["Tackle"]!
 
 		let (_, effectiveness) = engine.calculateDamage(attacker: eevee, defender: gengar, attack: tackle)
@@ -322,9 +372,6 @@ class PokemonKitTests: XCTestCase {
 		let solarBeam = Pokedex.default.attacks["Solar Beam"]!
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: solarBeam)))
 		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
-
-		print(rhys.activePokemon.volatileStatus)
-		print(joe.activePokemon.currentHP)
 
 		XCTAssertTrue(rhys.activePokemon.volatileStatus.contains(.preparingTo(solarBeam.withoutBonusEffect())))
 		XCTAssertEqual(joe.activePokemon.currentHP, joe.activePokemon.baseStats.hp)
@@ -383,8 +430,6 @@ class PokemonKitTests: XCTestCase {
 		rhys.activePokemon.volatileStatus.insert(.confused(3))
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: solarBeam)))
 		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
-
-		print(rhys.activePokemon.volatileStatus)
 
 		XCTAssertFalse(rhys.activePokemon.volatileStatus.contains(.preparingTo(solarBeam.withoutBonusEffect())))
 	}
@@ -497,13 +542,11 @@ class PokemonKitTests: XCTestCase {
 		if let copy = copy, let engine = self.engine {
 			XCTAssertTrue(copy == engine)
 		} else {
-			XCTFail()
+			XCTFail("Cannot copy BattleEngine")
 		}
 	}
 
 	func testPlayerIDValues() {
-		print(rhys.playerId)
-		print(joe.playerId)
 		XCTAssertNotEqual(rhys.playerId, joe.playerId)
 	}
 
@@ -524,18 +567,23 @@ class PokemonKitTests: XCTestCase {
 
 		turn = ai.bestMove(for: joe)
 
-		if let turn = turn as? Turn {
-			print("Best Move: \(turn)")
-			print("Move Value: \(turn.value)")
-		} else {
-			dump(turn)
-			XCTFail()
+		guard turn is Turn else {
+			XCTFail("AI cannot create a turn")
+			return
 		}
 	}
 
 	func testAIWillForceSwitch() {
 		let gengarSpecies = Pokedex.default.pokemon[93]
-		let gengar = Pokemon(species: gengarSpecies, level: 50, ability: gengarSpecies.abilityOne, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 0, spAtk: 252, spDef: 6, spd: 252), individualValues: .fullIVs, attacks: [sludgeBomb])
+		let gengar = Pokemon(
+			species: gengarSpecies,
+			level: 50,
+			ability: gengarSpecies.abilityOne,
+			nature: .modest,
+			effortValues: Stats(hp: 0, atk: 0, def: 0, spAtk: 252, spDef: 6, spd: 252),
+			individualValues: .fullIVs,
+			attacks: [sludgeBomb]
+		)
 
 		joe.add(pokemon: gengar)
 
@@ -550,18 +598,12 @@ class PokemonKitTests: XCTestCase {
 		ai.gameModel = engine
 		ai.randomSource = GKARC4RandomSource()
 
-		var turn: GKGameModelUpdate?
-
-		DispatchQueue.global().sync { [unowned self] in
-			turn = ai.bestMove(for: self.joe)
-		}
+		let turn = ai.bestMove(for: self.joe)
 
 		if let turn = turn as? Turn {
-			print("Best Move: \(turn)")
-			print("Move Value: \(turn.value)")
 			engine.addTurn(turn)
 		} else {
-			XCTFail()
+			XCTFail("Couldn't create a new turn")
 		}
 
 		XCTAssertEqual(joe.activePokemon, gengar)
@@ -692,7 +734,6 @@ class PokemonKitTests: XCTestCase {
 
 	func testCheckAllAttacks() {
 		for pokemon in Pokedex.default.pokemon {
-//			print("\(pokemon.name)'s attack count: \(pokemon.moveset.count)")
 			for move in pokemon.moveset where move.move.name == "Dummy" {
 				print("Dummy attack!")
 			}

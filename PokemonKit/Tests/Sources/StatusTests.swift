@@ -8,6 +8,8 @@
 
 import XCTest
 
+@testable import PokemonKit
+
 class StatusTests: XCTestCase {
 	var bulbasaur: Pokemon!
 	var pikachu: Pokemon!
@@ -26,10 +28,24 @@ class StatusTests: XCTestCase {
 		super.setUp()
 
 		let bulbasaurSpecies = Pokedex.default.pokemon["bulbasaur"]!
-		bulbasaur = Pokemon(species: bulbasaurSpecies, level: 50, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [sludgeBomb, gigaDrain])
+		bulbasaur = Pokemon(
+			species: bulbasaurSpecies,
+			level: 50,
+			nature: .modest,
+			effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252),
+			individualValues: .fullIVs,
+			attacks: [sludgeBomb, gigaDrain]
+		)
 
 		let pikachuSpecies = Pokedex.default.pokemon["pikachu"]!
-		pikachu = Pokemon(species: pikachuSpecies, level: 50, nature: .timid, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [thunderbolt, thunder])
+		pikachu = Pokemon(
+			species: pikachuSpecies,
+			level: 50,
+			nature: .timid,
+			effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252),
+			individualValues: .fullIVs,
+			attacks: [thunderbolt, thunder]
+		)
 
 		rhys.add(pokemon: bulbasaur)
 		joe.add(pokemon: pikachu)
@@ -54,7 +70,7 @@ class StatusTests: XCTestCase {
 
 	func testConfusedVolatileStatus() {
 		var confusion = VolatileStatus.confused(1)
-		confusion = confusion.turn()
+		confusion = confusion.next
 
 		XCTAssertEqual(VolatileStatus.confused(0), confusion)
 		XCTAssertNotEqual(VolatileStatus.confused(1), confusion)

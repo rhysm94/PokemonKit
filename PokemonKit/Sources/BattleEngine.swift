@@ -98,6 +98,10 @@ public class BattleEngine: NSObject, GKGameModel {
 		}
 	}
 
+	private let printUpdate: (Player, Bool) -> Void = {
+		print("\($0.name)'s \($0.activePokemon) has \($0.activePokemon.currentHP)/\($0.activePokemon.baseStats.hp) HP\($1 ? "" : " remaining")")
+	}
+
 	private(set) var turns: [Turn] = [] {
 		didSet {
 			guard !multiHitMoveRunning else { return }
@@ -266,8 +270,8 @@ public class BattleEngine: NSObject, GKGameModel {
 						attacker.volatileStatus.remove(.preparingTo(attack))
 					}
 
-					print("\(playerOne.name)'s \(playerOne.activePokemon) - Lv. \(playerOne.activePokemon.level) has \(playerOne.activePokemon.currentHP)/\(playerOne.activePokemon.baseStats.hp) HP")
-					print("\(playerTwo.name)'s \(playerTwo.activePokemon) - Lv. \(playerTwo.activePokemon.level) has \(playerTwo.activePokemon.currentHP)/\(playerTwo.activePokemon.baseStats.hp) HP")
+					printUpdate(playerOne, true)
+					printUpdate(playerTwo, true)
 
 					/// Attack
 					/// Attacker, Defender: Pokemon
@@ -287,7 +291,11 @@ public class BattleEngine: NSObject, GKGameModel {
 									view?.queue(action: .displayText("\(attacker.nickname) hurt itself in its confusion!"))
 									print("\(attacker.nickname) hurt itself in its confusion!")
 
-									let (baseDamage, _) = calculateDamage(attacker: attacker, defender: attacker, attack: Attack(name: "Confused", power: 40, basePP: 1, maxPP: 1, priority: 0, type: .typeless, category: .physical))
+									let (baseDamage, _) = calculateDamage(
+										attacker: attacker,
+										defender: attacker,
+										attack: Attack(name: "Confused", power: 40, basePP: 1, maxPP: 1, priority: 0, type: .typeless, category: .physical)
+									)
 									view?.queue(action: .confusedAttack(attacker))
 									attacker.damage(baseDamage)
 									return false
@@ -355,7 +363,7 @@ public class BattleEngine: NSObject, GKGameModel {
 						sleepCheck(),
 						paralysisCheck(),
 						protectedCheck(),
-						hitCheck(),
+						hitCheck()
 					].allSatisfy { $0 }
 
 					if shouldAttack {
@@ -417,7 +425,7 @@ public class BattleEngine: NSObject, GKGameModel {
 				player.activePokemon.volatileStatus.remove(.protected)
 				player.activePokemon.volatileStatus.remove(.flinch)
 
-				player.activePokemon.volatileStatus = Set(player.activePokemon.volatileStatus.map { $0.turn() })
+				player.activePokemon.volatileStatus = Set(player.activePokemon.volatileStatus.map { $0.next })
 
 				if player.activePokemon.status == .fainted {
 					view?.queue(action: .fainted(player.activePokemon))
@@ -436,8 +444,8 @@ public class BattleEngine: NSObject, GKGameModel {
 				}
 			}
 
-			print("\(playerOne.name)'s \(playerOne.activePokemon) has \(playerOne.activePokemon.currentHP)/\(playerOne.activePokemon.baseStats.hp) HP remaining")
-			print("\(playerTwo.name)'s \(playerTwo.activePokemon) has \(playerTwo.activePokemon.currentHP)/\(playerTwo.activePokemon.baseStats.hp) HP remaining")
+			printUpdate(playerOne, false)
+			printUpdate(playerTwo, false)
 
 			weatherCounter -= 1
 			terrainCounter -= 1
@@ -494,7 +502,7 @@ public class BattleEngine: NSObject, GKGameModel {
 			}
 		}
 
-		let topInnerBrackets = (floor(2 * Double(attacker.level)) / 5 + 2)
+		let topInnerBrackets = floor(2 * Double(attacker.level)) / 5 + 2
 		let topOfEquation = floor(floor(Double(topInnerBrackets) * Double(attack.power) * Double(attackerStat)) / Double(defenderStat))
 
 		print("Attacker stat = \(attackerStat)")
@@ -806,11 +814,15 @@ public class BattleEngine: NSObject, GKGameModel {
 	}
 
 	public func copy(with zone: NSZone? = nil) -> Any {
-		let copy = type(of: self).init(playerOne: Player(copying: playerOne), playerTwo: Player(copying: playerTwo))
+		let copy = Self(playerOne: Player(copying: playerOne), playerTwo: Player(copying: playerTwo))
 
 		copy.setGameModel(self)
 
 		return copy
+	}
+
+	public override func isEqual(_ object: Any?) -> Bool {
+		self == (object as? Self)
 	}
 
 	public static func == (lhs: BattleEngine, rhs: BattleEngine) -> Bool {

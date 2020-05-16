@@ -48,7 +48,19 @@ public struct Attack: Codable {
 		case multiTurnMove(condition: (BattleEngine) -> Bool, addAttack: (Attack, Pokemon) -> String)
 	}
 
-	public init(name: String, power: Int, basePP: Int, maxPP: Int, accuracy: Int? = nil, priority: Int, type: Type, breaksProtect: Bool = false, category: DamageCategory, effectTarget: EffectTarget? = nil, bonusEffect: BonusEffect? = nil) {
+	public init(
+		name: String,
+		power: Int,
+		basePP: Int,
+		maxPP: Int,
+		accuracy: Int? = nil,
+		priority: Int,
+		type: Type,
+		breaksProtect: Bool = false,
+		category: DamageCategory,
+		effectTarget: EffectTarget? = nil,
+		bonusEffect: BonusEffect? = nil
+	) {
 		self.name = name
 		self.power = power
 		self.basePP = basePP
@@ -64,7 +76,18 @@ public struct Attack: Codable {
 
 	/// Returns this Attack, but with its `bonusEffect` set to `nil`
 	public func withoutBonusEffect() -> Attack {
-		Attack(name: name, power: power, basePP: basePP, maxPP: maxPP, accuracy: accuracy, priority: priority, type: type, breaksProtect: breaksProtect, category: category, effectTarget: effectTarget)
+		Attack(
+			name: name,
+			power: power,
+			basePP: basePP,
+			maxPP: maxPP,
+			accuracy: accuracy,
+			priority: priority,
+			type: type,
+			breaksProtect: breaksProtect,
+			category: category,
+			effectTarget: effectTarget
+		)
 	}
 
 	enum CodingKeys: CodingKey {
@@ -111,9 +134,7 @@ public struct Attack: Codable {
 }
 
 extension Attack: CustomStringConvertible {
-	public var description: String {
-		name
-	}
+	public var description: String { name }
 }
 
 extension Attack: Hashable {
