@@ -70,7 +70,7 @@ class StatusTests: XCTestCase {
 
 	func testConfusedVolatileStatus() {
 		var confusion = VolatileStatus.confused(1)
-		confusion = confusion.turn()
+		confusion = confusion.next
 
 		XCTAssertEqual(VolatileStatus.confused(0), confusion)
 		XCTAssertNotEqual(VolatileStatus.confused(1), confusion)

@@ -140,7 +140,6 @@ class PokemonKitTests: XCTestCase {
 		let (damage, _) = engine.calculateDamage(attacker: pikachu, defender: bulbasaur, attack: thunderbolt)
 		XCTAssertGreaterThanOrEqual(damage, 30)
 		XCTAssertLessThanOrEqual(damage, 36)
-		print("Thunderbolt damage: \(damage)")
 	}
 
 	func testBulletSeedDamage() {
@@ -322,9 +321,6 @@ class PokemonKitTests: XCTestCase {
 		engine.addTurn(Turn(player: joe, action: .attack(attack: thunderbolt)))
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: gigaDrain)))
 
-		print("Before Turn: \(rhys.activePokemon.nickname)'s HP: \(beforeTurnHP)")
-		print("After Turn: \(rhys.activePokemon.nickname)'s HP: \(rhys.activePokemon.currentHP)")
-
 		XCTAssertEqual(rhys.activePokemon.currentHP, beforeTurnHP)
 	}
 
@@ -368,9 +364,6 @@ class PokemonKitTests: XCTestCase {
 		let solarBeam = Pokedex.default.attacks["Solar Beam"]!
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: solarBeam)))
 		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
-
-		print(rhys.activePokemon.volatileStatus)
-		print(joe.activePokemon.currentHP)
 
 		XCTAssertTrue(rhys.activePokemon.volatileStatus.contains(.preparingTo(solarBeam.withoutBonusEffect())))
 		XCTAssertEqual(joe.activePokemon.currentHP, joe.activePokemon.baseStats.hp)
@@ -429,8 +422,6 @@ class PokemonKitTests: XCTestCase {
 		rhys.activePokemon.volatileStatus.insert(.confused(3))
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: solarBeam)))
 		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
-
-		print(rhys.activePokemon.volatileStatus)
 
 		XCTAssertFalse(rhys.activePokemon.volatileStatus.contains(.preparingTo(solarBeam.withoutBonusEffect())))
 	}
@@ -543,13 +534,11 @@ class PokemonKitTests: XCTestCase {
 		if let copy = copy, let engine = self.engine {
 			XCTAssertTrue(copy == engine)
 		} else {
-			XCTFail()
+			XCTFail("Cannot copy BattleEngine")
 		}
 	}
 
 	func testPlayerIDValues() {
-		print(rhys.playerId)
-		print(joe.playerId)
 		XCTAssertNotEqual(rhys.playerId, joe.playerId)
 	}
 
@@ -570,12 +559,9 @@ class PokemonKitTests: XCTestCase {
 
 		turn = ai.bestMove(for: joe)
 
-		if let turn = turn as? Turn {
-			print("Best Move: \(turn)")
-			print("Move Value: \(turn.value)")
-		} else {
-			dump(turn)
+		guard turn is Turn else {
 			XCTFail("AI cannot create a turn")
+			return
 		}
 	}
 
@@ -746,7 +732,6 @@ class PokemonKitTests: XCTestCase {
 
 	func testCheckAllAttacks() {
 		for pokemon in Pokedex.default.pokemon {
-//			print("\(pokemon.name)'s attack count: \(pokemon.moveset.count)")
 			for move in pokemon.moveset where move.move.name == "Dummy" {
 				print("Dummy attack!")
 			}

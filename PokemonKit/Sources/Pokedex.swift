@@ -308,7 +308,7 @@ public class Pokedex {
 				let evolvesFrom = row[14] as? String
 				let formName = row[15] as? String
 
-				let ability1 = abilities[ability1Name] ?? Ability(name: "Dummy", description: "Dummy")
+				let ability1 = abilities[ability1Name, default: .dummy]
 				var ability2: Ability? {
 					guard let value = ability2Name else { return nil }
 					return abilities[value]
@@ -696,7 +696,10 @@ public class Pokedex {
 		let priority = Expression<Int>("priority")
 		let localLanguageID = Expression<Int>("local_language_id")
 
-		let query = moveTable.select(moveNames[moveName], moveTable[power], moveTable[type], moveTable[category], moveTable[pp], moveTable[accuracy], moveTable[priority])
+		let query = moveTable.select(
+				moveNames[moveName], moveTable[power], moveTable[type], moveTable[category],
+				moveTable[pp], moveTable[accuracy], moveTable[priority]
+			)
 			.join(moveNames, on: moveTable[id] == moveNames[moveID])
 			.filter(moveNames[localLanguageID] == 9 && moveTable[type] != 10002)
 
@@ -802,6 +805,10 @@ public class Pokedex {
 			return nil
 		}
 	}
+}
+
+extension Ability {
+	static let dummy = Ability(name: "Dummy", description: "Dummy")
 }
 
 extension Attack {

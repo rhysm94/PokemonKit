@@ -425,7 +425,7 @@ public class BattleEngine: NSObject, GKGameModel {
 				player.activePokemon.volatileStatus.remove(.protected)
 				player.activePokemon.volatileStatus.remove(.flinch)
 
-				player.activePokemon.volatileStatus = Set(player.activePokemon.volatileStatus.map { $0.turn() })
+				player.activePokemon.volatileStatus = Set(player.activePokemon.volatileStatus.map { $0.next })
 
 				if player.activePokemon.status == .fainted {
 					view?.queue(action: .fainted(player.activePokemon))
@@ -444,8 +444,12 @@ public class BattleEngine: NSObject, GKGameModel {
 				}
 			}
 
-			print("\(playerOne.name)'s \(playerOne.activePokemon) has \(playerOne.activePokemon.currentHP)/\(playerOne.activePokemon.baseStats.hp) HP remaining")
-			print("\(playerTwo.name)'s \(playerTwo.activePokemon) has \(playerTwo.activePokemon.currentHP)/\(playerTwo.activePokemon.baseStats.hp) HP remaining")
+			let printUpdate: (Player) -> Void = {
+				print("\($0.name)'s \($0.activePokemon) has \($0.activePokemon.currentHP)/\($0.activePokemon.baseStats.hp) HP remaining")
+			}
+
+			printUpdate(playerOne)
+			printUpdate(playerTwo)
 
 			weatherCounter -= 1
 			terrainCounter -= 1
@@ -502,7 +506,7 @@ public class BattleEngine: NSObject, GKGameModel {
 			}
 		}
 
-		let topInnerBrackets = (floor(2 * Double(attacker.level)) / 5 + 2)
+		let topInnerBrackets = floor(2 * Double(attacker.level)) / 5 + 2
 		let topOfEquation = floor(floor(Double(topInnerBrackets) * Double(attack.power) * Double(attackerStat)) / Double(defenderStat))
 
 		print("Attacker stat = \(attackerStat)")
