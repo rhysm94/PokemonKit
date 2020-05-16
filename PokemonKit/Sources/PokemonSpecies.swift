@@ -81,7 +81,22 @@ public struct PokemonSpecies: Codable, Hashable {
 		Pokedex.default.getAlternateFormsFor(pokemon: self)
 	}
 
-	public init(dexNum: Int, identifier: String, name: String, typeOne: Type, typeTwo: Type? = nil, stats: Stats, abilityOne: Ability, abilityTwo: Ability? = nil, hiddenAbility: Ability? = nil, eggGroupOne: EggGroup, eggGroupTwo: EggGroup? = nil, evolvesFrom: String? = nil, formAttributes: FormAttributes, moveset: [MovesetItem] = []) {
+	public init(
+		dexNum: Int,
+		identifier: String,
+		name: String,
+		typeOne: Type,
+		typeTwo: Type? = nil,
+		stats: Stats,
+		abilityOne: Ability,
+		abilityTwo: Ability? = nil,
+		hiddenAbility: Ability? = nil,
+		eggGroupOne: EggGroup,
+		eggGroupTwo: EggGroup? = nil,
+		evolvesFrom: String? = nil,
+		formAttributes: FormAttributes,
+		moveset: [MovesetItem] = []
+	) {
 		self.dexNum = dexNum
 		self.identifier = identifier
 		self.name = name
@@ -99,8 +114,37 @@ public struct PokemonSpecies: Codable, Hashable {
 		self.moveset = moveset
 	}
 
-	public init(dexNum: Int, identifier: String, name: String, type: Type, stats: Stats, abilityOne: Ability, abilityTwo: Ability? = nil, hiddenAbility: Ability? = nil, eggGroupOne: EggGroup, eggGroupTwo: EggGroup? = nil, evolvesFrom: String? = nil, formAttributes: FormAttributes, moveset: [MovesetItem] = []) {
-		self.init(dexNum: dexNum, identifier: identifier, name: name, typeOne: type, typeTwo: nil, stats: stats, abilityOne: abilityOne, abilityTwo: abilityTwo, hiddenAbility: hiddenAbility, eggGroupOne: eggGroupOne, eggGroupTwo: eggGroupTwo, evolvesFrom: evolvesFrom, formAttributes: formAttributes, moveset: moveset)
+	public init(
+		dexNum: Int,
+		identifier: String,
+		name: String,
+		type: Type,
+		stats: Stats,
+		abilityOne: Ability,
+		abilityTwo: Ability? = nil,
+		hiddenAbility: Ability? = nil,
+		eggGroupOne: EggGroup,
+		eggGroupTwo: EggGroup? = nil,
+		evolvesFrom: String? = nil,
+		formAttributes: FormAttributes,
+		moveset: [MovesetItem] = []
+	) {
+		self.init(
+			dexNum: dexNum,
+			identifier: identifier,
+			name: name,
+			typeOne: type,
+			typeTwo: nil,
+			stats: stats,
+			abilityOne: abilityOne,
+			abilityTwo: abilityTwo,
+			hiddenAbility: hiddenAbility,
+			eggGroupOne: eggGroupOne,
+			eggGroupTwo: eggGroupTwo,
+			evolvesFrom: evolvesFrom,
+			formAttributes: formAttributes,
+			moveset: moveset
+		)
 	}
 }
 

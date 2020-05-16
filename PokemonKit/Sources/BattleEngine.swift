@@ -266,8 +266,12 @@ public class BattleEngine: NSObject, GKGameModel {
 						attacker.volatileStatus.remove(.preparingTo(attack))
 					}
 
-					print("\(playerOne.name)'s \(playerOne.activePokemon) - Lv. \(playerOne.activePokemon.level) has \(playerOne.activePokemon.currentHP)/\(playerOne.activePokemon.baseStats.hp) HP")
-					print("\(playerTwo.name)'s \(playerTwo.activePokemon) - Lv. \(playerTwo.activePokemon.level) has \(playerTwo.activePokemon.currentHP)/\(playerTwo.activePokemon.baseStats.hp) HP")
+					print(
+						"\(playerOne.name)'s \(playerOne.activePokemon) - Lv. \(playerOne.activePokemon.level) has \(playerOne.activePokemon.currentHP)/\(playerOne.activePokemon.baseStats.hp) HP"
+					)
+					print(
+						"\(playerTwo.name)'s \(playerTwo.activePokemon) - Lv. \(playerTwo.activePokemon.level) has \(playerTwo.activePokemon.currentHP)/\(playerTwo.activePokemon.baseStats.hp) HP"
+					)
 
 					/// Attack
 					/// Attacker, Defender: Pokemon
@@ -287,7 +291,11 @@ public class BattleEngine: NSObject, GKGameModel {
 									view?.queue(action: .displayText("\(attacker.nickname) hurt itself in its confusion!"))
 									print("\(attacker.nickname) hurt itself in its confusion!")
 
-									let (baseDamage, _) = calculateDamage(attacker: attacker, defender: attacker, attack: Attack(name: "Confused", power: 40, basePP: 1, maxPP: 1, priority: 0, type: .typeless, category: .physical))
+									let (baseDamage, _) = calculateDamage(
+										attacker: attacker,
+										defender: attacker,
+										attack: Attack(name: "Confused", power: 40, basePP: 1, maxPP: 1, priority: 0, type: .typeless, category: .physical)
+									)
 									view?.queue(action: .confusedAttack(attacker))
 									attacker.damage(baseDamage)
 									return false
@@ -811,6 +819,10 @@ public class BattleEngine: NSObject, GKGameModel {
 		copy.setGameModel(self)
 
 		return copy
+	}
+
+	public override func isEqual(_ object: Any?) -> Bool {
+		self == (object as? Self)
 	}
 
 	public static func == (lhs: BattleEngine, rhs: BattleEngine) -> Bool {

@@ -277,44 +277,7 @@ public class Pokedex {
 		let db = databaseConnection
 
 		do {
-			let query = """
-			select
-			p.id,
-			p.identifier,
-			ps.name,
-			(select tn.name from type_names as tn
-			join pokemon_types as pt on pt.type_id = tn.type_id
-			where pt.pokemon_id = p.id and tn.local_language_id = 9 and pt.slot = 1) as typeOne,
-			(select tn.name from type_names as tn
-			join pokemon_types as pt on pt.type_id = tn.type_id
-			where pt.pokemon_id = p.id and tn.local_language_id = 9 and pt.slot = 2) as typeTwo,
-			(select pokestat.base_stat from pokemon_stats as pokestat
-			where pokestat.pokemon_id = p.id and pokestat.stat_id = 1) as stat_hp,
-			(select pokestat.base_stat from pokemon_stats as pokestat
-			where pokestat.pokemon_id = p.id and pokestat.stat_id = 2) as stat_atk,
-			(select pokestat.base_stat from pokemon_stats as pokestat
-			where pokestat.pokemon_id = p.id and pokestat.stat_id = 3) as stat_def,
-			(select pokestat.base_stat from pokemon_stats as pokestat
-			where pokestat.pokemon_id = p.id and pokestat.stat_id = 4) as stat_spAtk,
-			(select pokestat.base_stat from pokemon_stats as pokestat
-			where pokestat.pokemon_id = p.id and pokestat.stat_id = 5) as stat_spDef,
-			(select pokestat.base_stat from pokemon_stats as pokestat
-			where pokestat.pokemon_id = p.id and pokestat.stat_id = 6) as stat_spd,
-			(select an.name from ability_names as an join pokemon_abilities as pa on an.ability_id = pa.ability_id where pa.pokemon_id = p.id and an.local_language_id = 9 and pa.slot=1) as ability_one,
-			(select an.name from ability_names as an join pokemon_abilities as pa on an.ability_id = pa.ability_id where pa.pokemon_id = p.id and an.local_language_id = 9 and pa.slot=2) as ability_two,
-			(select an.name from ability_names as an join pokemon_abilities as pa on an.ability_id = pa.ability_id where pa.pokemon_id = p.id and an.local_language_id = 9 and pa.slot=3) as ability_hidden,
-			(select pAlias.identifier from pokemon_species as pAlias join pokemon_species as p2 on p2.evolves_from_species_id = pAlias.id where p2.id = p.id) as evolves_from,
-			(select pfn.form_name from pokemon_form_names as pfn
-			join pokemon_forms as pf on p.id = pf.pokemon_id
-			where pf.id = pfn.pokemon_form_id
-			and pfn.local_language_id = 9
-			and pf.is_default = 1) as form_name
-			from pokemon as p
-			join pokemon_species_names as ps on p.id = ps.pokemon_species_id
-			where ps.local_language_id = 9;
-			"""
-
-			for row in try db.prepare(query) {
+			for row in try db.prepare(Queries.getAllPokemon) {
 				guard let pokedexNumber = row[0] as? Int64 else {
 					print("Failed to get ID")
 					break
@@ -403,7 +366,22 @@ public class Pokedex {
 				let stats = Stats(hp: Int(hp), atk: Int(atk), def: Int(def), spAtk: Int(spAtk), spDef: Int(spDef), spd: Int(spd))
 				let formAttributes = PokemonSpecies.FormAttributes(formName: formName)
 
-				let pokemonSpecies = PokemonSpecies(dexNum: Int(pokedexNumber), identifier: identifier, name: pokemonName, typeOne: typeOne, typeTwo: typeTwo, stats: stats, abilityOne: ability1, abilityTwo: ability2, hiddenAbility: hiddenAbility, eggGroupOne: eggGroupOne, eggGroupTwo: eggGroupTwo, evolvesFrom: evolvesFrom, formAttributes: formAttributes, moveset: moveset)
+				let pokemonSpecies = PokemonSpecies(
+					dexNum: Int(pokedexNumber),
+					identifier: identifier,
+					name: pokemonName,
+					typeOne: typeOne,
+					typeTwo: typeTwo,
+					stats: stats,
+					abilityOne: ability1,
+					abilityTwo: ability2,
+					hiddenAbility: hiddenAbility,
+					eggGroupOne: eggGroupOne,
+					eggGroupTwo: eggGroupTwo,
+					evolvesFrom: evolvesFrom,
+					formAttributes: formAttributes,
+					moveset: moveset
+				)
 
 				pokemon.append(pokemonSpecies)
 			}
@@ -445,10 +423,26 @@ public class Pokedex {
 		let evolvesFrom = Expression<Int>("evolves_from_species_id")
 
 		let query = evolution.select(
-			identifier, evolvedID, evolutionTriggerID, minimumLevel, triggerItemID, genderID,
-			locationID, heldItemID, timeOfDay, knownMoveID, knownMoveTypeID, minimumHappiness,
-			minimumBeauty, minimumAffection, physicalStats, partySpeciesID, partyTypeID,
-			tradeSpeciesID, needsOverworldRain, upsideDown
+			identifier,
+			evolvedID,
+			evolutionTriggerID,
+			minimumLevel,
+			triggerItemID,
+			genderID,
+			locationID,
+			heldItemID,
+			timeOfDay,
+			knownMoveID,
+			knownMoveTypeID,
+			minimumHappiness,
+			minimumBeauty,
+			minimumAffection,
+			physicalStats,
+			partySpeciesID,
+			partyTypeID,
+			tradeSpeciesID,
+			needsOverworldRain,
+			upsideDown
 		)
 		.join(species, on: species[id] == evolution[evolvedID])
 		.filter(species[evolvesFrom] == pokemon.dexNum)
@@ -569,39 +563,8 @@ public class Pokedex {
 
 		var alternateForms: [PokemonSpecies] = []
 
-		let query = """
-		select
-		p.id,
-		p.species_id,
-		psn.name,
-		(select tn.name from type_names as tn join pokemon_types as pt on pt.type_id = tn.type_id where pt.pokemon_id = p.id and tn.local_language_id = 9 and pt.slot = 1) as typeOne,
-		(select tn.name from type_names as tn join pokemon_types as pt on pt.type_id = tn.type_id where pt.pokemon_id = p.id and tn.local_language_id = 9 and pt.slot = 2) as typeTwo,
-		(select base_stat from pokemon_stats as stats where stat_id = 1 and stats.pokemon_id = p.id) as hp,
-		(select base_stat from pokemon_stats as stats where stat_id = 2 and stats.pokemon_id = p.id) as atk,
-		(select base_stat from pokemon_stats as stats where stat_id = 3 and stats.pokemon_id = p.id) as def,
-		(select base_stat from pokemon_stats as stats where stat_id = 4 and stats.pokemon_id = p.id) as spAtk,
-		(select base_stat from pokemon_stats as stats where stat_id = 5 and stats.pokemon_id = p.id) as spDef,
-		(select base_stat from pokemon_stats as stats where stat_id = 6 and stats.pokemon_id = p.id) as spd,
-		(select an.name from ability_names as an join pokemon_abilities as pa on an.ability_id = pa.ability_id where pa.pokemon_id = p.id and an.local_language_id = 9 and pa.slot=1) as ability_one,
-		(select an.name from ability_names as an join pokemon_abilities as pa on an.ability_id = pa.ability_id where pa.pokemon_id = p.id and an.local_language_id = 9 and pa.slot=2) as ability_two,
-		(select an.name from ability_names as an join pokemon_abilities as pa on an.ability_id = pa.ability_id where pa.pokemon_id = p.id and an.local_language_id = 9 and pa.slot=3) as ability_hidden,
-		pfn.pokemon_name,
-		pfn.form_name,
-		pf.identifier,
-		pf.form_order,
-		pf.is_battle_only,
-		pf.is_mega
-		from pokemon p
-		join pokemon_forms pf on p.id = pf.pokemon_id
-		join pokemon_form_names pfn on pf.id = pfn.pokemon_form_id
-		join pokemon_species ps on ps.id = p.species_id
-		join pokemon_species_names psn on psn.pokemon_species_id = ps.id
-		where species_id = \(pokemon.dexNum)
-		and pfn.local_language_id = 9 and psn.local_language_id = 9;
-		"""
-
 		do {
-			for row in try db.prepare(query) {
+			for row in try db.prepare(Queries.getAlternateForms(for: pokemon.dexNum)) {
 				guard let dbId = row[0] as? Int64 else { break }
 				guard let dexNum = row[1] as? Int64 else { break }
 				guard let name = row[2] as? String else { break }
@@ -679,9 +642,29 @@ public class Pokedex {
 				}
 
 				let stats = Stats(hp: Int(hp), atk: Int(atk), def: Int(def), spAtk: Int(spAtk), spDef: Int(spDef), spd: Int(spd))
-				let formAttributes = PokemonSpecies.FormAttributes(formName: formName, formOrder: Int(formOrder), isMega: isMega == 1, isBattleOnly: isBattleOnly == 1, isDefault: false)
+				let formAttributes = PokemonSpecies.FormAttributes(
+					formName: formName,
+					formOrder: Int(formOrder),
+					isMega: isMega == 1,
+					isBattleOnly: isBattleOnly == 1,
+					isDefault: false
+				)
 
-				let form = PokemonSpecies(dexNum: Int(dexNum), identifier: identifier, name: name, typeOne: typeOne, typeTwo: typeTwo, stats: stats, abilityOne: ability1, abilityTwo: ability2, hiddenAbility: hiddenAbility, eggGroupOne: eggGroupOne, eggGroupTwo: eggGroupTwo, formAttributes: formAttributes, moveset: moveset)
+				let form = PokemonSpecies(
+					dexNum: Int(dexNum),
+					identifier: identifier,
+					name: name,
+					typeOne: typeOne,
+					typeTwo: typeTwo,
+					stats: stats,
+					abilityOne: ability1,
+					abilityTwo: ability2,
+					hiddenAbility: hiddenAbility,
+					eggGroupOne: eggGroupOne,
+					eggGroupTwo: eggGroupTwo,
+					formAttributes: formAttributes,
+					moveset: moveset
+				)
 
 				if formName != pokemon.formAttributes.formName {
 					alternateForms.append(form)
@@ -725,7 +708,19 @@ public class Pokedex {
 
 				let breaksProtect = Pokedex.protectBreakingMoves.contains(moveName)
 				let effectTarget = Pokedex.targets[moveName]
-				let attack = Attack(name: moveName, power: row[power] ?? 0, basePP: row[pp], maxPP: row[pp], accuracy: row[accuracy], priority: row[priority], type: type, breaksProtect: breaksProtect, category: category, effectTarget: effectTarget, bonusEffect: Pokedex.attackBonuses[moveName])
+				let attack = Attack(
+					name: moveName,
+					power: row[power] ?? 0,
+					basePP: row[pp],
+					maxPP: row[pp],
+					accuracy: row[accuracy],
+					priority: row[priority],
+					type: type,
+					breaksProtect: breaksProtect,
+					category: category,
+					effectTarget: effectTarget,
+					bonusEffect: Pokedex.attackBonuses[moveName]
+				)
 				attacks[moveName] = attack
 			}
 		} catch {
@@ -763,7 +758,7 @@ public class Pokedex {
 				let learnMethod = row[learnMethod]
 				let level = row[learnLevel]
 
-				let attack = attacks[attackName, default: Attack(name: "Dummy", power: 0, basePP: 0, maxPP: 0, priority: 0, type: .typeless, category: .status)]
+				let attack = attacks[attackName, default: .dummy]
 				let moveLearnMethod: MovesetItem.MoveLearnMethod
 
 				switch learnMethod {
@@ -809,8 +804,12 @@ public class Pokedex {
 	}
 }
 
+extension Attack {
+	static let dummy = Attack(name: "Dummy", power: 0, basePP: 0, maxPP: 0, priority: 0, type: .typeless, category: .status)
+}
+
 extension Array where Element == PokemonSpecies {
 	public subscript(_ identifier: String) -> PokemonSpecies? {
-		self.filter { $0.identifier == identifier }.first
+		first { $0.identifier == identifier }
 	}
 }

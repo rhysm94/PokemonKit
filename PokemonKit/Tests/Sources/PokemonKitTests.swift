@@ -31,10 +31,24 @@ class PokemonKitTests: XCTestCase {
 		super.setUp()
 
 		let bulbasaurSpecies = Pokedex.default.pokemon["bulbasaur"]!
-		bulbasaur = Pokemon(species: bulbasaurSpecies, level: 50, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [sludgeBomb, gigaDrain])
+		bulbasaur = Pokemon(
+			species: bulbasaurSpecies,
+			level: 50,
+			nature: .modest,
+			effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252),
+			individualValues: .fullIVs,
+			attacks: [sludgeBomb, gigaDrain]
+		)
 
 		let pikachuSpecies = Pokedex.default.pokemon["pikachu"]!
-		pikachu = Pokemon(species: pikachuSpecies, level: 50, nature: .timid, effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252), individualValues: .fullIVs, attacks: [thunderbolt, thunder])
+		pikachu = Pokemon(
+			species: pikachuSpecies,
+			level: 50,
+			nature: .timid,
+			effortValues: Stats(hp: 0, atk: 0, def: 4, spAtk: 252, spDef: 0, spd: 252),
+			individualValues: .fullIVs,
+			attacks: [thunderbolt, thunder]
+		)
 
 		rhys.add(pokemon: bulbasaur)
 		joe.add(pokemon: pikachu)
@@ -162,7 +176,15 @@ class PokemonKitTests: XCTestCase {
 
 	func testProteanMessage() {
 		let greninjaSpecies = Pokedex.default.pokemon["greninja"]!
-		let greninja = Pokemon(species: greninjaSpecies, level: 100, ability: greninjaSpecies.hiddenAbility!, nature: .timid, effortValues: .empty, individualValues: .fullIVs, attacks: [])
+		let greninja = Pokemon(
+			species: greninjaSpecies,
+			level: 100,
+			ability: greninjaSpecies.hiddenAbility!,
+			nature: .timid,
+			effortValues: .empty,
+			individualValues: .fullIVs,
+			attacks: []
+		)
 
 		greninja.species.typeOne = .grass
 		greninja.species.typeTwo = nil
@@ -177,7 +199,15 @@ class PokemonKitTests: XCTestCase {
 
 	func testAllFainted() {
 		let greninjaSpecies = Pokedex.default.pokemon["greninja"]!
-		let greninja = Pokemon(species: greninjaSpecies, level: 100, ability: greninjaSpecies.hiddenAbility!, nature: .timid, effortValues: .empty, individualValues: .fullIVs, attacks: [])
+		let greninja = Pokemon(
+			species: greninjaSpecies,
+			level: 100,
+			ability: greninjaSpecies.hiddenAbility!,
+			nature: .timid,
+			effortValues: .empty,
+			individualValues: .fullIVs,
+			attacks: []
+		)
 
 		rhys.add(pokemon: greninja)
 
@@ -219,7 +249,15 @@ class PokemonKitTests: XCTestCase {
 
 	func testAddingForceSwitch() {
 		let gengarSpecies = Pokedex.default.pokemon[93]
-		let gengar = Pokemon(species: gengarSpecies, level: 50, ability: gengarSpecies.abilityOne, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 0, spAtk: 252, spDef: 6, spd: 252), individualValues: .fullIVs, attacks: [sludgeBomb])
+		let gengar = Pokemon(
+			species: gengarSpecies,
+			level: 50,
+			ability: gengarSpecies.abilityOne,
+			nature: .modest,
+			effortValues: Stats(hp: 0, atk: 0, def: 0, spAtk: 252, spDef: 6, spd: 252),
+			individualValues: .fullIVs,
+			attacks: [sludgeBomb]
+		)
 
 		joe.add(pokemon: gengar)
 
@@ -306,7 +344,15 @@ class PokemonKitTests: XCTestCase {
 
 	func testNotEffectiveDamage() {
 		let gengarSpecies = Pokedex.default.pokemon[93]
-		let gengar = Pokemon(species: gengarSpecies, level: 50, ability: gengarSpecies.abilityOne, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 0, spAtk: 252, spDef: 6, spd: 252), individualValues: .fullIVs, attacks: [])
+		let gengar = Pokemon(
+			species: gengarSpecies,
+			level: 50,
+			ability: gengarSpecies.abilityOne,
+			nature: .modest,
+			effortValues: Stats(hp: 0, atk: 0, def: 0, spAtk: 252, spDef: 6, spd: 252),
+			individualValues: .fullIVs,
+			attacks: []
+		)
 
 		let eeveeSpecies = Pokedex.default.pokemon[132]
 		let eevee = Pokemon(species: eeveeSpecies, level: 50, ability: eeveeSpecies.abilityOne, nature: .hardy, effortValues: .empty, individualValues: .fullIVs, attacks: [])
@@ -535,7 +581,15 @@ class PokemonKitTests: XCTestCase {
 
 	func testAIWillForceSwitch() {
 		let gengarSpecies = Pokedex.default.pokemon[93]
-		let gengar = Pokemon(species: gengarSpecies, level: 50, ability: gengarSpecies.abilityOne, nature: .modest, effortValues: Stats(hp: 0, atk: 0, def: 0, spAtk: 252, spDef: 6, spd: 252), individualValues: .fullIVs, attacks: [sludgeBomb])
+		let gengar = Pokemon(
+			species: gengarSpecies,
+			level: 50,
+			ability: gengarSpecies.abilityOne,
+			nature: .modest,
+			effortValues: Stats(hp: 0, atk: 0, def: 0, spAtk: 252, spDef: 6, spd: 252),
+			individualValues: .fullIVs,
+			attacks: [sludgeBomb]
+		)
 
 		joe.add(pokemon: gengar)
 

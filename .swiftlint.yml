@@ -1,5 +1,9 @@
 included:
   ./PokemonKit/
+  
+line_length:
+  warning: 140
+  error: 200
 
 force_cast:
   severity: warning
@@ -21,6 +25,5 @@ disabled_rules:
   - cyclomatic_complexity
   - nesting
   - large_tuple
-  - line_length
-  - type_body_length
   - function_body_length
+  - type_body_length
