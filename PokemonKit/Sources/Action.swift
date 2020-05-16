@@ -12,29 +12,30 @@ public enum Action: Codable, Equatable {
 	case forceSwitch(Pokemon)
 	case recharge
 	case run
-	
+
 	private enum CodingKeys: CodingKey {
 		case base
 		case attack
 		case pokemon
 	}
-	
+
 	private enum Base: String, Codable {
 		case attack, switchTo, forceSwitch, recharge, run
 	}
-	
+
 	// MARK: - Codable
+
 	public func encode(to encoder: Encoder) throws {
 		var container = encoder.container(keyedBy: CodingKeys.self)
-		
+
 		switch self {
 		case let .attack(attack):
 			try container.encode(Base.attack, forKey: .base)
 			try container.encode(attack, forKey: .attack)
-		case .switchTo(let switchIn):
+		case let .switchTo(switchIn):
 			try container.encode(Base.switchTo, forKey: .base)
 			try container.encode(switchIn, forKey: .pokemon)
-		case .forceSwitch(let switchIn):
+		case let .forceSwitch(switchIn):
 			try container.encode(Base.forceSwitch, forKey: .base)
 			try container.encode(switchIn, forKey: .pokemon)
 		case .recharge:
@@ -43,11 +44,11 @@ public enum Action: Codable, Equatable {
 			try container.encode(Base.run, forKey: .base)
 		}
 	}
-	
+
 	public init(from decoder: Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
 		let base = try container.decode(Base.self, forKey: .base)
-		
+
 		switch base {
 		case .attack:
 			let attack = try container.decode(Attack.self, forKey: .attack)

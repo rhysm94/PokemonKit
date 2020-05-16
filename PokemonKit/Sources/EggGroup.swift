@@ -24,7 +24,7 @@ public enum EggGroup: String, Codable, Hashable {
 	case water3
 	case ditto
 	case undiscovered
-	
+
 	init(using number: Int) {
 		switch number {
 		case 1: self = .monster

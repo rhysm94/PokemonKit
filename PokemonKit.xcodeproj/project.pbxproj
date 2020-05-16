@@ -35,9 +35,6 @@
 		91A0DB7B204710C600D7B67A /* PokemonKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91A0DB5020470FFD00D7B67A /* PokemonKit.framework */; };
 		91A0DB8A204710D000D7B67A /* PokemonKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91A0DB5D2047101A00D7B67A /* PokemonKit.framework */; };
 		91A0DB99204710D900D7B67A /* PokemonKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91A0DB6A2047102400D7B67A /* PokemonKit.framework */; };
-		91A0DBA92047133500D7B67A /* PokemonKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 91A0DB19204706FA00D7B67A /* PokemonKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		91A0DBAA2047134E00D7B67A /* PokemonKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 91A0DB19204706FA00D7B67A /* PokemonKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		91A0DBAB2047135C00D7B67A /* PokemonKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 91A0DB19204706FA00D7B67A /* PokemonKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		91A0DBAC2047150E00D7B67A /* Ability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB292047072900D7B67A /* Ability.swift */; };
 		91A0DBAD2047150E00D7B67A /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB262047072800D7B67A /* Action.swift */; };
 		91A0DBAE2047150E00D7B67A /* Attack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB272047072800D7B67A /* Attack.swift */; };
@@ -231,7 +228,6 @@
 		911CDEB4219759A90038E08F /* Gender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gender.swift; sourceTree = "<group>"; };
 		911CDEBB21975C7F0038E08F /* Time.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Time.swift; sourceTree = "<group>"; };
 		9121ED0220C6216B008C625B /* pokedex.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = pokedex.sqlite; sourceTree = "<group>"; };
-		91A0DB19204706FA00D7B67A /* PokemonKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PokemonKit.h; sourceTree = "<group>"; };
 		91A0DB212047072800D7B67A /* BattleAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BattleAction.swift; sourceTree = "<group>"; };
 		91A0DB222047072800D7B67A /* PokemonSpecies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PokemonSpecies.swift; sourceTree = "<group>"; };
 		91A0DB232047072800D7B67A /* Nature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Nature.swift; sourceTree = "<group>"; };
@@ -394,7 +390,6 @@
 				91A0DB282047072900D7B67A /* Turn.swift */,
 				91A0DB2B2047072900D7B67A /* Type.swift */,
 				91A0DB312047072A00D7B67A /* Weather.swift */,
-				91A0DB19204706FA00D7B67A /* PokemonKit.h */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -499,7 +494,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				91A0DBAA2047134E00D7B67A /* PokemonKit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -507,7 +501,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				91A0DBA92047133500D7B67A /* PokemonKit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -515,7 +508,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				91A0DBAB2047135C00D7B67A /* PokemonKit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1099,7 +1091,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1160,7 +1152,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;

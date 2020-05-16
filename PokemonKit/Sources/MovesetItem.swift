@@ -14,19 +14,19 @@ public struct MovesetItem: Codable, Hashable {
 		case moveTutor
 		case lightBallEgg
 		case formChange
-		
+
 		private enum Base: String, Codable {
 			case levelUp, machine, egg, moveTutor, lightBallEgg, formChange
 		}
-		
+
 		enum CodingKeys: CodingKey {
 			case base, levelUp
 		}
-		
+
 		public func encode(to encoder: Encoder) throws {
 			var encoder = encoder.container(keyedBy: CodingKeys.self)
 			switch self {
-			case .levelUp(let level):
+			case let .levelUp(level):
 				try encoder.encode(Base.levelUp, forKey: .base)
 				try encoder.encode(level, forKey: .levelUp)
 			case .machine:
@@ -41,11 +41,11 @@ public struct MovesetItem: Codable, Hashable {
 				try encoder.encode(Base.lightBallEgg, forKey: .base)
 			}
 		}
-		
+
 		public init(from decoder: Decoder) throws {
 			let decoder = try decoder.container(keyedBy: CodingKeys.self)
 			let base = try decoder.decode(Base.self, forKey: .base)
-			
+
 			switch base {
 			case .levelUp:
 				let level = try decoder.decode(Int.self, forKey: .levelUp)
@@ -63,7 +63,7 @@ public struct MovesetItem: Codable, Hashable {
 			}
 		}
 	}
-	
+
 	public let move: Attack
 	public let moveLearnMethod: MoveLearnMethod
 }

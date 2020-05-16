@@ -1,0 +1,4 @@
+--indent tab
+--tabwidth 4
+--self init-only
+--stripunusedargs closure-only
