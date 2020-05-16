@@ -3,6 +3,24 @@ included:
 
 force_cast:
   severity: warning
+  
+force_try:
+  severity: warning
+  
+identifier_name:
+  excluded:
+    - id
+    - db
+    - hp
+    - IV
+    - EV
+    - ai
+    - pp
 
 disabled_rules:
-  cyclomatic_complexity
+  - cyclomatic_complexity
+  - nesting
+  - large_tuple
+  - line_length
+  - type_body_length
+  - function_body_length

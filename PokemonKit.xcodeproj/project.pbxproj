@@ -518,8 +518,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 91A0DB5520470FFD00D7B67A /* Build configuration list for PBXNativeTarget "PokemonKit-iOS" */;
 			buildPhases = (
-				91A0DB4B20470FFD00D7B67A /* Sources */,
 				916FCD45247031DC00D2A41C /* SwiftLint */,
+				91A0DB4B20470FFD00D7B67A /* Sources */,
 				91A0DB4C20470FFD00D7B67A /* Frameworks */,
 				91A0DB4D20470FFD00D7B67A /* Headers */,
 				91A0DB4E20470FFD00D7B67A /* Resources */,
@@ -538,12 +538,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 91A0DB622047101A00D7B67A /* Build configuration list for PBXNativeTarget "PokemonKit-macOS" */;
 			buildPhases = (
+				916FCD462470335800D2A41C /* SwiftLint */,
 				91A0DB582047101A00D7B67A /* Sources */,
 				91A0DB592047101A00D7B67A /* Frameworks */,
 				91A0DB5A2047101A00D7B67A /* Headers */,
 				91A0DB5B2047101A00D7B67A /* Resources */,
 				91BEEFD7204C746100AF5792 /* CopyFiles */,
-				916FCD462470335800D2A41C /* SwiftLint */,
 			);
 			buildRules = (
 			);
@@ -558,12 +558,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 91A0DB6F2047102500D7B67A /* Build configuration list for PBXNativeTarget "PokemonKit-tvOS" */;
 			buildPhases = (
+				916FCD472470337E00D2A41C /* SwiftLint */,
 				91A0DB652047102400D7B67A /* Sources */,
 				91A0DB662047102400D7B67A /* Frameworks */,
 				91A0DB672047102400D7B67A /* Headers */,
 				91A0DB682047102400D7B67A /* Resources */,
 				91BEEFDC204C749100AF5792 /* Carthage */,
-				916FCD472470337E00D2A41C /* SwiftLint */,
 			);
 			buildRules = (
 			);

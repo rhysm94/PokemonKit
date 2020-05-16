@@ -355,7 +355,7 @@ public class BattleEngine: NSObject, GKGameModel {
 						sleepCheck(),
 						paralysisCheck(),
 						protectedCheck(),
-						hitCheck(),
+						hitCheck()
 					].allSatisfy { $0 }
 
 					if shouldAttack {
@@ -806,7 +806,7 @@ public class BattleEngine: NSObject, GKGameModel {
 	}
 
 	public func copy(with zone: NSZone? = nil) -> Any {
-		let copy = type(of: self).init(playerOne: Player(copying: playerOne), playerTwo: Player(copying: playerTwo))
+		let copy = Self(playerOne: Player(copying: playerOne), playerTwo: Player(copying: playerTwo))
 
 		copy.setGameModel(self)
 

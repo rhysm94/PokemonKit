@@ -201,7 +201,7 @@ public class Pokedex {
 			let newSpDef = -pokemonStatStages.spDef
 			let newSpd = -pokemonStatStages.spd
 			$0.statStages = (atk: newAtk, def: newDef, spAtk: newSpAtk, spDef: newSpDef, spd: newSpd)
-		},
+		}
 	]
 
 	private static let targets: [String: Attack.EffectTarget] = [
@@ -215,13 +215,13 @@ public class Pokedex {
 		"Solar Beam": .attacker,
 		"Swords Dance": .attacker,
 		"Topsy-Turvy": .defender,
-		"Thunder Wave": .defender,
+		"Thunder Wave": .defender
 	]
 
 	static let activationMessage: [String: (Pokemon) -> String] = [
 		"Protean": {
 			"\($0.nickname) became \(String(describing: $0.species.typeOne).capitalized) type"
-		},
+		}
 	]
 
 	static func getAbilities() -> [String: Ability] {

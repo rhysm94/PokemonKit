@@ -81,27 +81,27 @@ class PokemonKitTests: XCTestCase {
 	}
 
 	func testAttackStatCalculation() {
-		let calculatedAttack = floor(Pokemon.calculateOtherStats(base: 49, EV: 0, IV: 31, level: 50, natureModifier: Nature.modest.atkModifier))
+		let calculatedAttack = Pokemon.calculateOtherStats(base: 49, EV: 0, IV: 31, level: 50, natureModifier: Nature.modest.atkModifier)
 		XCTAssertEqual(calculatedAttack, 62)
 	}
 
 	func testDefStatCalculation() {
-		let calculatedDef = floor(Pokemon.calculateOtherStats(base: 49, EV: 4, IV: 31, level: 50, natureModifier: Nature.modest.defModifier))
+		let calculatedDef = Pokemon.calculateOtherStats(base: 49, EV: 4, IV: 31, level: 50, natureModifier: Nature.modest.defModifier)
 		XCTAssertEqual(calculatedDef, 70)
 	}
 
 	func testSpAtkStatCalculation() {
-		let calculatedSpAtk = floor(Pokemon.calculateOtherStats(base: 65, EV: 252, IV: 31, level: 50, natureModifier: Nature.modest.spAtkModifier))
+		let calculatedSpAtk = Pokemon.calculateOtherStats(base: 65, EV: 252, IV: 31, level: 50, natureModifier: Nature.modest.spAtkModifier)
 		XCTAssertEqual(calculatedSpAtk, 128)
 	}
 
 	func testSpDefStatCalculation() {
-		let calculatedSpDef = floor(Pokemon.calculateOtherStats(base: 65, EV: 0, IV: 31, level: 50, natureModifier: Nature.modest.spDefModifier))
+		let calculatedSpDef = Pokemon.calculateOtherStats(base: 65, EV: 0, IV: 31, level: 50, natureModifier: Nature.modest.spDefModifier)
 		XCTAssertEqual(calculatedSpDef, 85)
 	}
 
 	func testSpeedStatCalculation() {
-		let calculatedSpeed = floor(Pokemon.calculateOtherStats(base: 45, EV: 252, IV: 31, level: 50, natureModifier: Nature.modest.spdModifier))
+		let calculatedSpeed = Pokemon.calculateOtherStats(base: 45, EV: 252, IV: 31, level: 50, natureModifier: Nature.modest.spdModifier)
 		XCTAssertEqual(calculatedSpeed, 97)
 	}
 
@@ -529,7 +529,7 @@ class PokemonKitTests: XCTestCase {
 			print("Move Value: \(turn.value)")
 		} else {
 			dump(turn)
-			XCTFail()
+			XCTFail("AI cannot create a turn")
 		}
 	}
 

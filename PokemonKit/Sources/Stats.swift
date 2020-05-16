@@ -21,7 +21,7 @@ public struct Stats: Codable, Hashable {
 		3: 2.5,
 		4: 3,
 		5: 3.5,
-		6: 4,
+		6: 4
 	]
 
 	public init(hp: Int, atk: Int, def: Int, spAtk: Int, spDef: Int, spd: Int) {
