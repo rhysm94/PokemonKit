@@ -258,7 +258,13 @@ public class Pokemon: Codable {
 		try container.encode(status, forKey: .status)
 
 		var statStagesContainer = encoder.container(keyedBy: StatStagesCodingKeys.self)
-		let statStagesStruct = StatStages(atk: _statStages.atk, def: _statStages.def, spAtk: _statStages.spAtk, spDef: _statStages.spDef, spd: _statStages.spd)
+		let statStagesStruct = StatStages(
+			atk: _statStages.atk,
+			def: _statStages.def,
+			spAtk: _statStages.spAtk,
+			spDef: _statStages.spDef,
+			spd: _statStages.spd
+		)
 		try statStagesContainer.encode(statStagesStruct.atk, forKey: .atk)
 		try statStagesContainer.encode(statStagesStruct.def, forKey: .def)
 		try statStagesContainer.encode(statStagesStruct.spAtk, forKey: .spAtk)

@@ -98,6 +98,10 @@ public class BattleEngine: NSObject, GKGameModel {
 		}
 	}
 
+	private let printUpdate: (Player, Bool) -> Void = {
+		print("\($0.name)'s \($0.activePokemon) has \($0.activePokemon.currentHP)/\($0.activePokemon.baseStats.hp) HP\($1 ? "" : " remaining")")
+	}
+
 	private(set) var turns: [Turn] = [] {
 		didSet {
 			guard !multiHitMoveRunning else { return }
@@ -266,12 +270,8 @@ public class BattleEngine: NSObject, GKGameModel {
 						attacker.volatileStatus.remove(.preparingTo(attack))
 					}
 
-					print(
-						"\(playerOne.name)'s \(playerOne.activePokemon) - Lv. \(playerOne.activePokemon.level) has \(playerOne.activePokemon.currentHP)/\(playerOne.activePokemon.baseStats.hp) HP"
-					)
-					print(
-						"\(playerTwo.name)'s \(playerTwo.activePokemon) - Lv. \(playerTwo.activePokemon.level) has \(playerTwo.activePokemon.currentHP)/\(playerTwo.activePokemon.baseStats.hp) HP"
-					)
+					printUpdate(playerOne, true)
+					printUpdate(playerTwo, true)
 
 					/// Attack
 					/// Attacker, Defender: Pokemon
@@ -444,12 +444,8 @@ public class BattleEngine: NSObject, GKGameModel {
 				}
 			}
 
-			let printUpdate: (Player) -> Void = {
-				print("\($0.name)'s \($0.activePokemon) has \($0.activePokemon.currentHP)/\($0.activePokemon.baseStats.hp) HP remaining")
-			}
-
-			printUpdate(playerOne)
-			printUpdate(playerTwo)
+			printUpdate(playerOne, false)
+			printUpdate(playerTwo, false)
 
 			weatherCounter -= 1
 			terrainCounter -= 1

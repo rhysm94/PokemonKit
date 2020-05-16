@@ -17,8 +17,7 @@ public class Pokedex {
 	private static let dbPath = Bundle(for: Pokedex.self).path(forResource: "pokedex", ofType: "sqlite")!
 
 	private static var databaseConnection: Connection = {
-		var database = try! Connection(dbPath, readonly: true)
-		return database
+		try! Connection(dbPath, readonly: true)
 	}()
 
 	public var pokemon: [PokemonSpecies] = []

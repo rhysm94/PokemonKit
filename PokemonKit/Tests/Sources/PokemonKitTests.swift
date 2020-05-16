@@ -189,7 +189,7 @@ class PokemonKitTests: XCTestCase {
 		greninja.species.typeTwo = nil
 
 		guard let activationMessage = greninja.ability.activationMessage?(greninja) else {
-			XCTFail()
+			XCTFail("Could not get activation method for Protean")
 			return
 		}
 
@@ -351,7 +351,15 @@ class PokemonKitTests: XCTestCase {
 		)
 
 		let eeveeSpecies = Pokedex.default.pokemon[132]
-		let eevee = Pokemon(species: eeveeSpecies, level: 50, ability: eeveeSpecies.abilityOne, nature: .hardy, effortValues: .empty, individualValues: .fullIVs, attacks: [])
+		let eevee = Pokemon(
+			species: eeveeSpecies,
+			level: 50,
+			ability: eeveeSpecies.abilityOne,
+			nature: .hardy,
+			effortValues: .empty,
+			individualValues: .fullIVs,
+			attacks: []
+		)
 		let tackle = Pokedex.default.attacks["Tackle"]!
 
 		let (_, effectiveness) = engine.calculateDamage(attacker: eevee, defender: gengar, attack: tackle)
@@ -590,18 +598,12 @@ class PokemonKitTests: XCTestCase {
 		ai.gameModel = engine
 		ai.randomSource = GKARC4RandomSource()
 
-		var turn: GKGameModelUpdate?
-
-		DispatchQueue.global().sync { [unowned self] in
-			turn = ai.bestMove(for: self.joe)
-		}
+		let turn = ai.bestMove(for: self.joe)
 
 		if let turn = turn as? Turn {
-			print("Best Move: \(turn)")
-			print("Move Value: \(turn.value)")
 			engine.addTurn(turn)
 		} else {
-			XCTFail()
+			XCTFail("Couldn't create a new turn")
 		}
 
 		XCTAssertEqual(joe.activePokemon, gengar)
