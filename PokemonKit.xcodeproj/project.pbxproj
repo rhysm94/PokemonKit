@@ -26,6 +26,8 @@
 		916FCD4A247048F900D2A41C /* Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 916FCD482470466B00D2A41C /* Queries.swift */; };
 		916FCD4B247048FA00D2A41C /* Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 916FCD482470466B00D2A41C /* Queries.swift */; };
 		916FCD57247141CD00D2A41C /* Defaulted.swift in Sources */ = {isa = PBXBuildFile; fileRef = 916FCD56247141CD00D2A41C /* Defaulted.swift */; };
+		916FCD612471452000D2A41C /* Defaulted.swift in Sources */ = {isa = PBXBuildFile; fileRef = 916FCD56247141CD00D2A41C /* Defaulted.swift */; };
+		916FCD622471452000D2A41C /* Defaulted.swift in Sources */ = {isa = PBXBuildFile; fileRef = 916FCD56247141CD00D2A41C /* Defaulted.swift */; };
 		91A0DB79204710C600D7B67A /* PokemonKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB78204710C600D7B67A /* PokemonKitTests.swift */; };
 		91A0DB7B204710C600D7B67A /* PokemonKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91A0DB5020470FFD00D7B67A /* PokemonKit.framework */; };
 		91A0DB8A204710D000D7B67A /* PokemonKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91A0DB5D2047101A00D7B67A /* PokemonKit.framework */; };
@@ -860,6 +862,7 @@
 				916FCD4A247048F900D2A41C /* Queries.swift in Sources */,
 				91B06ABE20C9E158005488E9 /* EggGroup.swift in Sources */,
 				91A0DBD72047150F00D7B67A /* BattleEngineViewer.swift in Sources */,
+				916FCD612471452000D2A41C /* Defaulted.swift in Sources */,
 				911CDEB0219759400038E08F /* PokemonEvolution.swift in Sources */,
 				911CDEB7219759A90038E08F /* Gender.swift in Sources */,
 				91A0DBDC2047150F00D7B67A /* Pokemon.swift in Sources */,
@@ -893,6 +896,7 @@
 				916FCD4B247048FA00D2A41C /* Queries.swift in Sources */,
 				91B06AC020C9E158005488E9 /* EggGroup.swift in Sources */,
 				91A0DBFD2047151100D7B67A /* BattleEngineViewer.swift in Sources */,
+				916FCD622471452000D2A41C /* Defaulted.swift in Sources */,
 				911CDEB2219759400038E08F /* PokemonEvolution.swift in Sources */,
 				911CDEB9219759A90038E08F /* Gender.swift in Sources */,
 				91A0DC022047151100D7B67A /* Pokemon.swift in Sources */,
