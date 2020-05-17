@@ -1,6 +1,6 @@
 //
 //  Defaulted.swift
-//  PokemonKit-iOS
+//  PokemonKit
 //
 //  Created by Rhys Morgan on 17/05/2020.
 //  Copyright © 2020 Rhys Morgan. All rights reserved.
