@@ -24,3 +24,6 @@ public struct Clamped<Number> where Number: Numeric, Number: Comparable {
 		}
 	}
 }
+
+extension Clamped: Equatable where Number: Equatable {}
+extension Clamped: Codable where Number: Codable {}
