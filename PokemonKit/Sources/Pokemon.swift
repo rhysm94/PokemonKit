@@ -11,16 +11,7 @@ import Foundation
 /// A Pokemon object refers to a specific instance of a Pokémon
 ///
 public class Pokemon: Codable {
-	private var _nickname: String?
-	public var nickname: String {
-		get {
-			_nickname ?? species.name
-		}
-		set {
-			_nickname = newValue
-		}
-	}
-
+	@Defaulted public var nickname: String
 	public internal(set) var species: PokemonSpecies
 	public let level: Int
 	public let effortValues: Stats
@@ -195,6 +186,7 @@ public class Pokemon: Codable {
 
 	public init(
 		species: PokemonSpecies,
+		nickname: String? = nil,
 		level: Int = 50,
 		ability: Ability = Ability(name: "Some ability", description: "Some Description"),
 		nature: Nature,
@@ -203,6 +195,7 @@ public class Pokemon: Codable {
 		attacks: [Attack]
 	) {
 		self.species = species
+		self._nickname = Defaulted(defaultValue: species.name, value: nickname)
 		self.level = level
 		self.effortValues = effortValues
 		self.individualValues = individualValues
@@ -282,7 +275,7 @@ public class Pokemon: Codable {
 
 	public required init(from decoder: Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
-		self._nickname = try container.decode(String?.self, forKey: .nickname)
+		self._nickname = try container.decode(Defaulted<String>.self, forKey: .nickname)
 		self.species = try container.decode(PokemonSpecies.self, forKey: .species)
 		self.level = try container.decode(Int.self, forKey: .level)
 		self.effortValues = try container.decode(Stats.self, forKey: .effortValues)
@@ -329,7 +322,7 @@ extension Pokemon: CustomStringConvertible {
 extension Pokemon: Equatable {
 	public static func == (lhs: Pokemon, rhs: Pokemon) -> Bool {
 		lhs.species == rhs.species &&
-			lhs._nickname == rhs._nickname &&
+			lhs.nickname == rhs.nickname &&
 			lhs._statStages == rhs._statStages &&
 			lhs.ability == rhs.ability &&
 			lhs.attacks == rhs.attacks &&

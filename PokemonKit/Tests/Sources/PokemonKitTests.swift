@@ -89,6 +89,11 @@ class PokemonKitTests: XCTestCase {
 		XCTAssertEqual(bulbasaur.nickname, "Bulbasaur")
 	}
 
+	func testNewNickname() {
+		bulbasaur.nickname = "Nickname"
+		XCTAssertEqual("Nickname", bulbasaur.nickname)
+	}
+
 	func testHPStatCalculation() {
 		let calculatedStat = Pokemon.calculateHPStat(base: 45, EV: 0, IV: 31, level: 50)
 		XCTAssertEqual(calculatedStat, 120)
