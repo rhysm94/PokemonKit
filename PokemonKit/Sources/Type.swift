@@ -1,6 +1,6 @@
 //
 //  PokemonType.swift
-//  PokemonBattleEngineTest
+//  PokemonKit
 //
 //  Created by Rhys Morgan on 17/01/2018.
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
