@@ -25,6 +25,12 @@
 		916FCD492470466B00D2A41C /* Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 916FCD482470466B00D2A41C /* Queries.swift */; };
 		916FCD4A247048F900D2A41C /* Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 916FCD482470466B00D2A41C /* Queries.swift */; };
 		916FCD4B247048FA00D2A41C /* Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 916FCD482470466B00D2A41C /* Queries.swift */; };
+		916FCD57247141CD00D2A41C /* Defaulted.swift in Sources */ = {isa = PBXBuildFile; fileRef = 916FCD56247141CD00D2A41C /* Defaulted.swift */; };
+		916FCD612471452000D2A41C /* Defaulted.swift in Sources */ = {isa = PBXBuildFile; fileRef = 916FCD56247141CD00D2A41C /* Defaulted.swift */; };
+		916FCD622471452000D2A41C /* Defaulted.swift in Sources */ = {isa = PBXBuildFile; fileRef = 916FCD56247141CD00D2A41C /* Defaulted.swift */; };
+		916FCD5B2471447100D2A41C /* Clamped.swift in Sources */ = {isa = PBXBuildFile; fileRef = 916FCD5A2471447100D2A41C /* Clamped.swift */; };
+		916FCD5F2471450900D2A41C /* Clamped.swift in Sources */ = {isa = PBXBuildFile; fileRef = 916FCD5A2471447100D2A41C /* Clamped.swift */; };
+		916FCD602471450A00D2A41C /* Clamped.swift in Sources */ = {isa = PBXBuildFile; fileRef = 916FCD5A2471447100D2A41C /* Clamped.swift */; };
 		91A0DB79204710C600D7B67A /* PokemonKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A0DB78204710C600D7B67A /* PokemonKitTests.swift */; };
 		91A0DB7B204710C600D7B67A /* PokemonKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91A0DB5020470FFD00D7B67A /* PokemonKit.framework */; };
 		91A0DB8A204710D000D7B67A /* PokemonKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91A0DB5D2047101A00D7B67A /* PokemonKit.framework */; };
@@ -157,6 +163,8 @@
 		911CDEBB21975C7F0038E08F /* Time.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Time.swift; sourceTree = "<group>"; };
 		9121ED0220C6216B008C625B /* pokedex.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = pokedex.sqlite; sourceTree = "<group>"; };
 		916FCD482470466B00D2A41C /* Queries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queries.swift; sourceTree = "<group>"; };
+		916FCD56247141CD00D2A41C /* Defaulted.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaulted.swift; sourceTree = "<group>"; };
+		916FCD5A2471447100D2A41C /* Clamped.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clamped.swift; sourceTree = "<group>"; };
 		91A0DB212047072800D7B67A /* BattleAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BattleAction.swift; sourceTree = "<group>"; };
 		91A0DB222047072800D7B67A /* PokemonSpecies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PokemonSpecies.swift; sourceTree = "<group>"; };
 		91A0DB232047072800D7B67A /* Nature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Nature.swift; sourceTree = "<group>"; };
@@ -259,6 +267,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		916FCD5C2471447800D2A41C /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				916FCD5A2471447100D2A41C /* Clamped.swift */,
+				916FCD56247141CD00D2A41C /* Defaulted.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		91A0DB0C204706FA00D7B67A = {
 			isa = PBXGroup;
 			children = (
@@ -320,6 +337,7 @@
 				91A0DB2B2047072900D7B67A /* Type.swift */,
 				91EA215D206F859800C4B26D /* VolatileStatus.swift */,
 				91A0DB312047072A00D7B67A /* Weather.swift */,
+				916FCD5C2471447800D2A41C /* Components */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -823,6 +841,8 @@
 				916FCD492470466B00D2A41C /* Queries.swift in Sources */,
 				91B06ABC20C9E158005488E9 /* EggGroup.swift in Sources */,
 				91A0DBB12047150E00D7B67A /* BattleEngineViewer.swift in Sources */,
+				916FCD57247141CD00D2A41C /* Defaulted.swift in Sources */,
+				916FCD5B2471447100D2A41C /* Clamped.swift in Sources */,
 				911CDEAE219759400038E08F /* PokemonEvolution.swift in Sources */,
 				911CDEB5219759A90038E08F /* Gender.swift in Sources */,
 				91A0DBB62047150E00D7B67A /* Pokemon.swift in Sources */,
@@ -845,6 +865,7 @@
 			files = (
 				91A0DBDD2047150F00D7B67A /* PokemonSpecies.swift in Sources */,
 				91A0DBE22047150F00D7B67A /* Turn.swift in Sources */,
+				916FCD5F2471450900D2A41C /* Clamped.swift in Sources */,
 				91A0DBD22047150F00D7B67A /* Ability.swift in Sources */,
 				91A0DBDE2047150F00D7B67A /* Random.swift in Sources */,
 				91A0DBDF2047150F00D7B67A /* Stats.swift in Sources */,
@@ -856,6 +877,7 @@
 				916FCD4A247048F900D2A41C /* Queries.swift in Sources */,
 				91B06ABE20C9E158005488E9 /* EggGroup.swift in Sources */,
 				91A0DBD72047150F00D7B67A /* BattleEngineViewer.swift in Sources */,
+				916FCD612471452000D2A41C /* Defaulted.swift in Sources */,
 				911CDEB0219759400038E08F /* PokemonEvolution.swift in Sources */,
 				911CDEB7219759A90038E08F /* Gender.swift in Sources */,
 				91A0DBDC2047150F00D7B67A /* Pokemon.swift in Sources */,
@@ -878,6 +900,7 @@
 			files = (
 				91A0DC032047151100D7B67A /* PokemonSpecies.swift in Sources */,
 				91A0DC082047151100D7B67A /* Turn.swift in Sources */,
+				916FCD602471450A00D2A41C /* Clamped.swift in Sources */,
 				91A0DBF82047151100D7B67A /* Ability.swift in Sources */,
 				91A0DC042047151100D7B67A /* Random.swift in Sources */,
 				91A0DC052047151100D7B67A /* Stats.swift in Sources */,
@@ -889,6 +912,7 @@
 				916FCD4B247048FA00D2A41C /* Queries.swift in Sources */,
 				91B06AC020C9E158005488E9 /* EggGroup.swift in Sources */,
 				91A0DBFD2047151100D7B67A /* BattleEngineViewer.swift in Sources */,
+				916FCD622471452000D2A41C /* Defaulted.swift in Sources */,
 				911CDEB2219759400038E08F /* PokemonEvolution.swift in Sources */,
 				911CDEB9219759A90038E08F /* Gender.swift in Sources */,
 				91A0DC022047151100D7B67A /* Pokemon.swift in Sources */,

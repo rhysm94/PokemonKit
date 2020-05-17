@@ -1,6 +1,6 @@
 //
 //  Random.swift
-//  PokemonBattleEngineTest
+//  PokemonKit
 //
 //  Created by Rhys Morgan on 22/02/2018.
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
