@@ -15,10 +15,27 @@ public class Pokedex {
 	/// Contains all Pokémon, Abilities, and Attacks
 	public static let `default` = Pokedex()
 
-	private static let dbPath = Bundle.module.path(forResource: "pokedex", ofType: "sqlite")!
+	private static let dbPath: String = {
+		guard let path = Bundle.module.path(forResource: "pokedex", ofType: "sqlite") else {
+			fatalError("""
+				Failed to locate pokedex.sqlite in bundle.
+				This indicates the PokemonKit bundle resources are missing or corrupted.
+				Please ensure the package was built correctly with Swift Package Manager.
+				""")
+		}
+		return path
+	}()
 
 	private static var databaseConnection: Connection = {
-		try! Connection(dbPath, readonly: true)
+		do {
+			return try Connection(dbPath, readonly: true)
+		} catch {
+			fatalError("""
+				Failed to open SQLite database at \(dbPath).
+				Error: \(error.localizedDescription)
+				This indicates the database file is corrupted or inaccessible.
+				""")
+		}
 	}()
 
 	public var pokemon: [PokemonSpecies] = []
