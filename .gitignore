@@ -3,3 +3,5 @@ Cartfile.resolved
 xcuserdata/
 docs/
 build/
+.build/
+.swiftpm/

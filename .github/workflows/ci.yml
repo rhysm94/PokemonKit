@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  push:
+    branches: [ develop, main ]
+  pull_request:
+    branches: [ develop, main ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test on ${{ matrix.platform }}
+    runs-on: macos-15
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - iOS
+          - macOS
+          - tvOS
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode 16
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+
+      - name: Build and Test - iOS
+        if: matrix.platform == 'iOS'
+        run: |
+          xcodebuild clean test \
+            -scheme PokemonKit-iOS \
+            -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=latest' \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO
+
+      - name: Build and Test - macOS
+        if: matrix.platform == 'macOS'
+        run: |
+          xcodebuild clean test \
+            -scheme PokemonKit-macOS \
+            -destination 'platform=macOS' \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO
+
+      - name: Build and Test - tvOS
+        if: matrix.platform == 'tvOS'
+        run: |
+          xcodebuild clean test \
+            -scheme PokemonKit-tvOS \
+            -destination 'platform=tvOS Simulator,name=Apple TV,OS=latest' \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO
+
+  spm:
+    name: Swift Package Manager
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode 16
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+
+      - name: Build with SPM
+        run: swift build
+
+      - name: Test with SPM
+        run: swift test
+
+  lint:
+    name: SwiftLint
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: SwiftLint
+        run: |
+          brew install swiftlint
+          swiftlint lint --strict

@@ -6,6 +6,7 @@
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
 //
 
+import Foundation
 import SQLite
 
 public class Pokedex {
@@ -14,7 +15,7 @@ public class Pokedex {
 	/// Contains all Pokémon, Abilities, and Attacks
 	public static let `default` = Pokedex()
 
-	private static let dbPath = Bundle(for: Pokedex.self).path(forResource: "pokedex", ofType: "sqlite")!
+	private static let dbPath = Bundle.module.path(forResource: "pokedex", ofType: "sqlite")!
 
 	private static var databaseConnection: Connection = {
 		try! Connection(dbPath, readonly: true)
