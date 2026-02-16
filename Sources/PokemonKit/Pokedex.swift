@@ -837,7 +837,6 @@ public class Pokedex {
 				guard let ability1ID = row[11] as? Int64 else { break }
 				let ability2ID = row[12] as? Int64
 				let hiddenAbilityID = row[13] as? Int64
-				let pokemonFormName = row[14] as? String
 				let formName = row[15] as? String
 				guard let identifier = row[16] as? String else { break }
 				guard let formOrder = row[17] as? Int64 else { break }
@@ -996,17 +995,12 @@ public class Pokedex {
 		var moveset: [MovesetItem] = []
 
 		let pokemonMoves = Table("pokemon_moves")
-		let pokemonNames = Table("pokemon_species_names")
-		let moveNames = Table("move_names")
 
 		let id = Expression<Int>("pokemon_id")
-		let speciesID = Expression<Int>("pokemon_species_id")
 		let moveID = Expression<Int>("move_id")
-		let name = Expression<String>("name")
 		let learnMethod = Expression<Int>("pokemon_move_method_id")
 		let learnLevel = Expression<Int>("level")
 		let version = Expression<Int>("version_group_id")
-		let language = Expression<Int>("local_language_id")
 
 		let query = pokemonMoves.select(pokemonMoves[moveID], pokemonMoves[learnMethod], pokemonMoves[learnLevel])
 			.filter(pokemonMoves[version] == 18 && pokemonMoves[id] == pokemon)

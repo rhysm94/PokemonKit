@@ -25,15 +25,13 @@ let package = Package(
             dependencies: [
                 .product(name: "SQLite", package: "SQLite.swift")
             ],
-            path: "PokemonKit/Sources",
             resources: [
                 .process("Resources")
             ]
         ),
         .testTarget(
             name: "PokemonKitTests",
-            dependencies: ["PokemonKit"],
-            path: "PokemonKit/Tests"
+            dependencies: ["PokemonKit"]
         )
     ]
 )
