@@ -551,21 +551,11 @@ public class Pokedex {
 				let formName = row[15] as? String
 
 				let ability1 = abilities[ability1Name, default: .dummy]
-				var ability2: Ability? {
-					guard let value = ability2Name else { return nil }
-					return abilities[value]
-				}
-
-				var hiddenAbility: Ability? {
-					guard let value = hiddenAbilityName else { return nil }
-					return abilities[value]
-				}
+				let ability2 = ability2Name.flatMap { abilities[$0] }
+				let hiddenAbility = hiddenAbilityName.flatMap { abilities[$0] }
 
 				guard let typeOne = Type(rawValue: typeOneString) else { break }
-				var typeTwo: Type? {
-					guard let value = typeTwoString else { return nil }
-					return Type(rawValue: value)
-				}
+				let typeTwo = typeTwoString.flatMap { Type(rawValue: $0) }
 
 				let eggGroupTable = Table("pokemon_egg_groups")
 				let speciesID = Expression<Int64>("species_id")
@@ -574,12 +564,10 @@ public class Pokedex {
 				let eggGroups = Array(try db.prepare(eggGroupQuery))
 
 				let eggGroupOne = EggGroup(using: eggGroups[0][eggGroupID])
-				var eggGroupTwo: EggGroup? {
-					if eggGroups.indices.contains(1) {
-						return EggGroup(using: eggGroups[1][eggGroupID])
-					} else {
-						return nil
-					}
+				let eggGroupTwo: EggGroup? = if eggGroups.indices.contains(1) {
+					EggGroup(using: eggGroups[1][eggGroupID])
+				} else {
+					nil
 				}
 
 				let moveset = Pokedex.getAttacksForPokemon(PokemonSpecies.ID(pokedexNumber)).sorted { first, second in
@@ -709,16 +697,11 @@ public class Pokedex {
 				}
 
 				if let gender = row[genderID] {
-					let genderToInsert: Gender = {
-						switch gender {
-						case 1:
-							return .female
-						case 2:
-							return .male
-						default:
-							return .genderless
-						}
-					}()
+          let genderToInsert: Gender = switch gender {
+          case 1: .female
+          case 2: .male
+          default: .genderless
+          }
 
           evolutionConditions.insert(.gender(genderToInsert))
 				}
@@ -829,21 +812,11 @@ public class Pokedex {
 				guard let isMega = row[19] as? Int64 else { break }
 
 				guard let typeOne = Type(rawValue: typeOneString) else { break }
-				var typeTwo: Type? {
-					guard let value = typeTwoString else { return nil }
-					return Type(rawValue: value)
-				}
+				let typeTwo = typeTwoString.flatMap { Type(rawValue: $0) }
 
 				let ability1 = Pokedex.getAbilityFromDB(byID: Ability.ID(ability1ID)) ?? Ability(id: Ability.ID(-1), name: "Dummy", description: "Dummy")
-				var ability2: Ability? {
-					guard let value = ability2ID else { return nil }
-					return Pokedex.getAbilityFromDB(byID: Ability.ID(value))
-				}
-
-				var hiddenAbility: Ability? {
-					guard let value = hiddenAbilityID else { return nil }
-					return Pokedex.getAbilityFromDB(byID: Ability.ID(value))
-				}
+				let ability2 = ability2ID.flatMap { Pokedex.getAbilityFromDB(byID: Ability.ID($0)) }
+				let hiddenAbility = hiddenAbilityID.flatMap { Pokedex.getAbilityFromDB(byID: Ability.ID($0)) }
 
 				let eggGroupTable = Table("pokemon_egg_groups")
 				let speciesID = Expression<Int64>("species_id")
@@ -852,12 +825,10 @@ public class Pokedex {
 				let eggGroups = Array(try db.prepare(eggGroupQuery))
 
 				let eggGroupOne = EggGroup(using: eggGroups[0][eggGroupID])
-				var eggGroupTwo: EggGroup? {
-					guard eggGroups.indices.contains(1) else {
-						return nil
-					}
-
-					return EggGroup(using: eggGroups[1][eggGroupID])
+				let eggGroupTwo: EggGroup? = if eggGroups.indices.contains(1) {
+					EggGroup(using: eggGroups[1][eggGroupID])
+				} else {
+					nil
 				}
 
 				let moveset = Pokedex.getAttacksForPokemon(PokemonSpecies.ID(dbId)).sorted()
@@ -1005,8 +976,8 @@ public class Pokedex {
 		let moveRowID = Expression<Int64>("move_id")
 		let languageID = Expression<Int>("local_language_id")
 
-		guard let id = moveID else { return nil }
-		let moveQuery = moveNames.select(name).filter(languageID == 9 && moveRowID == id.rawValue)
+		guard let moveID else { return nil }
+		let moveQuery = moveNames.select(name).filter(languageID == 9 && moveRowID == moveID.rawValue)
 
 		do {
 			guard let moveNameRow = try db.pluck(moveQuery) else { return nil }
