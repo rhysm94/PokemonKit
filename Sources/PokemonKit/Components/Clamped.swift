@@ -20,10 +20,16 @@ public struct Clamped<Number> where Number: Numeric, Number: Comparable {
 	public var wrappedValue: Number {
 		get { value }
 		set {
-			value = min(max(range.lowerBound, newValue), range.upperBound)
+			value = newValue.clamped(to: range)
 		}
 	}
 }
 
 extension Clamped: Equatable where Number: Equatable {}
 extension Clamped: Codable where Number: Codable {}
+
+extension Comparable {
+	public func clamped(to range: ClosedRange<Self>) -> Self {
+		min(max(range.lowerBound, self), range.upperBound)
+	}
+}

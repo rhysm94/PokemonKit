@@ -128,42 +128,11 @@ public class Pokemon: Codable {
 			_statStages
 		}
 		set {
-			_statStages.atk = newValue.atk
-			_statStages.def = newValue.def
-			_statStages.spAtk = newValue.spAtk
-			_statStages.spDef = newValue.spDef
-			_statStages.spd = newValue.spd
-
-			if _statStages.atk > 6 {
-				print("\(nickname)'s Attack can't go any higher!")
-				_statStages.atk = 6
-			} else if _statStages.atk < -6 {
-				_statStages.atk = -6
-			}
-
-			if _statStages.def > 6 {
-				_statStages.def = 6
-			} else if _statStages.def < -6 {
-				_statStages.def = -6
-			}
-
-			if _statStages.spAtk > 6 {
-				_statStages.spAtk = 6
-			} else if _statStages.spAtk < -6 {
-				_statStages.spAtk = -6
-			}
-
-			if _statStages.spDef > 6 {
-				_statStages.spDef = 6
-			} else if _statStages.spDef < -6 {
-				_statStages.spDef = -6
-			}
-
-			if _statStages.spd > 6 {
-				_statStages.spd = 6
-			} else if _statStages.spd < -6 {
-				_statStages.spd = -6
-			}
+			_statStages.atk = newValue.atk.clamped(to: -6...6)
+			_statStages.def = newValue.def.clamped(to: -6...6)
+			_statStages.spAtk = newValue.spAtk.clamped(to: -6...6)
+			_statStages.spDef = newValue.spDef.clamped(to: -6...6)
+			_statStages.spd = newValue.spd.clamped(to: -6...6)
 		}
 	}
 
