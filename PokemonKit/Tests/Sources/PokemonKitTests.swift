@@ -18,19 +18,19 @@ class PokemonKitTests: XCTestCase {
 
 	var engine: BattleEngine!
 
-	let sludgeBomb = Pokedex.default.attacks["Sludge Bomb"]!
-	let gigaDrain = Pokedex.default.attacks["Giga Drain"]!
-	let bulletSeed = Pokedex.default.attacks["Bullet Seed"]!
-	let thunderbolt = Pokedex.default.attacks["Thunderbolt"]!
-	let thunder = Pokedex.default.attacks["Thunder"]!
-	let tackle = Pokedex.default.attacks["Tackle"]!
+	let sludgeBomb = Pokedex.default.getAttack(named: "Sludge Bomb")!
+	let gigaDrain = Pokedex.default.getAttack(named: "Giga Drain")!
+	let bulletSeed = Pokedex.default.getAttack(named: "Bullet Seed")!
+	let thunderbolt = Pokedex.default.getAttack(named: "Thunderbolt")!
+	let thunder = Pokedex.default.getAttack(named: "Thunder")!
+	let tackle = Pokedex.default.getAttack(named: "Tackle")!
 
 	let testAbility = Ability(name: "Test", description: "Test")
 
 	override func setUp() {
 		super.setUp()
 
-		let bulbasaurSpecies = Pokedex.default.pokemon["bulbasaur"]!
+		let bulbasaurSpecies = Pokedex.default.getPokemon(byIdentifier: "bulbasaur")!
 		bulbasaur = Pokemon(
 			species: bulbasaurSpecies,
 			level: 50,
@@ -40,7 +40,7 @@ class PokemonKitTests: XCTestCase {
 			attacks: [sludgeBomb, gigaDrain]
 		)
 
-		let pikachuSpecies = Pokedex.default.pokemon["pikachu"]!
+		let pikachuSpecies = Pokedex.default.getPokemon(byIdentifier: "pikachu")!
 		pikachu = Pokemon(
 			species: pikachuSpecies,
 			level: 50,
@@ -76,8 +76,8 @@ class PokemonKitTests: XCTestCase {
 	}
 
 	func testFamily() {
-		let pikachu = Pokedex.default.pokemon["pikachu"]!
-		let mockedFamily = [Pokedex.default.pokemon["pichu"]!, pikachu, Pokedex.default.pokemon["raichu"]!]
+		let pikachu = Pokedex.default.getPokemon(byIdentifier: "pikachu")!
+		let mockedFamily = [Pokedex.default.getPokemon(byIdentifier: "pichu")!, pikachu, Pokedex.default.getPokemon(byIdentifier: "raichu")!]
 		XCTAssertTrue(pikachu.family == mockedFamily)
 	}
 
@@ -158,8 +158,8 @@ class PokemonKitTests: XCTestCase {
 	}
 
 	func testEeveeEggGroup() {
-		XCTAssertEqual(Pokedex.default.pokemon[132].eggGroupOne, .field)
-		XCTAssertNil(Pokedex.default.pokemon[132].eggGroupTwo)
+		XCTAssertEqual(Pokedex.default.getPokemon(byDexNumber: 133)!.eggGroupOne, .field)
+		XCTAssertNil(Pokedex.default.getPokemon(byDexNumber: 133)!.eggGroupTwo)
 	}
 
 	func testPikachuEggGroup() {
@@ -179,7 +179,7 @@ class PokemonKitTests: XCTestCase {
 	}
 
 	func testProteanMessage() {
-		let greninjaSpecies = Pokedex.default.pokemon["greninja"]!
+		let greninjaSpecies = Pokedex.default.getPokemon(byIdentifier: "greninja")!
 		let greninja = Pokemon(
 			species: greninjaSpecies,
 			level: 100,
@@ -202,7 +202,7 @@ class PokemonKitTests: XCTestCase {
 	}
 
 	func testAllFainted() {
-		let greninjaSpecies = Pokedex.default.pokemon["greninja"]!
+		let greninjaSpecies = Pokedex.default.getPokemon(byIdentifier: "greninja")!
 		let greninja = Pokemon(
 			species: greninjaSpecies,
 			level: 100,
@@ -229,30 +229,29 @@ class PokemonKitTests: XCTestCase {
 	}
 
 	func testImportingFromDatabase() {
-		XCTAssertEqual(Pokedex.default.pokemon.count, 807)
-		let charizardSpecies = Pokedex.default.pokemon["charizard"]
+		let charizardSpecies = Pokedex.default.getPokemon(byIdentifier: "charizard")
 		XCTAssertNotNil(charizardSpecies)
 	}
 
 	func testPichuMovesetCount() {
-		XCTAssertEqual(Pokedex.default.pokemon["pichu"]!.moveset.count, 48)
+		XCTAssertEqual(Pokedex.default.getPokemon(byIdentifier: "pichu")!.moveset.count, 48)
 	}
 
 	func testAddingMultipleAttacks() {
-		engine.addTurn(Turn(player: joe, action: .attack(attack: Pokedex.default.attacks["Thunder Wave"]!)))
-		engine.addTurn(Turn(player: joe, action: .attack(attack: Pokedex.default.attacks["Thunderbolt"]!)))
+		engine.addTurn(Turn(player: joe, action: .attack(attack: Pokedex.default.getAttack(named: "Thunder Wave")!)))
+		engine.addTurn(Turn(player: joe, action: .attack(attack: Pokedex.default.getAttack(named: "Thunderbolt")!)))
 		XCTAssert(engine.turns.count == 1)
 	}
 
 	func testAddingSwitchTurn() {
-		engine.addTurn(Turn(player: joe, action: .attack(attack: Pokedex.default.attacks["Thunder Wave"]!)))
+		engine.addTurn(Turn(player: joe, action: .attack(attack: Pokedex.default.getAttack(named: "Thunder Wave")!)))
 		engine.addTurn(Turn(player: joe, action: .switchTo(bulbasaur)))
 
 		XCTAssert(engine.turns.count == 1)
 	}
 
 	func testAddingForceSwitch() {
-		let gengarSpecies = Pokedex.default.pokemon[93]
+		let gengarSpecies = Pokedex.default.getPokemon(byDexNumber: 93)!
 		let gengar = Pokemon(
 			species: gengarSpecies,
 			level: 50,
@@ -283,7 +282,7 @@ class PokemonKitTests: XCTestCase {
 		// Bulbasaur's HP should be fully recovered by this point
 
 		engine.addTurn(Turn(player: joe, action: .attack(attack: thunderbolt)))
-		engine.addTurn(Turn(player: rhys, action: .attack(attack: Pokedex.default.attacks["Recover"]!)))
+		engine.addTurn(Turn(player: rhys, action: .attack(attack: Pokedex.default.getAttack(named: "Recover")!)))
 
 		XCTAssertEqual(rhys.activePokemon.currentHP, rhys.activePokemon.baseStats.hp)
 	}
@@ -291,7 +290,7 @@ class PokemonKitTests: XCTestCase {
 	func testNeedToRecharge() {
 		Random.shared = Random(seed: "willhit")
 
-		let hyperBeam = Pokedex.default.attacks["Hyper Beam"]!
+		let hyperBeam = Pokedex.default.getAttack(named: "Hyper Beam")!
 
 		engine.addTurn(Turn(player: joe, action: .attack(attack: hyperBeam)))
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: gigaDrain)))
@@ -300,7 +299,7 @@ class PokemonKitTests: XCTestCase {
 	}
 
 	func testSwordsDance() {
-		let swordsDance = Pokedex.default.attacks["Swords Dance"]!
+		let swordsDance = Pokedex.default.getAttack(named: "Swords Dance")!
 
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: swordsDance)))
 		engine.addTurn(Turn(player: joe, action: .attack(attack: thunderbolt)))
@@ -309,8 +308,8 @@ class PokemonKitTests: XCTestCase {
 	}
 
 	func testTopsyTurvy() {
-		let swordsDance = Pokedex.default.attacks["Swords Dance"]!
-		let topsyTurvy = Pokedex.default.attacks["Topsy-Turvy"]!
+		let swordsDance = Pokedex.default.getAttack(named: "Swords Dance")!
+		let topsyTurvy = Pokedex.default.getAttack(named: "Topsy-Turvy")!
 
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: swordsDance)))
 		engine.addTurn(Turn(player: joe, action: .attack(attack: thunderbolt)))
@@ -338,13 +337,13 @@ class PokemonKitTests: XCTestCase {
 	}
 
 	func testSuperEffectiveDamage() {
-		let flamethrower = Pokedex.default.attacks["Flamethrower"]!
+		let flamethrower = Pokedex.default.getAttack(named: "Flamethrower")!
 		let (_, effectiveness) = engine.calculateDamage(attacker: rhys.activePokemon, defender: bulbasaur, attack: flamethrower)
 		XCTAssertEqual(effectiveness, Type.Effectiveness.superEffective)
 	}
 
 	func testNotEffectiveDamage() {
-		let gengarSpecies = Pokedex.default.pokemon[93]
+		let gengarSpecies = Pokedex.default.getPokemon(byDexNumber: 93)!
 		let gengar = Pokemon(
 			species: gengarSpecies,
 			level: 50,
@@ -355,7 +354,7 @@ class PokemonKitTests: XCTestCase {
 			attacks: []
 		)
 
-		let eeveeSpecies = Pokedex.default.pokemon[132]
+		let eeveeSpecies = Pokedex.default.getPokemon(byDexNumber: 132)!
 		let eevee = Pokemon(
 			species: eeveeSpecies,
 			level: 50,
@@ -365,7 +364,7 @@ class PokemonKitTests: XCTestCase {
 			individualValues: .fullIVs,
 			attacks: []
 		)
-		let tackle = Pokedex.default.attacks["Tackle"]!
+		let tackle = Pokedex.default.getAttack(named: "Tackle")!
 
 		let (_, effectiveness) = engine.calculateDamage(attacker: eevee, defender: gengar, attack: tackle)
 
@@ -374,7 +373,7 @@ class PokemonKitTests: XCTestCase {
 
 	/// Checks that Solar Beam applies the correct volatile status to the Pokémon that uses it, and does no damage on the first turn
 	func testSolarBeamFirstTurn() {
-		let solarBeam = Pokedex.default.attacks["Solar Beam"]!
+		let solarBeam = Pokedex.default.getAttack(named: "Solar Beam")!
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: solarBeam)))
 		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
 
@@ -384,7 +383,7 @@ class PokemonKitTests: XCTestCase {
 
 	// Checks that Solar Beam applies the correct volatile status, does
 	func testSolarBeamTwoTurns() {
-		let solarBeam = Pokedex.default.attacks["Solar Beam"]!
+		let solarBeam = Pokedex.default.getAttack(named: "Solar Beam")!
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: solarBeam)))
 		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
 
@@ -399,7 +398,7 @@ class PokemonKitTests: XCTestCase {
 	}
 
 	func testSolarBeamUnderSunlight() {
-		let solarBeam = Pokedex.default.attacks["Solar Beam"]!
+		let solarBeam = Pokedex.default.getAttack(named: "Solar Beam")!
 		engine.setWeather(.harshSunlight)
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: solarBeam)))
 		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
@@ -412,7 +411,7 @@ class PokemonKitTests: XCTestCase {
 		Random.shared = Random(seed: "Testing")
 		// Main seed ensures Rhys's Pokémon won't hurt itself in confusion
 
-		let solarBeam = Pokedex.default.attacks["Solar Beam"]!
+		let solarBeam = Pokedex.default.getAttack(named: "Solar Beam")!
 		engine.setWeather(.harshSunlight)
 		rhys.activePokemon.volatileStatus.insert(.confused(3))
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: solarBeam)))
@@ -430,7 +429,7 @@ class PokemonKitTests: XCTestCase {
 		// Seed guaranteed to have Rhys's active Pokémon hurt itself in confusion
 		Random.shared = Random(seed: "HurtSelfConfusion")
 
-		let solarBeam = Pokedex.default.attacks["Solar Beam"]!
+		let solarBeam = Pokedex.default.getAttack(named: "Solar Beam")!
 		engine.setWeather(.harshSunlight)
 		rhys.activePokemon.volatileStatus.insert(.confused(3))
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: solarBeam)))
@@ -440,7 +439,7 @@ class PokemonKitTests: XCTestCase {
 	}
 
 	func testProtectFasterPokemon() {
-		let protect = Pokedex.default.attacks["Protect"]!
+		let protect = Pokedex.default.getAttack(named: "Protect")!
 
 		engine.addTurn(Turn(player: joe, action: .attack(attack: protect)))
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: gigaDrain)))
@@ -449,7 +448,7 @@ class PokemonKitTests: XCTestCase {
 	}
 
 	func testProtectSlowerPokemon() {
-		let protect = Pokedex.default.attacks["Protect"]!
+		let protect = Pokedex.default.getAttack(named: "Protect")!
 		engine.addTurn(Turn(player: joe, action: .attack(attack: thunderbolt)))
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: protect)))
 
@@ -521,7 +520,7 @@ class PokemonKitTests: XCTestCase {
 	/// Test's Random seed is known to cause attack to miss
 	func testAccuracyLowAccuracyMove() {
 		Random.shared = Random(seed: "Testing")
-		let fissure = Pokedex.default.attacks["Fissure"]!
+		let fissure = Pokedex.default.getAttack(named: "Fissure")!
 
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: fissure)))
 		engine.addTurn(Turn(player: joe, action: .attack(attack: gigaDrain)))
@@ -530,7 +529,7 @@ class PokemonKitTests: XCTestCase {
 	}
 
 	func testAccuracyPerfectAccuracy() {
-		let aerialAce = Pokedex.default.attacks["Aerial Ace"]!
+		let aerialAce = Pokedex.default.getAttack(named: "Aerial Ace")!
 
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: aerialAce)))
 		engine.addTurn(Turn(player: joe, action: .attack(attack: gigaDrain)))
@@ -558,8 +557,8 @@ class PokemonKitTests: XCTestCase {
 	// MARK: - GKMinmaxStrategist tests
 
 	func testAICanMakeTurn() {
-		joe.activePokemon.attacks.append(Pokedex.default.attacks["Hyper Beam"]!)
-		joe.activePokemon.attacks.append(Pokedex.default.attacks["Protect"]!)
+		joe.activePokemon.attacks.append(Pokedex.default.getAttack(named: "Hyper Beam")!)
+		joe.activePokemon.attacks.append(Pokedex.default.getAttack(named: "Protect")!)
 
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: gigaDrain)))
 
@@ -579,7 +578,7 @@ class PokemonKitTests: XCTestCase {
 	}
 
 	func testAIWillForceSwitch() {
-		let gengarSpecies = Pokedex.default.pokemon[93]
+		let gengarSpecies = Pokedex.default.getPokemon(byDexNumber: 93)!
 		let gengar = Pokemon(
 			species: gengarSpecies,
 			level: 50,
@@ -640,7 +639,7 @@ class PokemonKitTests: XCTestCase {
 	func testFireMoveInSunlight() {
 		engine.weather = .harshSunlight
 
-		let (damage, _) = engine.calculateDamage(attacker: pikachu, defender: bulbasaur, attack: Pokedex.default.attacks["Flamethrower"]!)
+		let (damage, _) = engine.calculateDamage(attacker: pikachu, defender: bulbasaur, attack: Pokedex.default.getAttack(named: "Flamethrower")!)
 
 		XCTAssertGreaterThanOrEqual(damage, 124)
 		XCTAssertLessThanOrEqual(damage, 146)
@@ -649,7 +648,7 @@ class PokemonKitTests: XCTestCase {
 	func testFireMoveInRain() {
 		engine.weather = .rain
 
-		let (damage, _) = engine.calculateDamage(attacker: pikachu, defender: bulbasaur, attack: Pokedex.default.attacks["Flamethrower"]!)
+		let (damage, _) = engine.calculateDamage(attacker: pikachu, defender: bulbasaur, attack: Pokedex.default.getAttack(named: "Flamethrower")!)
 
 		XCTAssertGreaterThanOrEqual(damage, 40)
 		XCTAssertLessThanOrEqual(damage, 48)
@@ -658,7 +657,7 @@ class PokemonKitTests: XCTestCase {
 	func testFireMoveInExtremelyHarshSunlight() {
 		engine.weather = .extremelyHarshSunlight
 
-		let (damage, _) = engine.calculateDamage(attacker: pikachu, defender: bulbasaur, attack: Pokedex.default.attacks["Flamethrower"]!)
+		let (damage, _) = engine.calculateDamage(attacker: pikachu, defender: bulbasaur, attack: Pokedex.default.getAttack(named: "Flamethrower")!)
 
 		XCTAssertGreaterThanOrEqual(damage, 124)
 		XCTAssertLessThanOrEqual(damage, 146)
@@ -667,7 +666,7 @@ class PokemonKitTests: XCTestCase {
 	func testFireMoveInHeavyRain() {
 		engine.weather = .heavyRain
 
-		let (damage, _) = engine.calculateDamage(attacker: pikachu, defender: bulbasaur, attack: Pokedex.default.attacks["Flamethrower"]!)
+		let (damage, _) = engine.calculateDamage(attacker: pikachu, defender: bulbasaur, attack: Pokedex.default.getAttack(named: "Flamethrower")!)
 
 		XCTAssertGreaterThanOrEqual(damage, 0)
 		XCTAssertLessThanOrEqual(damage, 0)
@@ -676,7 +675,7 @@ class PokemonKitTests: XCTestCase {
 	func testWaterMoveInSunlight() {
 		engine.weather = .harshSunlight
 
-		let (damage, _) = engine.calculateDamage(attacker: bulbasaur, defender: pikachu, attack: Pokedex.default.attacks["Hydro Pump"]!)
+		let (damage, _) = engine.calculateDamage(attacker: bulbasaur, defender: pikachu, attack: Pokedex.default.getAttack(named: "Hydro Pump")!)
 
 		XCTAssertGreaterThanOrEqual(damage, 38)
 		XCTAssertLessThanOrEqual(damage, 45)
@@ -685,7 +684,7 @@ class PokemonKitTests: XCTestCase {
 	func testWaterMoveInRain() {
 		engine.weather = .rain
 
-		let (damage, _) = engine.calculateDamage(attacker: bulbasaur, defender: pikachu, attack: Pokedex.default.attacks["Hydro Pump"]!)
+		let (damage, _) = engine.calculateDamage(attacker: bulbasaur, defender: pikachu, attack: Pokedex.default.getAttack(named: "Hydro Pump")!)
 
 		XCTAssertGreaterThanOrEqual(damage, 114)
 		XCTAssertLessThanOrEqual(damage, 135)
@@ -694,7 +693,7 @@ class PokemonKitTests: XCTestCase {
 	func testWaterMoveInExtremelyHarshSunlight() {
 		engine.weather = .extremelyHarshSunlight
 
-		let (damage, _) = engine.calculateDamage(attacker: bulbasaur, defender: pikachu, attack: Pokedex.default.attacks["Hydro Pump"]!)
+		let (damage, _) = engine.calculateDamage(attacker: bulbasaur, defender: pikachu, attack: Pokedex.default.getAttack(named: "Hydro Pump")!)
 
 		XCTAssertGreaterThanOrEqual(damage, 0)
 		XCTAssertLessThanOrEqual(damage, 0)
@@ -703,7 +702,7 @@ class PokemonKitTests: XCTestCase {
 	func testWaterMoveInHeavyRain() {
 		engine.weather = .heavyRain
 
-		let (damage, _) = engine.calculateDamage(attacker: bulbasaur, defender: pikachu, attack: Pokedex.default.attacks["Hydro Pump"]!)
+		let (damage, _) = engine.calculateDamage(attacker: bulbasaur, defender: pikachu, attack: Pokedex.default.getAttack(named: "Hydro Pump")!)
 
 		XCTAssertGreaterThanOrEqual(damage, 114)
 		XCTAssertLessThanOrEqual(damage, 135)
@@ -729,7 +728,7 @@ class PokemonKitTests: XCTestCase {
 	}
 
 	func testZeraoraHasThunderbolt() {
-		let zeraora = Pokedex.default.pokemon["zeraora"]!
+		let zeraora = Pokedex.default.getPokemon(byIdentifier: "zeraora")!
 		let moveset = zeraora.moveset
 
 		let thunderbolt = moveset.filter { $0.move.name == "Thunderbolt" }
@@ -737,11 +736,4 @@ class PokemonKitTests: XCTestCase {
 		XCTAssertEqual(zeraora.abilityOne.name, "Volt Absorb")
 	}
 
-	func testCheckAllAttacks() {
-		for pokemon in Pokedex.default.pokemon {
-			for move in pokemon.moveset where move.move.name == "Dummy" {
-				print("Dummy attack!")
-			}
-		}
-	}
 }

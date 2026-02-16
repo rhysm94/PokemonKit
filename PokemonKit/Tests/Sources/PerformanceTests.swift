@@ -10,30 +10,24 @@ import XCTest
 @testable import PokemonKit
 
 class PerformanceTests: XCTestCase {
-	func testSpeedCreatePokedex() {
+	// Old performance tests removed - they tested loading all data into memory
+	// which is no longer the architecture (now using query-based API)
+
+	func testQuerySinglePokemon() {
 		measure {
-			_ = Pokedex()
+			_ = Pokedex.default.getPokemon(byIdentifier: "pikachu")
 		}
 	}
 
-	func testSpeedGetAttacks() {
+	func testQuerySingleAbility() {
 		measure {
-			_ = Pokedex.getAttacks()
+			_ = Pokedex.default.getAbility(named: "Protean")
 		}
 	}
 
-	func testSpeedGetAbilities() {
+	func testQuerySingleAttack() {
 		measure {
-			_ = Pokedex.getAbilities()
-		}
-	}
-
-	func testSpeedGetPokemon() {
-		let attacks = Pokedex.getAttacks()
-		let abilities = Pokedex.getAbilities()
-
-		measure {
-			_ = Pokedex.getPokemon(abilities: abilities, attacks: attacks)
+			_ = Pokedex.default.getAttack(named: "Thunderbolt")
 		}
 	}
 }

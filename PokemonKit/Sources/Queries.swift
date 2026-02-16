@@ -7,6 +7,94 @@
 //
 
 enum Queries {
+	static func getPokemonByIdentifier(_ identifier: String) -> String {
+		"""
+		select
+		p.id,
+		p.identifier,
+		ps.name,
+		(select tn.name from type_names as tn
+		join pokemon_types as pt on pt.type_id = tn.type_id
+		where pt.pokemon_id = p.id and tn.local_language_id = 9 and pt.slot = 1) as typeOne,
+		(select tn.name from type_names as tn
+		join pokemon_types as pt on pt.type_id = tn.type_id
+		where pt.pokemon_id = p.id and tn.local_language_id = 9 and pt.slot = 2) as typeTwo,
+		(select pokestat.base_stat from pokemon_stats as pokestat
+		where pokestat.pokemon_id = p.id and pokestat.stat_id = 1) as stat_hp,
+		(select pokestat.base_stat from pokemon_stats as pokestat
+		where pokestat.pokemon_id = p.id and pokestat.stat_id = 2) as stat_atk,
+		(select pokestat.base_stat from pokemon_stats as pokestat
+		where pokestat.pokemon_id = p.id and pokestat.stat_id = 3) as stat_def,
+		(select pokestat.base_stat from pokemon_stats as pokestat
+		where pokestat.pokemon_id = p.id and pokestat.stat_id = 4) as stat_spAtk,
+		(select pokestat.base_stat from pokemon_stats as pokestat
+		where pokestat.pokemon_id = p.id and pokestat.stat_id = 5) as stat_spDef,
+		(select pokestat.base_stat from pokemon_stats as pokestat
+		where pokestat.pokemon_id = p.id and pokestat.stat_id = 6) as stat_spd,
+		(select pa.ability_id from pokemon_abilities as pa
+		where pa.pokemon_id = p.id and pa.slot=1 and pa.is_hidden=0) as ability_one_id,
+		(select pa.ability_id from pokemon_abilities as pa
+		where pa.pokemon_id = p.id and pa.slot=2 and pa.is_hidden=0) as ability_two_id,
+		(select pa.ability_id from pokemon_abilities as pa
+		where pa.pokemon_id = p.id and pa.is_hidden=1) as ability_hidden_id,
+		(select pAlias.identifier from pokemon_species as pAlias
+		join pokemon_species as p2
+		on p2.evolves_from_species_id = pAlias.id where p2.id = p.id) as evolves_from,
+		(select pfn.form_name from pokemon_form_names as pfn
+		join pokemon_forms as pf on p.id = pf.pokemon_id
+		where pf.id = pfn.pokemon_form_id
+		and pfn.local_language_id = 9
+		and pf.is_default = 1) as form_name
+		from pokemon as p
+		join pokemon_species_names as ps on p.id = ps.pokemon_species_id
+		where ps.local_language_id = 9 and p.identifier = '\(identifier)';
+		"""
+	}
+
+	static func getPokemonByDexNumber(_ dexNum: Int) -> String {
+		"""
+		select
+		p.id,
+		p.identifier,
+		ps.name,
+		(select tn.name from type_names as tn
+		join pokemon_types as pt on pt.type_id = tn.type_id
+		where pt.pokemon_id = p.id and tn.local_language_id = 9 and pt.slot = 1) as typeOne,
+		(select tn.name from type_names as tn
+		join pokemon_types as pt on pt.type_id = tn.type_id
+		where pt.pokemon_id = p.id and tn.local_language_id = 9 and pt.slot = 2) as typeTwo,
+		(select pokestat.base_stat from pokemon_stats as pokestat
+		where pokestat.pokemon_id = p.id and pokestat.stat_id = 1) as stat_hp,
+		(select pokestat.base_stat from pokemon_stats as pokestat
+		where pokestat.pokemon_id = p.id and pokestat.stat_id = 2) as stat_atk,
+		(select pokestat.base_stat from pokemon_stats as pokestat
+		where pokestat.pokemon_id = p.id and pokestat.stat_id = 3) as stat_def,
+		(select pokestat.base_stat from pokemon_stats as pokestat
+		where pokestat.pokemon_id = p.id and pokestat.stat_id = 4) as stat_spAtk,
+		(select pokestat.base_stat from pokemon_stats as pokestat
+		where pokestat.pokemon_id = p.id and pokestat.stat_id = 5) as stat_spDef,
+		(select pokestat.base_stat from pokemon_stats as pokestat
+		where pokestat.pokemon_id = p.id and pokestat.stat_id = 6) as stat_spd,
+		(select pa.ability_id from pokemon_abilities as pa
+		where pa.pokemon_id = p.id and pa.slot=1 and pa.is_hidden=0) as ability_one_id,
+		(select pa.ability_id from pokemon_abilities as pa
+		where pa.pokemon_id = p.id and pa.slot=2 and pa.is_hidden=0) as ability_two_id,
+		(select pa.ability_id from pokemon_abilities as pa
+		where pa.pokemon_id = p.id and pa.is_hidden=1) as ability_hidden_id,
+		(select pAlias.identifier from pokemon_species as pAlias
+		join pokemon_species as p2
+		on p2.evolves_from_species_id = pAlias.id where p2.id = p.id) as evolves_from,
+		(select pfn.form_name from pokemon_form_names as pfn
+		join pokemon_forms as pf on p.id = pf.pokemon_id
+		where pf.id = pfn.pokemon_form_id
+		and pfn.local_language_id = 9
+		and pf.is_default = 1) as form_name
+		from pokemon as p
+		join pokemon_species_names as ps on p.id = ps.pokemon_species_id
+		where ps.local_language_id = 9 and p.species_id = \(dexNum);
+		"""
+	}
+
 	static let getAllPokemon = """
 	select
 	p.id,
@@ -75,18 +163,12 @@ enum Queries {
 		(select base_stat from pokemon_stats as stats where stat_id = 4 and stats.pokemon_id = p.id) as spAtk,
 		(select base_stat from pokemon_stats as stats where stat_id = 5 and stats.pokemon_id = p.id) as spDef,
 		(select base_stat from pokemon_stats as stats where stat_id = 6 and stats.pokemon_id = p.id) as spd,
-		(select an.name from ability_names as an
-		join pokemon_abilities as pa
-		on an.ability_id = pa.ability_id where pa.pokemon_id = p.id
-		and an.local_language_id = 9 and pa.slot=1) as ability_one,
-		(select an.name from ability_names as an
-		join pokemon_abilities as pa
-		on an.ability_id = pa.ability_id where pa.pokemon_id = p.id
-		and an.local_language_id = 9 and pa.slot=2) as ability_two,
-		(select an.name from ability_names as an
-		join pokemon_abilities as pa
-		on an.ability_id = pa.ability_id where pa.pokemon_id = p.id
-		and an.local_language_id = 9 and pa.slot=3) as ability_hidden,
+		(select pa.ability_id from pokemon_abilities as pa
+		where pa.pokemon_id = p.id and pa.slot=1 and pa.is_hidden=0) as ability_one_id,
+		(select pa.ability_id from pokemon_abilities as pa
+		where pa.pokemon_id = p.id and pa.slot=2 and pa.is_hidden=0) as ability_two_id,
+		(select pa.ability_id from pokemon_abilities as pa
+		where pa.pokemon_id = p.id and pa.is_hidden=1) as ability_hidden_id,
 		pfn.pokemon_name,
 		pfn.form_name,
 		pf.identifier,
