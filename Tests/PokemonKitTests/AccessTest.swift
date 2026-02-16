@@ -11,16 +11,8 @@ import XCTest
 @testable import PokemonKit
 
 class AccessTest: XCTestCase {
-	override func setUp() {
-		// Put setup code here. This method is called before the invocation of each test method in the class.
-	}
-
-	override func tearDown() {
-		// Put teardown code here. This method is called after the invocation of each test method in the class.
-	}
-
 	func testEvolutions() {
-		let eevee = Pokedex.default.pokemon["tyrogue"]!
+		let eevee = Pokedex.default.getPokemon(byIdentifier: "tyrogue")!
 		let eeveeEvolutions = eevee.evolutions?.sorted { $1.evolvedPokemon.dexNum > $0.evolvedPokemon.dexNum }
 		for evolution in eeveeEvolutions ?? [] {
 			print("To evolve into: \(evolution.evolvedPokemon):")
@@ -31,7 +23,7 @@ class AccessTest: XCTestCase {
 	}
 
 	func testPreEvolutions() {
-		let sylveon = Pokedex.default.pokemon["sylveon"]!
+		let sylveon = Pokedex.default.getPokemon(byIdentifier: "sylveon")!
 		guard let eevee = sylveon.evolvesFrom else {
 			XCTFail("Couldn't unwrap sylveon.evolvesFrom")
 			return
@@ -40,28 +32,28 @@ class AccessTest: XCTestCase {
 	}
 
 	func testFormAttributes() {
-		let bulbasaur = Pokedex.default.pokemon["bulbasaur"]!
+		let bulbasaur = Pokedex.default.getPokemon(byIdentifier: "bulbasaur")!
 		XCTAssertFalse(bulbasaur.formAttributes.isMega)
 	}
 
 	func testAlternateFormCount() {
-		let deoxys = Pokedex.default.pokemon[385]
+		let deoxys = Pokedex.default.getPokemon(byDexNumber: 386)!
 		XCTAssertEqual(deoxys.forms.count, 3)
 	}
 
 	func testAlternateFormCountNone() {
-		let bulbasaur = Pokedex.default.pokemon["bulbasaur"]!
+		let bulbasaur = Pokedex.default.getPokemon(byIdentifier: "bulbasaur")!
 		XCTAssertEqual(bulbasaur.forms.count, 0)
 	}
 
 	func testAlternateFormCountMany() {
-		let pikachu = Pokedex.default.pokemon["pikachu"]!
+		let pikachu = Pokedex.default.getPokemon(byIdentifier: "pikachu")!
 		print(pikachu.forms)
 		XCTAssertEqual(pikachu.forms.count, 13)
 	}
 
 	func testIsMega() {
-		let sceptile = Pokedex.default.pokemon["sceptile"]!
+		let sceptile = Pokedex.default.getPokemon(byIdentifier: "sceptile")!
 		let megaSceptile = sceptile.forms[0]
 		XCTAssertTrue(megaSceptile.formAttributes.isMega)
 	}

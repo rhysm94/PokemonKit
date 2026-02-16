@@ -48,7 +48,7 @@ public struct PokemonSpecies: Codable, Hashable {
 
 	public var evolvesFrom: PokemonSpecies? {
 		guard let preEvo = _evolvesFrom else { return nil }
-		return Pokedex.default.pokemon[preEvo]
+		return Pokedex.default.getPokemon(byIdentifier: preEvo)
 	}
 
 	public var evolutions: [PokemonEvolution]? {

@@ -18,16 +18,16 @@ class StatusTests: XCTestCase {
 
 	var engine: BattleEngine!
 
-	let sludgeBomb = Pokedex.default.attacks["Sludge Bomb"]!
-	let gigaDrain = Pokedex.default.attacks["Giga Drain"]!
-	let thunderbolt = Pokedex.default.attacks["Thunderbolt"]!
-	let thunder = Pokedex.default.attacks["Thunder"]!
-	let tackle = Pokedex.default.attacks["Tackle"]!
+	let sludgeBomb = Pokedex.default.getAttack(named: "Sludge Bomb")!
+	let gigaDrain = Pokedex.default.getAttack(named: "Giga Drain")!
+	let thunderbolt = Pokedex.default.getAttack(named: "Thunderbolt")!
+	let thunder = Pokedex.default.getAttack(named: "Thunder")!
+	let tackle = Pokedex.default.getAttack(named: "Tackle")!
 
 	override func setUp() {
 		super.setUp()
 
-		let bulbasaurSpecies = Pokedex.default.pokemon["bulbasaur"]!
+		let bulbasaurSpecies = Pokedex.default.getPokemon(byIdentifier: "bulbasaur")!
 		bulbasaur = Pokemon(
 			species: bulbasaurSpecies,
 			level: 50,
@@ -37,7 +37,7 @@ class StatusTests: XCTestCase {
 			attacks: [sludgeBomb, gigaDrain]
 		)
 
-		let pikachuSpecies = Pokedex.default.pokemon["pikachu"]!
+		let pikachuSpecies = Pokedex.default.getPokemon(byIdentifier: "pikachu")!
 		pikachu = Pokemon(
 			species: pikachuSpecies,
 			level: 50,
@@ -51,18 +51,13 @@ class StatusTests: XCTestCase {
 		joe.add(pokemon: pikachu)
 
 		engine = BattleEngine(playerOne: rhys, playerTwo: joe)
-		// Put setup code here. This method is called before the invocation of each test method in the class.
 	}
 
-	override func tearDown() {
-		// Put teardown code here. This method is called after the invocation of each test method in the class.
-		super.tearDown()
-	}
 
 	func testParalysisApplied() {
 		Random.shared = Random(seed: "willhit")
 
-		engine.addTurn(Turn(player: joe, action: .attack(attack: Pokedex.default.attacks["Thunder Wave"]!)))
+		engine.addTurn(Turn(player: joe, action: .attack(attack: Pokedex.default.getAttack(named: "Thunder Wave")!)))
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: rhys.activePokemon.attacks[0])))
 
 		XCTAssert(rhys.activePokemon.status == .paralysed)
@@ -121,7 +116,7 @@ class StatusTests: XCTestCase {
 
 		joe.activePokemon.volatileStatus.insert(.confused(2))
 
-		let confuseRay = Pokedex.default.attacks["Confuse Ray"]!
+		let confuseRay = Pokedex.default.getAttack(named: "Confuse Ray")!
 
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: confuseRay)))
 		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
@@ -139,7 +134,7 @@ class StatusTests: XCTestCase {
 	func testConfusionPreventsBonusEffect() {
 		// Seed guaranteed to cause Joe's active Pokémon to hurt itself in its confusion
 		Random.shared = Random(seed: "confused")
-		let hypnosis = Pokedex.default.attacks["Hypnosis"]!
+		let hypnosis = Pokedex.default.getAttack(named: "Hypnosis")!
 
 		joe.activePokemon.volatileStatus.insert(.confused(3))
 

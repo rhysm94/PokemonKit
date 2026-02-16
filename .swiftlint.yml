@@ -1,5 +1,6 @@
 included:
-  ./PokemonKit/
+  - Sources/
+  - Tests/
   
 line_length:
   warning: 140
@@ -27,3 +28,4 @@ disabled_rules:
   - large_tuple
   - function_body_length
   - type_body_length
+  - file_length
