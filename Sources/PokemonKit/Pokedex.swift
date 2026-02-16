@@ -131,28 +131,7 @@ public class Pokedex {
 		let eggGroupTwo: EggGroup? = eggGroups.indices.contains(1) ? EggGroup(using: eggGroups[1][eggGroupID]) : nil
 
 		// Get moveset - only load attacks for this specific Pokemon
-		let moveset = Pokedex.getAttacksForPokemon(Int(pokedexNumber)).sorted { first, second in
-			switch (first.moveLearnMethod, second.moveLearnMethod) {
-			case let (.levelUp(left), .levelUp(right)):
-				return left < right
-			case (.levelUp, .machine):
-				return true
-			case (.machine, .egg):
-				return true
-			case (.egg, .lightBallEgg):
-				return true
-			case (.lightBallEgg, .moveTutor):
-				return true
-			case (.egg, .moveTutor):
-				return true
-			case (.moveTutor, .formChange):
-				return true
-			case (.machine, .moveTutor):
-				return true
-			default:
-				return false
-			}
-		}
+		let moveset = Pokedex.getAttacksForPokemon(Int(pokedexNumber)).sorted()
 
 		let stats = Stats(hp: Int(hp), atk: Int(atk), def: Int(def), spAtk: Int(spAtk), spDef: Int(spDef), spd: Int(spd))
 		let formAttributes = PokemonSpecies.FormAttributes(formName: formName)
@@ -875,28 +854,7 @@ public class Pokedex {
 					return EggGroup(using: eggGroups[1][eggGroupID])
 				}
 
-				let moveset = Pokedex.getAttacksForPokemon(Int(dbId)).sorted { first, second in
-					switch (first.moveLearnMethod, second.moveLearnMethod) {
-					case let (.levelUp(left), .levelUp(right)):
-						return left < right
-					case (.levelUp, .machine):
-						return true
-					case (.machine, .egg):
-						return true
-					case (.egg, .lightBallEgg):
-						return true
-					case (.lightBallEgg, .moveTutor):
-						return true
-					case (.egg, .moveTutor):
-						return true
-					case (.moveTutor, .formChange):
-						return true
-					case (.machine, .moveTutor):
-						return true
-					default:
-						return false
-					}
-				}
+				let moveset = Pokedex.getAttacksForPokemon(Int(dbId)).sorted()
 
 				let stats = Stats(hp: Int(hp), atk: Int(atk), def: Int(def), spAtk: Int(spAtk), spDef: Int(spDef), spd: Int(spd))
 				let formAttributes = PokemonSpecies.FormAttributes(

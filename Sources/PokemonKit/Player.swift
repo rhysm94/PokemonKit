@@ -13,9 +13,7 @@ public class Player: NSObject, Codable, GKGameModelPlayer {
 	public let name: String
 	public internal(set) var team = [Pokemon]()
 
-	public lazy var playerId: Int = {
-		GKRandomSource.sharedRandom().nextInt()
-	}()
+	public lazy var playerId: Int = GKRandomSource.sharedRandom().nextInt()
 
 	public var activePokemon: Pokemon {
 		team[0]
@@ -61,43 +59,16 @@ extension Player {
 	public static func == (lhs: Player, rhs: Player) -> Bool {
 		lhs.name == rhs.name &&
 			lhs.playerId == rhs.playerId &&
-			lhs.team == rhs.team &&
-			lhs.activePokemon == rhs.activePokemon
-	}
-
-	public static func != (lhs: Player, rhs: Player) -> Bool {
-		!(lhs == rhs)
+			lhs.team == rhs.team
 	}
 
 	public static func == (lhs: Player, rhs: GKGameModelPlayer) -> Bool {
-		if let right = rhs as? Player {
-			return lhs == right
-		} else {
-			return false
-		}
+		guard let right = rhs as? Player else { return false }
+		return lhs == right
 	}
 
 	public static func == (lhs: GKGameModelPlayer, rhs: Player) -> Bool {
-		if let left = lhs as? Player {
-			return left == rhs
-		} else {
-			return false
-		}
-	}
-
-	public static func != (lhs: Player, rhs: GKGameModelPlayer) -> Bool {
-		if let right = rhs as? Player {
-			return lhs != right
-		} else {
-			return false
-		}
-	}
-
-	public static func != (lhs: GKGameModelPlayer, rhs: Player) -> Bool {
-		if let left = lhs as? Player {
-			return left != rhs
-		} else {
-			return false
-		}
+		guard let left = lhs as? Player else { return false }
+		return left == rhs
 	}
 }

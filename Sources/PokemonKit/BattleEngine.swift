@@ -856,7 +856,7 @@ public class BattleEngine: NSObject, GKGameModel {
 
 	public func isLoss(for player: GKGameModelPlayer) -> Bool {
 		if let winner = winner {
-			return winner != player
+			return !(winner == player)
 		} else {
 			return false
 		}

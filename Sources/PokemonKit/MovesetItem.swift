@@ -6,8 +6,8 @@
 //  Copyright © 2018 Rhys Morgan. All rights reserved.
 //
 
-public struct MovesetItem: Codable, Hashable {
-	public enum MoveLearnMethod: Codable, Hashable {
+public struct MovesetItem: Codable, Hashable, Comparable {
+	public enum MoveLearnMethod: Codable, Hashable, Comparable {
 		case levelUp(level: Int)
 		case machine
 		case egg
@@ -18,4 +18,11 @@ public struct MovesetItem: Codable, Hashable {
 
 	public let move: Attack
 	public let moveLearnMethod: MoveLearnMethod
+
+	public static func < (lhs: Self, rhs: Self) -> Bool {
+		if lhs.moveLearnMethod != rhs.moveLearnMethod {
+			return lhs.moveLearnMethod < rhs.moveLearnMethod
+		}
+		return lhs.move.name < rhs.move.name
+	}
 }
