@@ -245,7 +245,7 @@ public class BattleEngine: NSObject, GKGameModel {
 				let turn = turns.removeFirst()
 
 				switch turn.action {
-				case var .attack(attack):
+				case let .attack(attack):
 					var attacker: Pokemon
 					var defender: Pokemon
 

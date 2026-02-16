@@ -712,7 +712,7 @@ public class Pokedex {
 				guard let evolution = getPokemon(byIdentifier: row[identifier]) else { break }
 
 				if let level = row[minimumLevel] {
-					evolutionConditions.insert(.levelUp(.minimumLevel(level)))
+          evolutionConditions.insert(.levelUp(conditions: .minimumLevel(level)))
 				}
 
 				if row[evolutionTriggerID] == 2 {
@@ -735,20 +735,20 @@ public class Pokedex {
 						}
 					}()
 
-					evolutionConditions.insert(.gender(genderToInsert))
+          evolutionConditions.insert(.gender(genderToInsert))
 				}
 
 				if let locationID = row[locationID] {
 					switch locationID {
 					case 8, 375, 650:
 						// Moss Rock for Leafeon
-						evolutionConditions.insert(.levelUp(.inArea(.mossRock)))
+            evolutionConditions.insert(.levelUp(conditions: .inArea(.mossRock)))
 					case 10, 379, 629:
 						// Mt Coronet for Magnetic Field Pokémon
-						evolutionConditions.insert(.levelUp(.inArea(.magneticField)))
+            evolutionConditions.insert(.levelUp(conditions: .inArea(.magneticField)))
 					case 48, 380, 649:
 						// Icy Rock for Glaceon
-						evolutionConditions.insert(.levelUp(.inArea(.icyRock)))
+            evolutionConditions.insert(.levelUp(conditions: .inArea(.icyRock)))
 					default:
 						break
 					}
@@ -756,23 +756,23 @@ public class Pokedex {
 
 				if let timeOfDay = row[timeOfDay] {
 					if timeOfDay == "day" {
-						evolutionConditions.insert(.timeOfDay(.day))
+            evolutionConditions.insert(.timeOfDay(.day))
 					} else if timeOfDay == "night" {
-						evolutionConditions.insert(.timeOfDay(.night))
+            evolutionConditions.insert(.timeOfDay(.night))
 					}
 				}
 
 				if let moveTypeID = row[knownMoveTypeID] {
 					let type = Type(using: moveTypeID)
-					evolutionConditions.insert(.levelUp(.knowsAttackType(type)))
+          evolutionConditions.insert(.levelUp(conditions: .knowsAttackType(type)))
 				}
 
 				if row[minimumHappiness] != nil {
-					evolutionConditions.insert(.levelUp(.happiness))
+					evolutionConditions.insert(.levelUp(conditions: .happiness))
 				}
 
 				if row[minimumBeauty] != nil {
-					evolutionConditions.insert(.levelUp(.beauty))
+					evolutionConditions.insert(.levelUp(conditions: .beauty))
 				}
 
 				if row[minimumAffection] != nil {
@@ -780,7 +780,7 @@ public class Pokedex {
 				}
 
 				if row[needsOverworldRain] {
-					evolutionConditions.insert(.weather(.rain))
+          evolutionConditions.insert(.weather(.rain))
 				}
 
 				if row[upsideDown] {
@@ -789,18 +789,18 @@ public class Pokedex {
 
 				if let stats = row[physicalStats] {
 					if stats == -1 {
-						evolutionConditions.insert(.physicalStats(.defenseHigher))
+            evolutionConditions.insert(.physicalStats(.defenseHigher))
 					} else if stats == 0 {
-						evolutionConditions.insert(.physicalStats(.equal))
+            evolutionConditions.insert(.physicalStats(.equal))
 					} else if stats == 1 {
-						evolutionConditions.insert(.physicalStats(.attackHigher))
+            evolutionConditions.insert(.physicalStats(.attackHigher))
 					}
 				}
 
 				let knownMoveName = Pokedex.getMoveName(moveID: row[knownMoveID])
 				if let moveName = knownMoveName,
 					let attack = Pokedex.getAttackFromDB(named: moveName) {
-					evolutionConditions.insert(.levelUp(.knowsAttack(attack)))
+          evolutionConditions.insert(.levelUp(conditions: .knowsAttack(attack)))
 				}
 
 				evolutions.insert(PokemonEvolution(evolvedPokemon: evolution, conditions: evolutionConditions))
@@ -1013,13 +1013,13 @@ public class Pokedex {
 
 				let attack = getAttackFromDB(byID: moveIDValue) ?? .dummy
 				let moveLearnMethod: MovesetItem.MoveLearnMethod = switch learnMethod {
-				case 1: .levelUp(level)
+				case 1: .levelUp(level: level)
 				case 2: .egg
 				case 3: .moveTutor
 				case 4: .machine
 				case 6: .lightBallEgg
 				case 10: .formChange
-				default: .levelUp(0)
+				default: .levelUp(level: 0)
 				}
 
 				moveset.append(MovesetItem(move: attack, moveLearnMethod: moveLearnMethod))
