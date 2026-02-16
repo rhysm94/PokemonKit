@@ -17,13 +17,15 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/stephencelis/SQLite.swift.git", from: "0.15.5")
+        .package(url: "https://github.com/stephencelis/SQLite.swift.git", from: "0.15.5"),
+        .package(url: "https://github.com/pointfreeco/swift-tagged.git", from: "0.10.0")
     ],
     targets: [
         .target(
             name: "PokemonKit",
             dependencies: [
-                .product(name: "SQLite", package: "SQLite.swift")
+                .product(name: "SQLite", package: "SQLite.swift"),
+                .product(name: "Tagged", package: "swift-tagged")
             ],
             resources: [
                 .process("Resources")

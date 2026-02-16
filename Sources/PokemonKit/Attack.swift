@@ -7,8 +7,12 @@
 //
 
 import Foundation
+import Tagged
 
-public struct Attack: Codable {
+public struct Attack: Codable, Identifiable {
+	public typealias ID = Tagged<Attack, Int64>
+
+	public let id: ID
 	public let name: String
 	public let power: Int
 	public let basePP: Int
@@ -49,6 +53,7 @@ public struct Attack: Codable {
 	}
 
 	public init(
+		id: ID,
 		name: String,
 		power: Int,
 		basePP: Int,
@@ -61,6 +66,7 @@ public struct Attack: Codable {
 		effectTarget: EffectTarget? = nil,
 		bonusEffect: BonusEffect? = nil
 	) {
+		self.id = id
 		self.name = name
 		self.power = power
 		self.basePP = basePP
@@ -77,6 +83,7 @@ public struct Attack: Codable {
 	/// Returns this Attack, but with its `bonusEffect` set to `nil`
 	public func withoutBonusEffect() -> Attack {
 		Attack(
+			id: id,
 			name: name,
 			power: power,
 			basePP: basePP,
@@ -91,6 +98,7 @@ public struct Attack: Codable {
 	}
 
 	enum CodingKeys: CodingKey {
+		case id
 		case name
 		case power
 		case basePP
@@ -105,6 +113,7 @@ public struct Attack: Codable {
 
 	public func encode(to encoder: Encoder) throws {
 		var container = encoder.container(keyedBy: CodingKeys.self)
+		try container.encode(id, forKey: .id)
 		try container.encode(name, forKey: .name)
 		try container.encode(power, forKey: .power)
 		try container.encode(basePP, forKey: .basePP)
@@ -119,6 +128,7 @@ public struct Attack: Codable {
 
 	public init(from decoder: Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
+		self.id = try container.decode(ID.self, forKey: .id)
 		self.name = try container.decode(String.self, forKey: .name)
 		self.power = try container.decode(Int.self, forKey: .power)
 		self.basePP = try container.decode(Int.self, forKey: .basePP)
@@ -139,27 +149,10 @@ extension Attack: CustomStringConvertible {
 
 extension Attack: Hashable {
 	public func hash(into hasher: inout Hasher) {
-		hasher.combine(name)
-		hasher.combine(power)
-		hasher.combine(basePP)
-		hasher.combine(maxPP)
-		hasher.combine(accuracy)
-		hasher.combine(priority)
-		hasher.combine(type)
-		hasher.combine(breaksProtect)
-		hasher.combine(category)
-		hasher.combine(effectTarget)
+		hasher.combine(id)
 	}
 
 	public static func == (lhs: Attack, rhs: Attack) -> Bool {
-		lhs.name == rhs.name &&
-			lhs.power == rhs.power &&
-			lhs.basePP == rhs.basePP &&
-			lhs.maxPP == rhs.maxPP &&
-			lhs.accuracy == rhs.accuracy &&
-			lhs.priority == rhs.priority &&
-			lhs.type == rhs.type &&
-			lhs.category == rhs.category &&
-			lhs.effectTarget == rhs.effectTarget
+		lhs.id == rhs.id
 	}
 }

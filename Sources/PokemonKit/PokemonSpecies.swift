@@ -7,8 +7,12 @@
 //
 
 import Foundation
+import Tagged
 
-public struct PokemonSpecies: Codable, Hashable {
+public struct PokemonSpecies: Codable, Hashable, Identifiable {
+	public typealias ID = Tagged<PokemonSpecies, Int64>
+
+	public let id: ID
 	public let dexNum: Int
 	public let generation: Generation
 	public let identifier: String
@@ -82,6 +86,7 @@ public struct PokemonSpecies: Codable, Hashable {
 	}
 
 	public init(
+		id: ID,
 		dexNum: Int,
 		identifier: String,
 		name: String,
@@ -97,6 +102,7 @@ public struct PokemonSpecies: Codable, Hashable {
 		formAttributes: FormAttributes,
 		moveset: [MovesetItem] = []
 	) {
+		self.id = id
 		self.dexNum = dexNum
 		self.identifier = identifier
 		self.name = name
@@ -115,6 +121,7 @@ public struct PokemonSpecies: Codable, Hashable {
 	}
 
 	public init(
+		id: ID,
 		dexNum: Int,
 		identifier: String,
 		name: String,
@@ -130,6 +137,7 @@ public struct PokemonSpecies: Codable, Hashable {
 		moveset: [MovesetItem] = []
 	) {
 		self.init(
+			id: id,
 			dexNum: dexNum,
 			identifier: identifier,
 			name: name,

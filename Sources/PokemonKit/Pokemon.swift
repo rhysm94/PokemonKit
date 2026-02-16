@@ -142,7 +142,7 @@ public class Pokemon: Codable {
 		species: PokemonSpecies,
 		nickname: String? = nil,
 		level: Int = 50,
-		ability: Ability = Ability(name: "Some ability", description: "Some Description"),
+		ability: Ability = Ability(id: Ability.ID(-1), name: "Some ability", description: "Some Description"),
 		nature: Nature,
 		effortValues: Stats,
 		individualValues: Stats,

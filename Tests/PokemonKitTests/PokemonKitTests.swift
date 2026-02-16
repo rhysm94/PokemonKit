@@ -25,7 +25,7 @@ class PokemonKitTests: XCTestCase {
 	let thunder = Pokedex.default.getAttack(named: "Thunder")!
 	let tackle = Pokedex.default.getAttack(named: "Tackle")!
 
-	let testAbility = Ability(name: "Test", description: "Test")
+	let testAbility = Ability(id: Ability.ID(-1), name: "Test", description: "Test")
 
 	override func setUp() {
 		super.setUp()

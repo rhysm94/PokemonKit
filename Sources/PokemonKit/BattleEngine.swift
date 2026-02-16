@@ -294,7 +294,7 @@ public class BattleEngine: NSObject, GKGameModel {
 									let (baseDamage, _) = calculateDamage(
 										attacker: attacker,
 										defender: attacker,
-										attack: Attack(name: "Confused", power: 40, basePP: 1, maxPP: 1, priority: 0, type: .typeless, category: .physical)
+										attack: Attack(id: Attack.ID(-2), name: "Confused", power: 40, basePP: 1, maxPP: 1, priority: 0, type: .typeless, category: .physical)
 									)
 									view?.queue(action: .confusedAttack(attacker))
 									attacker.damage(baseDamage)
