@@ -267,7 +267,7 @@ public class BattleEngine: NSObject, GKGameModel {
 
 					// Removes .preparingTo(Attack) volatile status, as it's no longer useful here
 					for case let .preparingTo(attack) in attacker.volatileStatus {
-						attacker.volatileStatus.remove(.preparingTo(attack))
+						attacker.volatileStatus.remove(.preparingTo(attack: attack))
 					}
 
 					printUpdate(playerOne, true)
@@ -281,7 +281,7 @@ public class BattleEngine: NSObject, GKGameModel {
 							view?.queue(action: .displayText("\(attacker.nickname) is confused!"))
 
 							if number == 0 {
-								attacker.volatileStatus.remove(.confused(0))
+								attacker.volatileStatus.remove(.confused(counter: 0))
 								view?.queue(action: .displayText("\(attacker.nickname) snapped out of its confusion!"))
 								return true
 							} else {
@@ -419,7 +419,7 @@ public class BattleEngine: NSObject, GKGameModel {
 				}
 
 				if case let .asleep(counter) = player.activePokemon.status {
-					player.activePokemon.status = .asleep(counter - 1)
+					player.activePokemon.status = .asleep(counter: counter - 1)
 				}
 
 				player.activePokemon.volatileStatus.remove(.protected)
@@ -784,7 +784,7 @@ public class BattleEngine: NSObject, GKGameModel {
 					}
 
 					for pokemon in player.team where pokemon.status != .fainted && pokemon != player.activePokemon {
-						possibleTurns?.append(Turn(player: player, action: .switchTo(pokemon)))
+						possibleTurns?.append(Turn(player: player, action: .switchTo(pokemon: pokemon)))
 					}
 				}
 			case .completed:
@@ -793,7 +793,7 @@ public class BattleEngine: NSObject, GKGameModel {
 				if player.activePokemon.status == .fainted {
 					if !player.allFainted {
 						for pokemon in player.team where pokemon.status != .fainted {
-							possibleTurns?.append(Turn(player: player, action: .forceSwitch(pokemon)))
+							possibleTurns?.append(Turn(player: player, action: .forceSwitch(pokemon: pokemon)))
 						}
 					}
 				}

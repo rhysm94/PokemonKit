@@ -240,7 +240,7 @@ class PokemonKitTests: XCTestCase {
 
 	func testAddingSwitchTurn() {
 		engine.addTurn(Turn(player: joe, action: .attack(attack: Pokedex.default.getAttack(named: "Thunder Wave")!)))
-		engine.addTurn(Turn(player: joe, action: .switchTo(bulbasaur)))
+		engine.addTurn(Turn(player: joe, action: .switchTo(pokemon: bulbasaur)))
 
 		XCTAssert(engine.turns.count == 1)
 	}
@@ -263,7 +263,7 @@ class PokemonKitTests: XCTestCase {
 
 		joe.activePokemon.currentHP = 0
 
-		engine.addTurn(Turn(player: joe, action: .forceSwitch(gengar)))
+		engine.addTurn(Turn(player: joe, action: .forceSwitch(pokemon: gengar)))
 
 		XCTAssertEqual(joe.activePokemon, gengar)
 		XCTAssertEqual(engine.turns.count, 0)
@@ -372,7 +372,7 @@ class PokemonKitTests: XCTestCase {
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: solarBeam)))
 		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
 
-		XCTAssertTrue(rhys.activePokemon.volatileStatus.contains(.preparingTo(solarBeam.withoutBonusEffect())))
+		XCTAssertTrue(rhys.activePokemon.volatileStatus.contains(.preparingTo(attack: solarBeam.withoutBonusEffect())))
 		XCTAssertEqual(joe.activePokemon.currentHP, joe.activePokemon.baseStats.hp)
 	}
 
@@ -383,13 +383,13 @@ class PokemonKitTests: XCTestCase {
 		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
 
 		XCTAssertEqual(joe.activePokemon.currentHP, joe.activePokemon.baseStats.hp)
-		XCTAssertTrue(rhys.activePokemon.volatileStatus.contains(.preparingTo(solarBeam.withoutBonusEffect())))
+		XCTAssertTrue(rhys.activePokemon.volatileStatus.contains(.preparingTo(attack: solarBeam.withoutBonusEffect())))
 
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: solarBeam.withoutBonusEffect())))
 		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
 
 		XCTAssertNotEqual(joe.activePokemon.currentHP, joe.activePokemon.baseStats.hp)
-		XCTAssertFalse(rhys.activePokemon.volatileStatus.contains(.preparingTo(solarBeam.withoutBonusEffect())))
+		XCTAssertFalse(rhys.activePokemon.volatileStatus.contains(.preparingTo(attack: solarBeam.withoutBonusEffect())))
 	}
 
 	func testSolarBeamUnderSunlight() {
@@ -399,7 +399,7 @@ class PokemonKitTests: XCTestCase {
 		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
 
 		XCTAssertNotEqual(joe.activePokemon.currentHP, joe.activePokemon.baseStats.hp)
-		XCTAssertFalse(rhys.activePokemon.volatileStatus.contains(.preparingTo(solarBeam.withoutBonusEffect())))
+		XCTAssertFalse(rhys.activePokemon.volatileStatus.contains(.preparingTo(attack: solarBeam.withoutBonusEffect())))
 	}
 
 	func testSolarBeamUnderSunlightAndConfusion() {
@@ -408,12 +408,12 @@ class PokemonKitTests: XCTestCase {
 
 		let solarBeam = Pokedex.default.getAttack(named: "Solar Beam")!
 		engine.setWeather(.harshSunlight)
-		rhys.activePokemon.volatileStatus.insert(.confused(3))
+		rhys.activePokemon.volatileStatus.insert(.confused(counter: 3))
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: solarBeam)))
 		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
 
 		XCTAssertNotEqual(joe.activePokemon.currentHP, joe.activePokemon.baseStats.hp)
-		XCTAssertFalse(rhys.activePokemon.volatileStatus.contains(.preparingTo(solarBeam.withoutBonusEffect())))
+		XCTAssertFalse(rhys.activePokemon.volatileStatus.contains(.preparingTo(attack: solarBeam.withoutBonusEffect())))
 	}
 
 	func testSolarBeamNoPreparingToAppliesWhenConfused() {
@@ -426,11 +426,11 @@ class PokemonKitTests: XCTestCase {
 
 		let solarBeam = Pokedex.default.getAttack(named: "Solar Beam")!
 		engine.setWeather(.harshSunlight)
-		rhys.activePokemon.volatileStatus.insert(.confused(3))
+		rhys.activePokemon.volatileStatus.insert(.confused(counter: 3))
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: solarBeam)))
 		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
 
-		XCTAssertFalse(rhys.activePokemon.volatileStatus.contains(.preparingTo(solarBeam.withoutBonusEffect())))
+		XCTAssertFalse(rhys.activePokemon.volatileStatus.contains(.preparingTo(attack: solarBeam.withoutBonusEffect())))
 	}
 
 	func testProtectFasterPokemon() {

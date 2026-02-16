@@ -378,7 +378,7 @@ public class Pokedex {
 		"Confuse Ray": .singleTarget {
 			for case .confused in $0.volatileStatus { return }
 			let diceRoll = Random.shared.confusion()
-			$0.volatileStatus.insert(.confused(diceRoll))
+			$0.volatileStatus.insert(.confused(counter: diceRoll))
 			print("\($0.nickname) became confused for \(diceRoll) turns!")
 		},
 		"Dark Pulse": .singleTarget {
@@ -409,11 +409,11 @@ public class Pokedex {
 
 			let sleepTurns = Random.shared.between(minimum: 1, maximum: 3)
 
-			pokemon.status = .asleep(sleepTurns)
+			pokemon.status = .asleep(counter: sleepTurns)
 		},
 		"Rest": .singleTarget { pokemon in
 			pokemon.currentHP = pokemon.baseStats.hp
-			pokemon.status = .asleep(2)
+			pokemon.status = .asleep(counter: 2)
 		},
 		"Ice Beam": .singleTarget {
 			let diceRoll = Random.shared.d10Roll()
@@ -431,7 +431,7 @@ public class Pokedex {
 		"Solar Beam": .multiTurnMove(
 			condition: { $0.weather == .harshSunlight || $0.weather == .extremelyHarshSunlight },
 			addAttack: { attack, pokemon in
-				pokemon.volatileStatus.insert(.preparingTo(attack.withoutBonusEffect()))
+				pokemon.volatileStatus.insert(.preparingTo(attack: attack.withoutBonusEffect()))
 				return "\(pokemon.nickname) took in sunlight!"
 			}
 		),

@@ -64,18 +64,18 @@ class StatusTests: XCTestCase {
 	}
 
 	func testConfusedVolatileStatus() {
-		var confusion = VolatileStatus.confused(1)
+		var confusion = VolatileStatus.confused(counter: 1)
 		confusion = confusion.next
 
-		XCTAssertEqual(VolatileStatus.confused(0), confusion)
-		XCTAssertNotEqual(VolatileStatus.confused(1), confusion)
+		XCTAssertEqual(VolatileStatus.confused(counter: 0), confusion)
+		XCTAssertNotEqual(VolatileStatus.confused(counter: 1), confusion)
 	}
 
 	func testConfusion() {
 		// Seed guaranteed to cause Joe's active Pokémon to hurt itself in its confusion
 		Random.shared = Random(seed: "confused")
 
-		joe.activePokemon.volatileStatus.insert(.confused(3))
+		joe.activePokemon.volatileStatus.insert(.confused(counter: 3))
 
 		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: tackle)))
@@ -87,16 +87,16 @@ class StatusTests: XCTestCase {
 	func testConfusionWearsOff() {
 		Random.shared = Random(seed: "confused")
 
-		joe.activePokemon.volatileStatus.insert(.confused(1))
+		joe.activePokemon.volatileStatus.insert(.confused(counter: 1))
 
-		XCTAssertTrue(joe.activePokemon.volatileStatus.contains(.confused(1)))
-		XCTAssertFalse(joe.activePokemon.volatileStatus.contains(.confused(0)))
+		XCTAssertTrue(joe.activePokemon.volatileStatus.contains(.confused(counter: 1)))
+		XCTAssertFalse(joe.activePokemon.volatileStatus.contains(.confused(counter: 0)))
 
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: tackle)))
 		engine.addTurn(Turn(player: joe, action: .attack(attack: joe.activePokemon.attacks[0])))
 
-		XCTAssertFalse(joe.activePokemon.volatileStatus.contains(.confused(1)))
-		XCTAssertTrue(joe.activePokemon.volatileStatus.contains(.confused(0)))
+		XCTAssertFalse(joe.activePokemon.volatileStatus.contains(.confused(counter: 1)))
+		XCTAssertTrue(joe.activePokemon.volatileStatus.contains(.confused(counter: 0)))
 
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: tackle)))
 		engine.addTurn(Turn(player: joe, action: .attack(attack: tackle)))
@@ -114,7 +114,7 @@ class StatusTests: XCTestCase {
 	func testConfusionAppliesOnce() {
 		Random.shared = Random(seed: "confused")
 
-		joe.activePokemon.volatileStatus.insert(.confused(2))
+		joe.activePokemon.volatileStatus.insert(.confused(counter: 2))
 
 		let confuseRay = Pokedex.default.getAttack(named: "Confuse Ray")!
 
@@ -136,7 +136,7 @@ class StatusTests: XCTestCase {
 		Random.shared = Random(seed: "confused")
 		let hypnosis = Pokedex.default.getAttack(named: "Hypnosis")!
 
-		joe.activePokemon.volatileStatus.insert(.confused(3))
+		joe.activePokemon.volatileStatus.insert(.confused(counter: 3))
 
 		engine.addTurn(Turn(player: joe, action: .attack(attack: hypnosis)))
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: tackle)))
@@ -147,7 +147,7 @@ class StatusTests: XCTestCase {
 	}
 
 	func testSleepPreventsAttack() {
-		joe.activePokemon.status = .asleep(1)
+		joe.activePokemon.status = .asleep(counter: 1)
 
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: tackle)))
 		engine.addTurn(Turn(player: joe, action: .attack(attack: tackle)))
@@ -156,7 +156,7 @@ class StatusTests: XCTestCase {
 	}
 
 	func testSleepExpires() {
-		joe.activePokemon.status = .asleep(0)
+		joe.activePokemon.status = .asleep(counter: 0)
 
 		engine.addTurn(Turn(player: rhys, action: .attack(attack: tackle)))
 		engine.addTurn(Turn(player: joe, action: .attack(attack: tackle)))
