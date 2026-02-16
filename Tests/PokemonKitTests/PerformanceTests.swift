@@ -10,9 +10,6 @@ import XCTest
 @testable import PokemonKit
 
 class PerformanceTests: XCTestCase {
-	// Old performance tests removed - they tested loading all data into memory
-	// which is no longer the architecture (now using query-based API)
-
 	func testQuerySinglePokemon() {
 		measure {
 			_ = Pokedex.default.getPokemon(byIdentifier: "pikachu")

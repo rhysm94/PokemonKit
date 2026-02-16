@@ -51,7 +51,6 @@ class StatusTests: XCTestCase {
 		joe.add(pokemon: pikachu)
 
 		engine = BattleEngine(playerOne: rhys, playerTwo: joe)
-		// Put setup code here. This method is called before the invocation of each test method in the class.
 	}
 
 
