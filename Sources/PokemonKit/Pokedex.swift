@@ -107,18 +107,18 @@ public class Pokedex {
 		let evolvesFrom = row[14] as? String
 		let formName = row[15] as? String
 
-		let ability1 = getAbilityFromDB(byID: Int(ability1ID)) ?? .dummy
-		let ability2 = ability2ID.flatMap { getAbilityFromDB(byID: Int($0)) }
-		let hiddenAbility = hiddenAbilityID.flatMap { getAbilityFromDB(byID: Int($0)) }
+		let ability1 = getAbilityFromDB(byID: Ability.ID(ability1ID)) ?? .dummy
+		let ability2 = ability2ID.flatMap { getAbilityFromDB(byID: Ability.ID($0)) }
+		let hiddenAbility = hiddenAbilityID.flatMap { getAbilityFromDB(byID: Ability.ID($0)) }
 
 		guard let typeOne = Type(rawValue: typeOneString) else { return nil }
 		let typeTwo = typeTwoString.flatMap { Type(rawValue: $0) }
 
 		// Get egg groups
 		let eggGroupTable = Table("pokemon_egg_groups")
-		let speciesID = Expression<Int>("species_id")
+		let speciesID = Expression<Int64>("species_id")
 		let eggGroupID = Expression<Int>("egg_group_id")
-		let eggGroupQuery = eggGroupTable.select(speciesID, eggGroupID).filter(speciesID == Int(pokedexNumber))
+		let eggGroupQuery = eggGroupTable.select(speciesID, eggGroupID).filter(speciesID == pokedexNumber)
 
 		let eggGroups: [Row]
 		do {
@@ -131,33 +131,13 @@ public class Pokedex {
 		let eggGroupTwo: EggGroup? = eggGroups.indices.contains(1) ? EggGroup(using: eggGroups[1][eggGroupID]) : nil
 
 		// Get moveset - only load attacks for this specific Pokemon
-		let moveset = Pokedex.getAttacksForPokemon(Int(pokedexNumber)).sorted { first, second in
-			switch (first.moveLearnMethod, second.moveLearnMethod) {
-			case let (.levelUp(left), .levelUp(right)):
-				return left < right
-			case (.levelUp, .machine):
-				return true
-			case (.machine, .egg):
-				return true
-			case (.egg, .lightBallEgg):
-				return true
-			case (.lightBallEgg, .moveTutor):
-				return true
-			case (.egg, .moveTutor):
-				return true
-			case (.moveTutor, .formChange):
-				return true
-			case (.machine, .moveTutor):
-				return true
-			default:
-				return false
-			}
-		}
+		let moveset = Pokedex.getAttacksForPokemon(PokemonSpecies.ID(pokedexNumber)).sorted()
 
 		let stats = Stats(hp: Int(hp), atk: Int(atk), def: Int(def), spAtk: Int(spAtk), spDef: Int(spDef), spd: Int(spd))
 		let formAttributes = PokemonSpecies.FormAttributes(formName: formName)
 
 		return PokemonSpecies(
+			id: PokemonSpecies.ID(pokedexNumber),
 			dexNum: Int(pokedexNumber),
 			identifier: identifier,
 			name: pokemonName,
@@ -176,15 +156,15 @@ public class Pokedex {
 	}
 
 	/// Get a single ability from the database by ID
-	private static func getAbilityFromDB(byID abilityID: Int) -> Ability? {
+	private static func getAbilityFromDB(byID abilityID: Ability.ID) -> Ability? {
 		let db = databaseConnection
 
 		let abilityTable = Table("abilities")
 		let abilityNames = Table("ability_names")
 		let abilityFlavorText = Table("ability_flavor_text")
 
-		let id = Expression<Int>("id")
-		let abilityIDExpr = Expression<Int>("ability_id")
+		let id = Expression<Int64>("id")
+		let abilityIDExpr = Expression<Int64>("ability_id")
 		let abilityName = Expression<String>("name")
 		let languageID = Expression<Int>("language_id")
 		let localLanguageID = Expression<Int>("local_language_id")
@@ -192,7 +172,7 @@ public class Pokedex {
 		let mainSeries = Expression<Int>("is_main_series")
 		let versionGroupID = Expression<Int>("version_group_id")
 
-		let query = abilityTable.select(abilityNames[abilityName], abilityFlavorText[flavorText])
+		let query = abilityTable.select(abilityTable[id], abilityNames[abilityName], abilityFlavorText[flavorText])
 			.join(abilityNames, on: abilityTable[id] == abilityNames[abilityIDExpr])
 			.join(abilityFlavorText, on: abilityTable[id] == abilityFlavorText[abilityIDExpr])
 			.filter(
@@ -200,12 +180,13 @@ public class Pokedex {
 				abilityFlavorText[languageID] == 9 &&
 				abilityTable[mainSeries] == 1 &&
 				abilityFlavorText[versionGroupID] == 17 &&
-				abilityTable[id] == abilityID
+				abilityTable[id] == abilityID.rawValue
 			)
 
 		do {
 			if let row = try db.pluck(query) {
 				return Ability(
+					id: Ability.ID(row[id]),
 					name: row[abilityName],
 					description: row[flavorText],
 					activationMessage: activationMessage[row[abilityName]]
@@ -225,8 +206,8 @@ public class Pokedex {
 		let abilityNames = Table("ability_names")
 		let abilityFlavorText = Table("ability_flavor_text")
 
-		let id = Expression<Int>("id")
-		let abilityID = Expression<Int>("ability_id")
+		let id = Expression<Int64>("id")
+		let abilityID = Expression<Int64>("ability_id")
 		let abilityName = Expression<String>("name")
 		let languageID = Expression<Int>("language_id")
 		let localLanguageID = Expression<Int>("local_language_id")
@@ -234,7 +215,7 @@ public class Pokedex {
 		let mainSeries = Expression<Int>("is_main_series")
 		let versionGroupID = Expression<Int>("version_group_id")
 
-		let query = abilityTable.select(abilityNames[abilityName], abilityFlavorText[flavorText])
+		let query = abilityTable.select(abilityTable[id], abilityNames[abilityName], abilityFlavorText[flavorText])
 			.join(abilityNames, on: abilityTable[id] == abilityNames[abilityID])
 			.join(abilityFlavorText, on: abilityTable[id] == abilityFlavorText[abilityID])
 			.filter(
@@ -248,6 +229,7 @@ public class Pokedex {
 		do {
 			if let row = try db.pluck(query) {
 				return Ability(
+					id: Ability.ID(row[id]),
 					name: row[abilityName],
 					description: row[flavorText],
 					activationMessage: activationMessage[row[abilityName]]
@@ -260,14 +242,14 @@ public class Pokedex {
 	}
 
 	/// Get a single attack from the database by ID
-	private static func getAttackFromDB(byID moveID: Int) -> Attack? {
+	private static func getAttackFromDB(byID moveID: Attack.ID) -> Attack? {
 		let db = databaseConnection
 
 		let moveTable = Table("moves")
 		let moveNames = Table("move_names")
 
-		let id = Expression<Int>("id")
-		let moveIDExpr = Expression<Int>("move_id")
+		let id = Expression<Int64>("id")
+		let moveIDExpr = Expression<Int64>("move_id")
 		let moveName = Expression<String>("name")
 		let power = Expression<Int?>("power")
 		let pp = Expression<Int>("pp")
@@ -278,11 +260,11 @@ public class Pokedex {
 		let localLanguageID = Expression<Int>("local_language_id")
 
 		let query = moveTable.select(
-				moveNames[moveName], moveTable[power], moveTable[type], moveTable[category],
+				moveTable[id], moveNames[moveName], moveTable[power], moveTable[type], moveTable[category],
 				moveTable[pp], moveTable[accuracy], moveTable[priority]
 			)
 			.join(moveNames, on: moveTable[id] == moveNames[moveIDExpr])
-			.filter(moveNames[localLanguageID] == 9 && moveTable[type] != 10002 && moveTable[id] == moveID)
+			.filter(moveNames[localLanguageID] == 9 && moveTable[type] != 10002 && moveTable[id] == moveID.rawValue)
 
 		do {
 			if let row = try db.pluck(query) {
@@ -294,6 +276,7 @@ public class Pokedex {
 				let effectTarget = Pokedex.targets[moveName]
 
 				return Attack(
+					id: Attack.ID(row[id]),
 					name: moveName,
 					power: row[power] ?? 0,
 					basePP: row[pp],
@@ -320,8 +303,8 @@ public class Pokedex {
 		let moveTable = Table("moves")
 		let moveNames = Table("move_names")
 
-		let id = Expression<Int>("id")
-		let moveID = Expression<Int>("move_id")
+		let id = Expression<Int64>("id")
+		let moveID = Expression<Int64>("move_id")
 		let moveName = Expression<String>("name")
 		let power = Expression<Int?>("power")
 		let pp = Expression<Int>("pp")
@@ -332,7 +315,7 @@ public class Pokedex {
 		let localLanguageID = Expression<Int>("local_language_id")
 
 		let query = moveTable.select(
-				moveNames[moveName], moveTable[power], moveTable[type], moveTable[category],
+				moveTable[id], moveNames[moveName], moveTable[power], moveTable[type], moveTable[category],
 				moveTable[pp], moveTable[accuracy], moveTable[priority]
 			)
 			.join(moveNames, on: moveTable[id] == moveNames[moveID])
@@ -348,6 +331,7 @@ public class Pokedex {
 				let effectTarget = Pokedex.targets[moveName]
 
 				return Attack(
+					id: Attack.ID(row[id]),
 					name: moveName,
 					power: row[power] ?? 0,
 					basePP: row[pp],
@@ -378,7 +362,7 @@ public class Pokedex {
 		"Confuse Ray": .singleTarget {
 			for case .confused in $0.volatileStatus { return }
 			let diceRoll = Random.shared.confusion()
-			$0.volatileStatus.insert(.confused(diceRoll))
+			$0.volatileStatus.insert(.confused(counter: diceRoll))
 			print("\($0.nickname) became confused for \(diceRoll) turns!")
 		},
 		"Dark Pulse": .singleTarget {
@@ -409,11 +393,11 @@ public class Pokedex {
 
 			let sleepTurns = Random.shared.between(minimum: 1, maximum: 3)
 
-			pokemon.status = .asleep(sleepTurns)
+			pokemon.status = .asleep(counter: sleepTurns)
 		},
 		"Rest": .singleTarget { pokemon in
 			pokemon.currentHP = pokemon.baseStats.hp
-			pokemon.status = .asleep(2)
+			pokemon.status = .asleep(counter: 2)
 		},
 		"Ice Beam": .singleTarget {
 			let diceRoll = Random.shared.d10Roll()
@@ -431,7 +415,7 @@ public class Pokedex {
 		"Solar Beam": .multiTurnMove(
 			condition: { $0.weather == .harshSunlight || $0.weather == .extremelyHarshSunlight },
 			addAttack: { attack, pokemon in
-				pokemon.volatileStatus.insert(.preparingTo(attack.withoutBonusEffect()))
+				pokemon.volatileStatus.insert(.preparingTo(attack: attack.withoutBonusEffect()))
 				return "\(pokemon.nickname) took in sunlight!"
 			}
 		),
@@ -490,8 +474,8 @@ public class Pokedex {
 		let abilityNames = Table("ability_names")
 		let abilityFlavorText = Table("ability_flavor_text")
 
-		let id = Expression<Int>("id")
-		let abilityID = Expression<Int>("ability_id")
+		let id = Expression<Int64>("id")
+		let abilityID = Expression<Int64>("ability_id")
 		let abilityName = Expression<String>("name")
 		let languageID = Expression<Int>("language_id")
 		let localLanguageID = Expression<Int>("local_language_id")
@@ -511,7 +495,7 @@ public class Pokedex {
 			abilityFlavorText[versionGroupID] == 17
 		)
 
-		let query = abilityTable.select(abilityNames[abilityName], abilityFlavorText[flavorText])
+		let query = abilityTable.select(abilityTable[id], abilityNames[abilityName], abilityFlavorText[flavorText])
 			.join(abilityNames, on: abilityTable[id] == abilityNames[abilityID])
 			.join(abilityFlavorText, on: abilityTable[id] == abilityFlavorText[abilityID])
 			.filter(filterPartOne && filterPartTwo)
@@ -520,7 +504,7 @@ public class Pokedex {
 			for row in try db.prepare(query) {
 				let abilityName = row[abilityName]
 
-				let ability = Ability(name: abilityName, description: row[flavorText], activationMessage: activationMessage[abilityName])
+				let ability = Ability(id: Ability.ID(row[id]), name: abilityName, description: row[flavorText], activationMessage: activationMessage[abilityName])
 				abilities[abilityName] = ability
 			}
 		} catch {
@@ -567,38 +551,26 @@ public class Pokedex {
 				let formName = row[15] as? String
 
 				let ability1 = abilities[ability1Name, default: .dummy]
-				var ability2: Ability? {
-					guard let value = ability2Name else { return nil }
-					return abilities[value]
-				}
-
-				var hiddenAbility: Ability? {
-					guard let value = hiddenAbilityName else { return nil }
-					return abilities[value]
-				}
+				let ability2 = ability2Name.flatMap { abilities[$0] }
+				let hiddenAbility = hiddenAbilityName.flatMap { abilities[$0] }
 
 				guard let typeOne = Type(rawValue: typeOneString) else { break }
-				var typeTwo: Type? {
-					guard let value = typeTwoString else { return nil }
-					return Type(rawValue: value)
-				}
+				let typeTwo = typeTwoString.flatMap { Type(rawValue: $0) }
 
 				let eggGroupTable = Table("pokemon_egg_groups")
-				let speciesID = Expression<Int>("species_id")
+				let speciesID = Expression<Int64>("species_id")
 				let eggGroupID = Expression<Int>("egg_group_id")
-				let eggGroupQuery = eggGroupTable.select(speciesID, eggGroupID).filter(speciesID == Int(pokedexNumber))
+				let eggGroupQuery = eggGroupTable.select(speciesID, eggGroupID).filter(speciesID == pokedexNumber)
 				let eggGroups = Array(try db.prepare(eggGroupQuery))
 
 				let eggGroupOne = EggGroup(using: eggGroups[0][eggGroupID])
-				var eggGroupTwo: EggGroup? {
-					if eggGroups.indices.contains(1) {
-						return EggGroup(using: eggGroups[1][eggGroupID])
-					} else {
-						return nil
-					}
+				let eggGroupTwo: EggGroup? = if eggGroups.indices.contains(1) {
+					EggGroup(using: eggGroups[1][eggGroupID])
+				} else {
+					nil
 				}
 
-				let moveset = Pokedex.getAttacksForPokemon(Int(pokedexNumber)).sorted { first, second in
+				let moveset = Pokedex.getAttacksForPokemon(PokemonSpecies.ID(pokedexNumber)).sorted { first, second in
 					switch (first.moveLearnMethod, second.moveLearnMethod) {
 					case let (.levelUp(left), .levelUp(right)):
 						return left < right
@@ -625,6 +597,7 @@ public class Pokedex {
 				let formAttributes = PokemonSpecies.FormAttributes(formName: formName)
 
 				let pokemonSpecies = PokemonSpecies(
+					id: PokemonSpecies.ID(pokedexNumber),
 					dexNum: Int(pokedexNumber),
 					identifier: identifier,
 					name: pokemonName,
@@ -656,9 +629,9 @@ public class Pokedex {
 
 		let evolution = Table("pokemon_evolution")
 		let species = Table("pokemon_species")
-		let id = Expression<Int>("id")
+		let id = Expression<Int64>("id")
 		let identifier = Expression<String>("identifier")
-		let evolvedID = Expression<Int>("evolved_species_id")
+		let evolvedID = Expression<Int64>("evolved_species_id")
 		let evolutionTriggerID = Expression<Int>("evolution_trigger_id")
 		let minimumLevel = Expression<Int?>("minimum_level")
 		let genderID = Expression<Int?>("gender_id")
@@ -666,7 +639,7 @@ public class Pokedex {
 		let triggerItemID = Expression<Int?>("trigger_item_id")
 		let heldItemID = Expression<Int?>("held_item_id")
 		let timeOfDay = Expression<String?>("time_of_day")
-		let knownMoveID = Expression<Int?>("known_move_id")
+		let knownMoveID = Expression<Int64?>("known_move_id")
 		let knownMoveTypeID = Expression<Int?>("known_move_type_id")
 		let minimumHappiness = Expression<Int?>("minimum_happiness")
 		let minimumBeauty = Expression<Int?>("minimum_beauty")
@@ -712,7 +685,7 @@ public class Pokedex {
 				guard let evolution = getPokemon(byIdentifier: row[identifier]) else { break }
 
 				if let level = row[minimumLevel] {
-					evolutionConditions.insert(.levelUp(.minimumLevel(level)))
+          evolutionConditions.insert(.levelUp(conditions: .minimumLevel(level)))
 				}
 
 				if row[evolutionTriggerID] == 2 {
@@ -724,31 +697,26 @@ public class Pokedex {
 				}
 
 				if let gender = row[genderID] {
-					let genderToInsert: Gender = {
-						switch gender {
-						case 1:
-							return .female
-						case 2:
-							return .male
-						default:
-							return .genderless
-						}
-					}()
+          let genderToInsert: Gender = switch gender {
+          case 1: .female
+          case 2: .male
+          default: .genderless
+          }
 
-					evolutionConditions.insert(.gender(genderToInsert))
+          evolutionConditions.insert(.gender(genderToInsert))
 				}
 
 				if let locationID = row[locationID] {
 					switch locationID {
 					case 8, 375, 650:
 						// Moss Rock for Leafeon
-						evolutionConditions.insert(.levelUp(.inArea(.mossRock)))
+            evolutionConditions.insert(.levelUp(conditions: .inArea(.mossRock)))
 					case 10, 379, 629:
 						// Mt Coronet for Magnetic Field Pokémon
-						evolutionConditions.insert(.levelUp(.inArea(.magneticField)))
+            evolutionConditions.insert(.levelUp(conditions: .inArea(.magneticField)))
 					case 48, 380, 649:
 						// Icy Rock for Glaceon
-						evolutionConditions.insert(.levelUp(.inArea(.icyRock)))
+            evolutionConditions.insert(.levelUp(conditions: .inArea(.icyRock)))
 					default:
 						break
 					}
@@ -756,23 +724,23 @@ public class Pokedex {
 
 				if let timeOfDay = row[timeOfDay] {
 					if timeOfDay == "day" {
-						evolutionConditions.insert(.timeOfDay(.day))
+            evolutionConditions.insert(.timeOfDay(.day))
 					} else if timeOfDay == "night" {
-						evolutionConditions.insert(.timeOfDay(.night))
+            evolutionConditions.insert(.timeOfDay(.night))
 					}
 				}
 
 				if let moveTypeID = row[knownMoveTypeID] {
 					let type = Type(using: moveTypeID)
-					evolutionConditions.insert(.levelUp(.knowsAttackType(type)))
+          evolutionConditions.insert(.levelUp(conditions: .knowsAttackType(type)))
 				}
 
 				if row[minimumHappiness] != nil {
-					evolutionConditions.insert(.levelUp(.happiness))
+					evolutionConditions.insert(.levelUp(conditions: .happiness))
 				}
 
 				if row[minimumBeauty] != nil {
-					evolutionConditions.insert(.levelUp(.beauty))
+					evolutionConditions.insert(.levelUp(conditions: .beauty))
 				}
 
 				if row[minimumAffection] != nil {
@@ -780,7 +748,7 @@ public class Pokedex {
 				}
 
 				if row[needsOverworldRain] {
-					evolutionConditions.insert(.weather(.rain))
+          evolutionConditions.insert(.weather(.rain))
 				}
 
 				if row[upsideDown] {
@@ -789,18 +757,18 @@ public class Pokedex {
 
 				if let stats = row[physicalStats] {
 					if stats == -1 {
-						evolutionConditions.insert(.physicalStats(.defenseHigher))
+            evolutionConditions.insert(.physicalStats(.defenseHigher))
 					} else if stats == 0 {
-						evolutionConditions.insert(.physicalStats(.equal))
+            evolutionConditions.insert(.physicalStats(.equal))
 					} else if stats == 1 {
-						evolutionConditions.insert(.physicalStats(.attackHigher))
+            evolutionConditions.insert(.physicalStats(.attackHigher))
 					}
 				}
 
-				let knownMoveName = Pokedex.getMoveName(moveID: row[knownMoveID])
+				let knownMoveName = Pokedex.getMoveName(moveID: row[knownMoveID].map { Attack.ID($0) })
 				if let moveName = knownMoveName,
 					let attack = Pokedex.getAttackFromDB(named: moveName) {
-					evolutionConditions.insert(.levelUp(.knowsAttack(attack)))
+          evolutionConditions.insert(.levelUp(conditions: .knowsAttack(attack)))
 				}
 
 				evolutions.insert(PokemonEvolution(evolvedPokemon: evolution, conditions: evolutionConditions))
@@ -844,59 +812,26 @@ public class Pokedex {
 				guard let isMega = row[19] as? Int64 else { break }
 
 				guard let typeOne = Type(rawValue: typeOneString) else { break }
-				var typeTwo: Type? {
-					guard let value = typeTwoString else { return nil }
-					return Type(rawValue: value)
-				}
+				let typeTwo = typeTwoString.flatMap { Type(rawValue: $0) }
 
-				let ability1 = Pokedex.getAbilityFromDB(byID: Int(ability1ID)) ?? Ability(name: "Dummy", description: "Dummy")
-				var ability2: Ability? {
-					guard let value = ability2ID else { return nil }
-					return Pokedex.getAbilityFromDB(byID: Int(value))
-				}
-
-				var hiddenAbility: Ability? {
-					guard let value = hiddenAbilityID else { return nil }
-					return Pokedex.getAbilityFromDB(byID: Int(value))
-				}
+				let ability1 = Pokedex.getAbilityFromDB(byID: Ability.ID(ability1ID)) ?? Ability(id: Ability.ID(-1), name: "Dummy", description: "Dummy")
+				let ability2 = ability2ID.flatMap { Pokedex.getAbilityFromDB(byID: Ability.ID($0)) }
+				let hiddenAbility = hiddenAbilityID.flatMap { Pokedex.getAbilityFromDB(byID: Ability.ID($0)) }
 
 				let eggGroupTable = Table("pokemon_egg_groups")
-				let speciesID = Expression<Int>("species_id")
+				let speciesID = Expression<Int64>("species_id")
 				let eggGroupID = Expression<Int>("egg_group_id")
-				let eggGroupQuery = eggGroupTable.select(speciesID, eggGroupID).filter(speciesID == Int(dexNum))
+				let eggGroupQuery = eggGroupTable.select(speciesID, eggGroupID).filter(speciesID == dexNum)
 				let eggGroups = Array(try db.prepare(eggGroupQuery))
 
 				let eggGroupOne = EggGroup(using: eggGroups[0][eggGroupID])
-				var eggGroupTwo: EggGroup? {
-					guard eggGroups.indices.contains(1) else {
-						return nil
-					}
-
-					return EggGroup(using: eggGroups[1][eggGroupID])
+				let eggGroupTwo: EggGroup? = if eggGroups.indices.contains(1) {
+					EggGroup(using: eggGroups[1][eggGroupID])
+				} else {
+					nil
 				}
 
-				let moveset = Pokedex.getAttacksForPokemon(Int(dbId)).sorted { first, second in
-					switch (first.moveLearnMethod, second.moveLearnMethod) {
-					case let (.levelUp(left), .levelUp(right)):
-						return left < right
-					case (.levelUp, .machine):
-						return true
-					case (.machine, .egg):
-						return true
-					case (.egg, .lightBallEgg):
-						return true
-					case (.lightBallEgg, .moveTutor):
-						return true
-					case (.egg, .moveTutor):
-						return true
-					case (.moveTutor, .formChange):
-						return true
-					case (.machine, .moveTutor):
-						return true
-					default:
-						return false
-					}
-				}
+				let moveset = Pokedex.getAttacksForPokemon(PokemonSpecies.ID(dbId)).sorted()
 
 				let stats = Stats(hp: Int(hp), atk: Int(atk), def: Int(def), spAtk: Int(spAtk), spDef: Int(spDef), spd: Int(spd))
 				let formAttributes = PokemonSpecies.FormAttributes(
@@ -908,6 +843,7 @@ public class Pokedex {
 				)
 
 				let form = PokemonSpecies(
+					id: PokemonSpecies.ID(dbId),
 					dexNum: Int(dexNum),
 					identifier: identifier,
 					name: name,
@@ -942,8 +878,8 @@ public class Pokedex {
 		let moveTable = Table("moves")
 		let moveNames = Table("move_names")
 
-		let id = Expression<Int>("id")
-		let moveID = Expression<Int>("move_id")
+		let id = Expression<Int64>("id")
+		let moveID = Expression<Int64>("move_id")
 		let moveName = Expression<String>("name")
 		let power = Expression<Int?>("power")
 		let pp = Expression<Int>("pp")
@@ -954,7 +890,7 @@ public class Pokedex {
 		let localLanguageID = Expression<Int>("local_language_id")
 
 		let query = moveTable.select(
-				moveNames[moveName], moveTable[power], moveTable[type], moveTable[category],
+				moveTable[id], moveNames[moveName], moveTable[power], moveTable[type], moveTable[category],
 				moveTable[pp], moveTable[accuracy], moveTable[priority]
 			)
 			.join(moveNames, on: moveTable[id] == moveNames[moveID])
@@ -969,6 +905,7 @@ public class Pokedex {
 				let breaksProtect = Pokedex.protectBreakingMoves.contains(moveName)
 				let effectTarget = Pokedex.targets[moveName]
 				let attack = Attack(
+					id: Attack.ID(row[id]),
 					name: moveName,
 					power: row[power] ?? 0,
 					basePP: row[pp],
@@ -990,20 +927,20 @@ public class Pokedex {
 		return attacks
 	}
 
-	static func getAttacksForPokemon(_ pokemon: Int) -> [MovesetItem] {
+	static func getAttacksForPokemon(_ pokemon: PokemonSpecies.ID) -> [MovesetItem] {
 		let db = databaseConnection
 		var moveset: [MovesetItem] = []
 
 		let pokemonMoves = Table("pokemon_moves")
 
-		let id = Expression<Int>("pokemon_id")
-		let moveID = Expression<Int>("move_id")
+		let id = Expression<Int64>("pokemon_id")
+		let moveID = Expression<Int64>("move_id")
 		let learnMethod = Expression<Int>("pokemon_move_method_id")
 		let learnLevel = Expression<Int>("level")
 		let version = Expression<Int>("version_group_id")
 
 		let query = pokemonMoves.select(pokemonMoves[moveID], pokemonMoves[learnMethod], pokemonMoves[learnLevel])
-			.filter(pokemonMoves[version] == 18 && pokemonMoves[id] == pokemon)
+			.filter(pokemonMoves[version] == 18 && pokemonMoves[id] == pokemon.rawValue)
 
 		do {
 			for row in try db.prepare(query) {
@@ -1011,15 +948,15 @@ public class Pokedex {
 				let learnMethod = row[learnMethod]
 				let level = row[learnLevel]
 
-				let attack = getAttackFromDB(byID: moveIDValue) ?? .dummy
+				let attack = getAttackFromDB(byID: Attack.ID(moveIDValue)) ?? Attack.dummy
 				let moveLearnMethod: MovesetItem.MoveLearnMethod = switch learnMethod {
-				case 1: .levelUp(level)
+				case 1: .levelUp(level: level)
 				case 2: .egg
 				case 3: .moveTutor
 				case 4: .machine
 				case 6: .lightBallEgg
 				case 10: .formChange
-				default: .levelUp(0)
+				default: .levelUp(level: 0)
 				}
 
 				moveset.append(MovesetItem(move: attack, moveLearnMethod: moveLearnMethod))
@@ -1031,16 +968,16 @@ public class Pokedex {
 		return moveset
 	}
 
-	private static func getMoveName(moveID: Int?) -> String? {
+	private static func getMoveName(moveID: Attack.ID?) -> String? {
 		let db = databaseConnection
 
 		let moveNames = Table("move_names")
 		let name = Expression<String>("name")
-		let moveRowID = Expression<Int>("move_id")
+		let moveRowID = Expression<Int64>("move_id")
 		let languageID = Expression<Int>("local_language_id")
 
-		guard let id = moveID else { return nil }
-		let moveQuery = moveNames.select(name).filter(languageID == 9 && moveRowID == id)
+		guard let moveID else { return nil }
+		let moveQuery = moveNames.select(name).filter(languageID == 9 && moveRowID == moveID.rawValue)
 
 		do {
 			guard let moveNameRow = try db.pluck(moveQuery) else { return nil }
@@ -1056,11 +993,11 @@ public class Pokedex {
 }
 
 extension Ability {
-	static let dummy = Ability(name: "Dummy", description: "Dummy")
+	static let dummy = Ability(id: Ability.ID(-1), name: "Dummy", description: "Dummy")
 }
 
 extension Attack {
-	static let dummy = Attack(name: "Dummy", power: 0, basePP: 0, maxPP: 0, priority: 0, type: .typeless, category: .status)
+	static let dummy = Attack(id: Attack.ID(-1), name: "Dummy", power: 0, basePP: 0, maxPP: 0, priority: 0, type: .typeless, category: .status)
 }
 
 extension Array where Element == PokemonSpecies {

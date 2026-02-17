@@ -7,67 +7,18 @@
 //
 
 public enum VolatileStatus: Codable, Equatable, Hashable {
-	case confused(Int)
+	case confused(counter: Int)
 	case protected
 	case flinch
 	case mustRecharge
-	case preparingTo(Attack)
+	case preparingTo(attack: Attack)
 
 	public var next: VolatileStatus {
 		switch self {
 		case let .confused(counter):
-			return .confused(counter - 1)
+			return .confused(counter: counter - 1)
 		default:
 			return self
-		}
-	}
-
-	// MARK: - Codable implementation
-
-	enum CodingKeys: CodingKey {
-		case base, counter, attack
-	}
-
-	private enum Base: String, Codable {
-		case confused, protected, flinch, mustRecharge, preparingTo
-	}
-
-	public init(from decoder: Decoder) throws {
-		let container = try decoder.container(keyedBy: CodingKeys.self)
-		let returnValue = try container.decode(Base.self, forKey: .base)
-
-		switch returnValue {
-		case .confused:
-			let counter = try container.decode(Int.self, forKey: .counter)
-			self = .confused(counter)
-		case .protected:
-			self = .protected
-		case .flinch:
-			self = .flinch
-		case .mustRecharge:
-			self = .mustRecharge
-		case .preparingTo:
-			let attack = try container.decode(Attack.self, forKey: .attack)
-			self = .preparingTo(attack)
-		}
-	}
-
-	public func encode(to encoder: Encoder) throws {
-		var container = encoder.container(keyedBy: CodingKeys.self)
-
-		switch self {
-		case let .confused(counter):
-			try container.encode(Base.confused, forKey: .base)
-			try container.encode(counter, forKey: .counter)
-		case .protected:
-			try container.encode(Base.protected, forKey: .base)
-		case .flinch:
-			try container.encode(Base.flinch, forKey: .base)
-		case .mustRecharge:
-			try container.encode(Base.mustRecharge, forKey: .base)
-		case let .preparingTo(attack):
-			try container.encode(Base.preparingTo, forKey: .base)
-			try container.encode(attack, forKey: .attack)
 		}
 	}
 }

@@ -28,7 +28,7 @@ public class BattleEngine: NSObject, GKGameModel {
 
 	private(set) var winner: Player? {
 		didSet {
-			guard let winner = winner else { return }
+			guard let winner else { return }
 			print("Setting winner as \(winner.name)")
 			print("Player One all fainted? \(playerOne.allFainted)")
 			print("Player Two all fainted? \(playerTwo.allFainted)")
@@ -188,8 +188,8 @@ public class BattleEngine: NSObject, GKGameModel {
 	private func runBonusEffect(attack: Attack, target: Pokemon? = nil, player: Player) {
 		switch attack.bonusEffect {
 		case let .singleTarget(bonusEffect)?:
-			guard let moveTarget = target else { return }
-			bonusEffect(moveTarget)
+			guard let target else { return }
+			bonusEffect(target)
 
 		case let .setWeather(weather)?:
 			setWeather(weather)
@@ -206,13 +206,13 @@ public class BattleEngine: NSObject, GKGameModel {
 			}
 
 		case let .singleTargetUsingDamage(bonusEffect)?:
-			guard let moveTarget = target else { return }
-			bonusEffect(moveTarget, lastDamage)
+			guard let target else { return }
+			bonusEffect(target, lastDamage)
 
 		case let .multiTurnMove(condition, addAttack)?:
-			guard let moveTarget = target else { return }
+			guard let target else { return }
 			if !condition(self) {
-				let textToAdd = addAttack(attack, moveTarget)
+				let textToAdd = addAttack(attack, target)
 				view?.queue(action: .displayText(textToAdd))
 			}
 
@@ -245,16 +245,11 @@ public class BattleEngine: NSObject, GKGameModel {
 				let turn = turns.removeFirst()
 
 				switch turn.action {
-				case var .attack(attack):
-					var attacker: Pokemon
-					var defender: Pokemon
-
-					if turn.player.playerId == playerOne.playerId {
-						attacker = playerOne.activePokemon
-						defender = playerTwo.activePokemon
+				case let .attack(attack):
+					let (attacker, defender): (Pokemon, Pokemon) = if turn.player.playerId == playerOne.playerId {
+						(playerOne.activePokemon, playerTwo.activePokemon)
 					} else {
-						attacker = playerTwo.activePokemon
-						defender = playerOne.activePokemon
+						(playerTwo.activePokemon, playerOne.activePokemon)
 					}
 
 					guard attacker.status != .fainted else { break }
@@ -267,7 +262,7 @@ public class BattleEngine: NSObject, GKGameModel {
 
 					// Removes .preparingTo(Attack) volatile status, as it's no longer useful here
 					for case let .preparingTo(attack) in attacker.volatileStatus {
-						attacker.volatileStatus.remove(.preparingTo(attack))
+						attacker.volatileStatus.remove(.preparingTo(attack: attack))
 					}
 
 					printUpdate(playerOne, true)
@@ -281,7 +276,7 @@ public class BattleEngine: NSObject, GKGameModel {
 							view?.queue(action: .displayText("\(attacker.nickname) is confused!"))
 
 							if number == 0 {
-								attacker.volatileStatus.remove(.confused(0))
+								attacker.volatileStatus.remove(.confused(counter: 0))
 								view?.queue(action: .displayText("\(attacker.nickname) snapped out of its confusion!"))
 								return true
 							} else {
@@ -294,7 +289,7 @@ public class BattleEngine: NSObject, GKGameModel {
 									let (baseDamage, _) = calculateDamage(
 										attacker: attacker,
 										defender: attacker,
-										attack: Attack(name: "Confused", power: 40, basePP: 1, maxPP: 1, priority: 0, type: .typeless, category: .physical)
+										attack: Attack(id: Attack.ID(-2), name: "Confused", power: 40, basePP: 1, maxPP: 1, priority: 0, type: .typeless, category: .physical)
 									)
 									view?.queue(action: .confusedAttack(attacker))
 									attacker.damage(baseDamage)
@@ -419,7 +414,7 @@ public class BattleEngine: NSObject, GKGameModel {
 				}
 
 				if case let .asleep(counter) = player.activePokemon.status {
-					player.activePokemon.status = .asleep(counter - 1)
+					player.activePokemon.status = .asleep(counter: counter - 1)
 				}
 
 				player.activePokemon.volatileStatus.remove(.protected)
@@ -600,12 +595,10 @@ public class BattleEngine: NSObject, GKGameModel {
 	}
 
 	private func switchPokemon(player: Player, pokemon: Pokemon) {
-		var switchingPlayer: Player
-
-		if player.playerId == playerOne.playerId {
-			switchingPlayer = playerOne
+		let switchingPlayer: Player = if player.playerId == playerOne.playerId {
+			playerOne
 		} else {
-			switchingPlayer = playerTwo
+			playerTwo
 		}
 
 		let switchingPokemon = switchingPlayer.activePokemon
@@ -784,7 +777,7 @@ public class BattleEngine: NSObject, GKGameModel {
 					}
 
 					for pokemon in player.team where pokemon.status != .fainted && pokemon != player.activePokemon {
-						possibleTurns?.append(Turn(player: player, action: .switchTo(pokemon)))
+						possibleTurns?.append(Turn(player: player, action: .switchTo(pokemon: pokemon)))
 					}
 				}
 			case .completed:
@@ -793,7 +786,7 @@ public class BattleEngine: NSObject, GKGameModel {
 				if player.activePokemon.status == .fainted {
 					if !player.allFainted {
 						for pokemon in player.team where pokemon.status != .fainted {
-							possibleTurns?.append(Turn(player: player, action: .forceSwitch(pokemon)))
+							possibleTurns?.append(Turn(player: player, action: .forceSwitch(pokemon: pokemon)))
 						}
 					}
 				}
@@ -847,7 +840,7 @@ public class BattleEngine: NSObject, GKGameModel {
 	}
 
 	public func isWin(for player: GKGameModelPlayer) -> Bool {
-		if let winner = winner {
+		if let winner {
 			return winner == player
 		} else {
 			return false
@@ -855,8 +848,8 @@ public class BattleEngine: NSObject, GKGameModel {
 	}
 
 	public func isLoss(for player: GKGameModelPlayer) -> Bool {
-		if let winner = winner {
-			return winner != player
+		if let winner {
+			return !(winner == player)
 		} else {
 			return false
 		}
